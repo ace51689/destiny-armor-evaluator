@@ -5,6 +5,7 @@ import { GET_ARMOR } from "../store/store"
 
 const GetManifest = (props) => {
   const dispatch = useStore((state) => state.dispatch)
+  // const manifestArmor = useStore((state) => state.armor)
   
   useEffect(() => {
     let mounted = true
@@ -23,6 +24,11 @@ const GetManifest = (props) => {
           return item
         }
         return false
+      }).filter((item) => {
+        if (item[1].classType === 0) {
+          return item
+        }
+        return false
       })
 
       await dispatch({ type: GET_ARMOR, payload: armor})
@@ -31,7 +37,7 @@ const GetManifest = (props) => {
     if (mounted) {
       gettingTheManifest()
     }
-
+    
     return () => {
       mounted = false
     }

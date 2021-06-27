@@ -1,32 +1,26 @@
 import create from "zustand"
 import { devtools, redux } from "zustand/middleware"
 
-const initialState = { authCode: "", authToken: "", memberId: "", destinyId: "", memberType: "", staticArmor: [], userArmor: []}
+const initialState = { staticArmor: [], userArmor: [], titan: false, hunter: false, warlock: false}
 
 export const GET_ARMOR = "GETARMOR"
-export const GET_AUTH_CODE = "GETAUTHCODE"
-export const GET_AUTH_TOKEN = "GETAUTHTOKEN"
-export const GET_MEMBER_ID = "GETMEMBERID"
-export const GET_DESTINY_ID = "GETDESTINYID"
-export const GET_MEMBER_TYPE = "GETMEMBERTYPE"
 export const GET_USER_ARMOR = "GETUSERARMOR"
+export const IS_TITAN = "ISTITAN"
+export const IS_HUNTER = "ISHUNTER"
+export const IS_WARLOCK = "ISWARLOCK"
 
 const reducer = (state, action) => {
-  switch(action.type) {
-    case GET_ARMOR: 
-      return { staticArmor: action.payload}
-    case GET_AUTH_CODE:
-      return { authCode: action.payload}
-    case GET_AUTH_TOKEN:
-      return { authToken: action.payload}
-    case GET_MEMBER_ID:
-      return { memberId: action.payload }
-    case GET_DESTINY_ID:
-      return { destinyId: action.payload }
-    case GET_MEMBER_TYPE:
-      return { memberType: action.payload }
+  switch (action.type) {
+    case GET_ARMOR:
+      return { staticArmor: action.payload }
     case GET_USER_ARMOR:
       return { userArmor: action.payload }
+    case IS_TITAN:
+      return { titan: action.payload } 
+    case IS_HUNTER:
+      return { hunter: action.payload } 
+    case IS_WARLOCK:
+      return { warlock: action.payload } 
     default:
       return state
   }

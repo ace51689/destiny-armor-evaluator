@@ -1,43 +1,41 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from "react-router-dom"
-import { useStore, GET_AUTH_CODE, GET_AUTH_TOKEN, GET_MEMBER_ID, GET_DESTINY_ID, GET_MEMBER_TYPE } from '../store/store'
 import { getAuthToken, getLinkedProfiles } from '../endpoints'
 
 const AuthPage = (props) => {
-  const dispatch = useStore((state) => state.dispatch)
-  const authCode = useStore((state) => state.authCode)
-  // const authToken = useStore((state) => state.authToken)
-  // const memberId = useStore((state) => state.memberId)
-  // const destinyId = useStore((state) => state.destinyId)
-  // const memberType = useStore((state) => state.memberType)
-  const history = useHistory()
   const [error, setError] = useState("")
+  const authCode = localStorage.getItem("AUTH_CODE")
   let queryParam = props.location.search
+  const history = useHistory()
 
   useEffect(() => {
+    console.log(authCode)
+    if (authCode !== null) {
+      history.push("/populate")
+    }
     if (queryParam.includes("?code=") && authCode !== props.location.search) {
-      dispatch({ type: GET_AUTH_CODE, payload: props.location.search })
+      localStorage.setItem("AUTH_CODE", props.location.search)
       getAuthToken(queryParam.replace("?", ""))
         .then((res) => {
           if (Object.keys(res).includes("error")) {
             setError(res["error_description"])
           }
-          dispatch({ type: GET_AUTH_TOKEN, payload: res.access_token })
-          dispatch({ type: GET_MEMBER_ID, payload: res.membership_id })
+          localStorage.setItem("AUTH_TOKEN", res.access_token)
+          localStorage.setItem("MEMBER_ID", res.membership_id)
           getLinkedProfiles(res.membership_id)
             .then((res) => {
               if (res.ErrorCode === 1) {
-                dispatch({ type: GET_DESTINY_ID, payload: res.Response.profiles[0].membershipId })
-                dispatch({ type: GET_MEMBER_TYPE, payload: res.Response.profiles[0].membershipType})
+                localStorage.setItem("DESTINY_ID", res.Response.profiles[0].membershipId)
+                localStorage.setItem("MEMBER_TYPE", res.Response.profiles[0].membershipType)
                 setError("Success!")
-                history.push("/main")
+                history.push("/populate")
               }
-            }) 
+            })
         })
     }
-  }, [props.location.search])
+  }, [props.location.search, authCode, history, queryParam])
 
-  if (authCode === "") {
+  if (authCode === null) {
     return (
       <div className="App">
         <a href="https://www.bungie.net/en/OAuth/Authorize?client_id=36791&response_type=code">Login with Bungie.net</a>
