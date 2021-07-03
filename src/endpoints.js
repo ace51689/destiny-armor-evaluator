@@ -1,4 +1,4 @@
-const apiKey = "3df5d6e267084bd0b2d0257b2b80215a"
+import { apiKey } from "./store/apiKey"
 const baseURL = "https://www.bungie.net/"
 const basePlatformURL = "https://www.bungie.net/Platform/"
 
