@@ -42,7 +42,6 @@ const GetUserArmor = (props) => {
           const itemArray = [item[0]]
           obj.itemInstanceId = item[0]
           obj.itemType = "Armor"
-          // obj.tierCount = 0
           masterArray.forEach((master) => {
             if (master.itemInstanceId === obj.itemInstanceId) {
               obj.itemHash = master.itemHash
@@ -94,6 +93,7 @@ const GetUserArmor = (props) => {
             obj.stats.mobility = statPath[2996146975].value
             obj.stats.strength = statPath[4244567218].value
           })
+          //This is where we can change the class of the armor we want to load-----------------------------------
           if (obj.equippableBy === "Titan") {
             itemArray.push(obj)
             armorArray.push(itemArray)

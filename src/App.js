@@ -5,8 +5,10 @@ import AuthPage from "./views/AuthPage"
 import Main from "./views/Main"
 import ExoticBattle from "./views/ExoticBattle"
 import ExtoicPage from "./views/ExtoicPage"
+import ArmorEvaluator from "./views/ArmorEvaluator"
 import { Switch, Route } from "react-router-dom"
 import './App.css';
+import SingleEvaluation from "./views/SingleEvaluation"
 
 function App() {
 
@@ -25,11 +27,16 @@ function App() {
         }} />
         <Route path="/exotic-battle" render={(routeProps) => {
           return <ExoticBattle {...routeProps} />
-        }}></Route>
+        }} />
+        <Route exact path="/evaluate" render={(routeProps) => {
+          return <ArmorEvaluator {...routeProps} />
+        }} />
         <Route path="/evaluate/:hash?" render={(routeProps) => {
           return <ExtoicPage {...routeProps} />
-        }}>
-        </Route>
+        }} />
+        <Route path="/single/:instance?" render={(routeProps) => {
+          return <SingleEvaluation {...routeProps} />
+        }} />
       </Switch>
     </div>
   );

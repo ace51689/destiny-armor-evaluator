@@ -8,6 +8,8 @@ const Main = (props) => {
     <div>
       <div>You're successuflly authorized with Bungie! What would you want to do now?</div>
       <Link to="/exotic-battle">Exotic Battle</Link>
+      <Link to="/evaluate">Armor Evaluator</Link>
+      {/* <Linkto ""></Link> */}
     </div>
   )
 

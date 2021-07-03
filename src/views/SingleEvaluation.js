@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useStore } from '../store/store'
-import ExoticLoop from '../components/armorLoops/ExoticLoop'
+import { useStore } from "../store/store"
+import DoubleStatLoop from '../Tests'
 import EvaluationInterface from '../components/EvaluationInterface'
 
-const ExtoicPage = (props) => {
+const SingleEvaluation = (props) => {
   const userArmor = useStore((state) => state.userArmor)
   const [chained, setChained] = useState(false)
   const [dupes, setDupes] = useState([])
@@ -20,7 +20,7 @@ const ExtoicPage = (props) => {
     intellect: 0,
     strength: 0
   })
-  const hash = props.match.params.hash
+  const hash = props.match.params.instance
 
   useEffect(() => {
     const dupesArray = []
@@ -28,10 +28,11 @@ const ExtoicPage = (props) => {
     const gauntletsArray = []
     const chestsArray = []
     const legsArray = []
-    userArmor.forEach((armor) => {
-      if (armor[1].itemHash.toString() === hash) {
+    userArmor.find((armor) => {
+      if (armor[0].toString() === hash) {
         dupesArray.push(armor)
       }
+      return false
     })
     setDupes(dupesArray)
     userArmor.filter((armor) => {
@@ -60,7 +61,7 @@ const ExtoicPage = (props) => {
   }, [hash, userArmor, setDupes])
 
   const handleChange = (e) => {
-    setUserTier((state) => ({...state, [e.target.name]: parseInt(e.target.value)}))
+    setUserTier((state) => ({ ...state, [e.target.name]: parseInt(e.target.value) }))
   }
 
   const handleChained = () => {
@@ -69,18 +70,18 @@ const ExtoicPage = (props) => {
 
   const checkExotics = () => {
     const dupeType = dupes[0][1].itemSubType
-    switch(dupeType) {
+    switch (dupeType) {
       case "Helmet":
-        ExoticLoop(dupes, setDupes, gauntlets, chests, legs, userTier, chained)
+        DoubleStatLoop(dupes, setDupes, gauntlets, chests, legs)
         break;
       case "Gauntlets":
-        ExoticLoop(dupes, setDupes, helmets, chests, legs, userTier, chained)
+        DoubleStatLoop(dupes, setDupes, helmets, chests, legs)
         break;
       case "Chest Armor":
-        ExoticLoop(dupes, setDupes, helmets, gauntlets, legs, userTier, chained)
+        DoubleStatLoop(dupes, setDupes, helmets, gauntlets, legs)
         break;
       case "Leg Armor":
-        ExoticLoop(dupes, setDupes, helmets, gauntlets, chests, userTier, chained)
+        DoubleStatLoop(dupes, setDupes, helmets, gauntlets, chests)
         break;
       default:
         break;
@@ -101,4 +102,4 @@ const ExtoicPage = (props) => {
   )
 }
 
-export default ExtoicPage
+export default SingleEvaluation

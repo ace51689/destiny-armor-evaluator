@@ -25,6 +25,7 @@ const GetManifest = (props) => {
         }
         return false
       }).filter((item) => {
+        //Where we can change the class for the manifest armor 0 - Titan; 1 - Hunter; 2: Warlock
         if (item[1].classType === 0) {
           return item
         }
