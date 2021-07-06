@@ -1,4 +1,5 @@
-import { apiKey } from "./store/apiKey"
+// require('dotenv').config();
+const apiKey = "3df5d6e267084bd0b2d0257b2b80215a"
 const baseURL = "https://www.bungie.net/"
 const basePlatformURL = "https://www.bungie.net/Platform/"
 
@@ -26,6 +27,7 @@ export async function getAuthToken(code) {
 }
 
 export async function getLinkedProfiles(membershipId) {
+  console.log(process.env)
   return await fetch(basePlatformURL + "Destiny2/-1/Profile/" + membershipId + "/LinkedProfiles/?getAllMemberships=true", {
     method: "GET",
     headers: {
