@@ -1,19 +1,10 @@
-const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exoticBottom, bottom, userTier, evalType) => {
-  console.log("GroupLoop")
+const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exoticBottom, bottom, userTier) => {
   //Inital loop of our chosen armor type---------------------------------------------------------------------------------------------------
+  console.log("DoubleStatLegendary")
   chosen.forEach((choice) => {
-    choice[1].pairedItems = []
     choice[1].counter = 0
-    choice[1].customTier = {
-      totalTier: 0,
-      mobility: 0,
-      resilience: 0,
-      recovery: 0,
-      discipline: 0,
-      intellect: 0,
-      strength: 0,
-    }
-
+    choice[1].pairedItems = []
+    choice[1].pairedExotics = []
     const combinations = []
 
     let choiceMobility = choice[1].stats.mobility
@@ -31,7 +22,7 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
       choiceIntellect += 2
       choiceStrength += 2
     }
-    // console.log("running")
+
     //First sub group of loops --------------------------------------------------------------------------------------------------------------
     exoticTop.forEach((top) => {
 
@@ -102,59 +93,30 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
           let intellectTier = Math.floor(intellect / 10)
           let strengthTier = Math.floor(strength / 10)
 
-          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
-
           let totalTier = mobilityTier + resilienceTier + recoveryTier + disciplineTier + intellectTier + strengthTier
 
-          if (evalType === 2) {
-            if (totalTier >= userTier.totalTier) {
-              if (mobilityTier >= userTier.mobility) {
-                if (resilienceTier >= userTier.resilience) {
-                  if (recoveryTier >= userTier.recovery) {
-                    if (disciplineTier >= userTier.discipline) {
-                      if (intellectTier >= userTier.intellect) {
-                        if (strengthTier >= userTier.strength) {
-                          choice[1].counter += 1
-                          const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
-                          const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
-                          choice[1].pairedItems.push([loadout, stats])
-                          combinations.push(finalCombination)
-                        }
-                      }
-                    }
+          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
+
+          if (totalTier >= userTier.totalTier) {
+            if (recoveryTier >= userTier.recovery) {
+              if (intellectTier >= userTier.intellect) {
+                if (recoveryTier + intellectTier >= userTier.average) {
+                  choice[1].counter += 1
+                  const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
+                  const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
+                  choice[1].pairedItems.push([loadout, stats])
+                  combinations.push(finalCombination)
+                  if (!choice[1].pairedExotics.includes(`${top[1].name}`)) {
+                    choice[1].pairedExotics.push(`${top[1].name}`)
                   }
                 }
               }
             }
           }
-          else {
-            if (totalTier >= userTier.totalTier) {
-              choice[1].customTier.totalTier += 1
-            }
-            if (mobilityTier >= userTier.mobility) {
-              choice[1].customTier.mobility += 1
-            }
-            if (resilienceTier >= userTier.resilience) {
-              choice[1].customTier.resilience += 1
-            }
-            if (recoveryTier >= userTier.recovery) {
-              choice[1].customTier.recovery += 1
-            }
-            if (disciplineTier >= userTier.discipline) {
-              choice[1].customTier.discipline += 1
-            }
-            if (intellectTier >= userTier.intellect) {
-              choice[1].customTier.intellect += 1
-            }
-            if (strengthTier >= userTier.strength) {
-              choice[1].customTier.strength += 1
-            }
-            combinations.push(finalCombination)
-          }
-
         })
       })
     })
+
     //Second sub group of loops --------------------------------------------------------------------------------------------------------------
     top.forEach((top) => {
 
@@ -225,54 +187,25 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
           let intellectTier = Math.floor(intellect / 10)
           let strengthTier = Math.floor(strength / 10)
 
-          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
-
           let totalTier = mobilityTier + resilienceTier + recoveryTier + disciplineTier + intellectTier + strengthTier
 
-          if (evalType === 2) {
-            if (totalTier >= userTier.totalTier) {
-              if (mobilityTier >= userTier.mobility) {
-                if (resilienceTier >= userTier.resilience) {
-                  if (recoveryTier >= userTier.recovery) {
-                    if (disciplineTier >= userTier.discipline) {
-                      if (intellectTier >= userTier.intellect) {
-                        if (strengthTier >= userTier.strength) {
-                          choice[1].counter += 1
-                          const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
-                          const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
-                          choice[1].pairedItems.push([loadout, stats])
-                          combinations.push(finalCombination)
-                        }
-                      }
-                    }
+          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
+        
+          if (totalTier >= userTier.totalTier) {
+            if (recoveryTier >= userTier.recovery) {
+              if (intellectTier >= userTier.intellect) {
+                if (recoveryTier + intellectTier >= userTier.average) {
+                  choice[1].counter += 1
+                  const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
+                  const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
+                  choice[1].pairedItems.push([loadout, stats])
+                  combinations.push(finalCombination)
+                  if (!choice[1].pairedExotics.includes(`${middle[1].name}`)) {
+                    choice[1].pairedExotics.push(`${middle[1].name}`)
                   }
                 }
               }
             }
-          }
-          else {
-            if (totalTier >= userTier.totalTier) {
-              choice[1].customTier.totalTier += 1
-            }
-            if (mobilityTier >= userTier.mobility) {
-              choice[1].customTier.mobility += 1
-            }
-            if (resilienceTier >= userTier.resilience) {
-              choice[1].customTier.resilience += 1
-            }
-            if (recoveryTier >= userTier.recovery) {
-              choice[1].customTier.recovery += 1
-            }
-            if (disciplineTier >= userTier.discipline) {
-              choice[1].customTier.discipline += 1
-            }
-            if (intellectTier >= userTier.intellect) {
-              choice[1].customTier.intellect += 1
-            }
-            if (strengthTier >= userTier.strength) {
-              choice[1].customTier.strength += 1
-            }
-            combinations.push(finalCombination)
           }
         })
       })
@@ -347,54 +280,25 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
           let intellectTier = Math.floor(intellect / 10)
           let strengthTier = Math.floor(strength / 10)
 
-          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
-
           let totalTier = mobilityTier + resilienceTier + recoveryTier + disciplineTier + intellectTier + strengthTier
 
-          if (evalType === 2) {
-            if (totalTier >= userTier.totalTier) {
-              if (mobilityTier >= userTier.mobility) {
-                if (resilienceTier >= userTier.resilience) {
-                  if (recoveryTier >= userTier.recovery) {
-                    if (disciplineTier >= userTier.discipline) {
-                      if (intellectTier >= userTier.intellect) {
-                        if (strengthTier >= userTier.strength) {
-                          choice[1].counter += 1
-                          const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
-                          const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
-                          choice[1].pairedItems.push([loadout, stats])
-                          combinations.push(finalCombination)
-                        }
-                      }
-                    }
+          const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
+
+          if (totalTier >= userTier.totalTier) {
+            if (recoveryTier >= userTier.recovery) {
+              if (intellectTier >= userTier.intellect) {
+                if (recoveryTier + intellectTier >= userTier.average) {
+                  choice[1].counter += 1
+                  const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
+                  const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
+                  choice[1].pairedItems.push([loadout, stats])
+                  combinations.push(finalCombination)
+                  if (!choice[1].pairedExotics.includes(`${bottom[1].name}`)) {
+                    choice[1].pairedExotics.push(`${bottom[1].name}`)
                   }
                 }
               }
             }
-          }
-          else {
-            if (totalTier >= userTier.totalTier) {
-              choice[1].customTier.totalTier += 1
-            }
-            if (mobilityTier >= userTier.mobility) {
-              choice[1].customTier.mobility += 1
-            }
-            if (resilienceTier >= userTier.resilience) {
-              choice[1].customTier.resilience += 1
-            }
-            if (recoveryTier >= userTier.recovery) {
-              choice[1].customTier.recovery += 1
-            }
-            if (disciplineTier >= userTier.discipline) {
-              choice[1].customTier.discipline += 1
-            }
-            if (intellectTier >= userTier.intellect) {
-              choice[1].customTier.intellect += 1
-            }
-            if (strengthTier >= userTier.strength) {
-              choice[1].customTier.strength += 1
-            }
-            combinations.push(finalCombination)
           }
         })
       })
@@ -402,8 +306,9 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
     const uniqueCombosSet = new Set(combinations)
     choice[1].uniqueCombos = uniqueCombosSet.size
   })
+
   const copyArmor = [...chosen]
   setChosen(copyArmor)
 }
 
-export default GroupLoop
+export default DoubleStatLegendary

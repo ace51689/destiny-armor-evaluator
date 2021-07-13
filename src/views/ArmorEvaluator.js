@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/store'
-import GroupLoop from '../components/armorLoops/GroupLoop'
+import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
+import GroupLoop from '../components/armorLoops/GroupLoop'
 import ExoticLoop from '../components/armorLoops/ExoticLoop'
+import DoubleStatLoop from '../components/armorLoops/DoubleStatLoop'
+import DoubleStatLegendary from '../Test'
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
-  const [armorType, setArmorType] = useState("Exotic Gauntlets")
-  const [chained, setChained] = useState(false)
+  const [exotic, setExotic] = useState(false)
+  const [armorType, setArmorType] = useState(1)
+  const [evalType, setEvalType] = useState(1)
   const [helmets, setHelmets] = useState([])
   const [exoticHelmets, setExoticHelmets] = useState([])
   const [gauntlets, setGauntlets] = useState([])
@@ -23,7 +27,8 @@ const ArmorEvaluator = () => {
     recovery: 0,
     discipline: 0,
     intellect: 0,
-    strength: 0
+    strength: 0,
+    average: 0
   })
 
   useEffect(() => {
@@ -89,40 +94,92 @@ const ArmorEvaluator = () => {
     setUserTier((state) => ({ ...state, [e.target.name]: parseInt(e.target.value) }))
   }
 
-  const handleChained = () => {
-    setChained(!chained)
+  const handleEvalType = (val) => {
+    setEvalType(val)
   }
 
-  const handleChangeArmor = (e) => {
-    setArmorType(e.target.value)
+  const handleArmorType = (val) => {
+    setArmorType(val)
+  }
+
+  const handleToggleExotic = (e) => {
+    setExotic(e.currentTarget.checked)
   }
 
   const evaluateArmor = () => {
     console.log(armorType)
     switch (armorType) {
-      case "Helmets":
-        GroupLoop(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, chained)
+      case 1:
+        if (exotic) {
+          if (evalType === 3) {
+            DoubleStatLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs)
+          }
+          else {
+            ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, evalType)
+          }
+        }
+        else {
+          if (evalType === 3) {
+            DoubleStatLegendary(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier)
+          }
+          else {
+            GroupLoop(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
+          }
+        }
         break;
-      case "Exotic Helmets":
-        ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, chained)
+      case 2:
+        if (exotic) {
+          if (evalType === 3) {
+            DoubleStatLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs)
+          }
+          else {
+            ExoticLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs, userTier, evalType)
+          }
+        }
+        else {
+          if (evalType === 3) {
+            DoubleStatLegendary(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier)
+          } 
+          else {
+            GroupLoop(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
+          }
+        }
         break;
-      case "Gauntlets":
-        GroupLoop(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, chained)
+      case 3:
+        if (exotic) {
+          if (evalType === 3) {
+            DoubleStatLoop(exoticChests, setExoticChests, helmets, gauntlets, legs)
+          }
+          else {
+            ExoticLoop(exoticChests, setExoticChests, helmets, gauntlets, legs, userTier, evalType)
+          }
+        }
+        else {
+          if (evalType === 3) {
+            DoubleStatLegendary(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier)
+          }
+          else {
+            GroupLoop(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, evalType)
+          }
+        }
         break;
-      case "Exotic Gauntlets":
-        ExoticLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs, userTier, chained)
-        break;
-      case "Chests":
-        GroupLoop(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, chained)
-        break;
-      case "Exotic Chests":
-        ExoticLoop(exoticChests, setExoticChests, helmets, gauntlets, legs, userTier, chained)
-        break;
-      case "Legs":
-        GroupLoop(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, chained)
-        break;
-      case "Exotic Legs":
-        ExoticLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests, userTier, chained)
+      case 4:
+        if (exotic) {
+          if (evalType === 3) {
+            DoubleStatLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests)
+          }
+          else {
+            ExoticLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests, userTier, evalType)
+          }
+        }
+        else {
+          if (evalType === 3) {
+            DoubleStatLegendary(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier)
+          }
+          else {
+            GroupLoop(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, evalType)
+          }
+        }
         break;
       default:
         break;
@@ -130,102 +187,138 @@ const ArmorEvaluator = () => {
   }
 
   switch (armorType) {
-    case "Helmets":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={helmets}
-        />
-      )
-    case "Gauntlets":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={gauntlets}
-        />
-      )
-    case "Chests":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={chests}
-        />
-      )
-    case "Legs":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={legs}
-        />
-      )
-    case "Exotic Helmets":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={exoticHelmets}
-        />
-      )
-    case "Exotic Gauntlets":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={exoticGauntlets}
-        />
-      )
-    case "Exotic Chests":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={exoticChests}
-        />
-      )
-    case "Exotic Legs":
-      return (
-        <EvaluationInterface
-          handleChained={handleChained}
-          handleChange={handleChange}
-          evaluateArmor={evaluateArmor}
-          changeArmor={handleChangeArmor}
-          chained={chained}
-          userTier={userTier}
-          chosen={exoticLegs}
-        />
-      )
+    case 1:
+      if (exotic) {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={exoticHelmets}
+          />
+        )
+      }
+      else {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={helmets}
+          />
+        )
+      }
+    case 2:
+      if (exotic) {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={exoticGauntlets}
+          />
+        )
+      }
+      else {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={gauntlets}
+          />
+        )
+      }
+    case 3:
+      if (exotic) {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={exoticChests}
+          />
+        )
+      }
+      else {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={chests}
+          />
+        )
+      }
+    case 4:
+      if (exotic) {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={exoticLegs}
+          />
+        )
+      }
+      else {
+        return (
+          <EvaluationInterface
+            handleEvalType={handleEvalType}
+            handleChange={handleChange}
+            evaluateArmor={evaluateArmor}
+            changeArmor={handleArmorType}
+            toggleExotic={handleToggleExotic}
+            armorType={armorType}
+            exotic={exotic}
+            evalType={evalType}
+            userTier={userTier}
+            chosen={legs}
+          />
+        )
+      }
     default:
       return (
         <div>

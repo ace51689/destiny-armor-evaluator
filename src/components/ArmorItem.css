@@ -1,0 +1,13 @@
+div.card {
+  flex-direction: row;
+}
+
+div.card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.card-body {
+  text-align: left;
+}

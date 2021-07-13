@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from "../store/store"
-import DoubleStatLoop from '../Tests'
+import DoubleStatLoop from "../components/armorLoops/DoubleStatLoop"
 import EvaluationInterface from '../components/EvaluationInterface'
 
 const SingleEvaluation = (props) => {

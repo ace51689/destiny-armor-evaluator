@@ -1,7 +1,9 @@
-const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, chained) => {
+const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, evalType) => {
   //This is where we can create more custom keys and initiallize their values 
+  console.log("ExoticLoop")
   exotics.forEach((exotic) => {
     exotic[1].pairedItems = []
+    exotic[1].counter = 0
     exotic[1].customTier = {
       totalTier: 0,
       mobility: 0,
@@ -10,7 +12,6 @@ const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, chained)
       discipline: 0,
       intellect: 0,
       strength: 0,
-      chained: 0
     }
 
     const combinations = []
@@ -103,7 +104,7 @@ const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, chained)
 
           let totalTier = mobilityTier + resilienceTier + recoveryTier + disciplineTier + intellectTier + strengthTier
 
-          if (chained) {
+          if (evalType === 2) {
             if (totalTier >= userTier.totalTier) {
               if (mobilityTier >= userTier.mobility) {
                 if (resilienceTier >= userTier.resilience) {
@@ -111,12 +112,10 @@ const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, chained)
                     if (disciplineTier >= userTier.discipline) {
                       if (intellectTier >= userTier.intellect) {
                         if (strengthTier >= userTier.strength) {
-                          exotic[1].customTier.chained += 1
-                          const loadout = []
-                          loadout.push(top[1].name)
-                          loadout.push(middle[1].name)
-                          loadout.push(bottom[1].name)
-                          exotic[1].pairedItems.push(loadout)
+                          exotic[1].counter += 1
+                          const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
+                          const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
+                          exotic[1].pairedItems.push([loadout, stats])
                           combinations.push(finalCombination)
                         }
                       }

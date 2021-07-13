@@ -1,24 +1,10 @@
 const DoubleStatLoop = (exotics, setExotics, top, middle, bottom) => {
-  // let startingTier = 31
-  // while (startingTier >= 30) {
-  let trackedRecovery = 0
-  //This is where we can create more custom keys and initiallize their values 
+  console.log("DoubleStatLoop")
   exotics.forEach((exotic) => {
-    exotic[1].pairedItems = []
-    // exotic[1].pairedItems.loadouts = []
-    // exotic[1].pairedItems.stats = []
-    // exotic[1].customTier = {
-    //   totalTier: 0,
-    //   mobility: 0,
-    //   resilience: 0,
-    //   recovery: 0,
-    //   discipline: 0,
-    //   intellect: 0,
-    //   strength: 0,
-    //   chained: 0
-    // }
-
-    // const combinations = []
+    let trackedRecovery = 0
+    let trackedIntellect = 0
+    exotic[1].recoveryItems = []
+    exotic[1].intellectItems = []
 
     let exoticMobility = exotic[1].stats.mobility
     let exoticResilience = exotic[1].stats.resilience
@@ -37,7 +23,6 @@ const DoubleStatLoop = (exotics, setExotics, top, middle, bottom) => {
     }
 
     top.forEach((top) => {
-      // console.log("running")
 
       let topMobility = top[1].stats.mobility
       let topResilience = top[1].stats.resilience
@@ -105,36 +90,50 @@ const DoubleStatLoop = (exotics, setExotics, top, middle, bottom) => {
           let intellectTier = Math.floor(intellect / 10)
           let strengthTier = Math.floor(strength / 10)
 
-          // const finalCombination = (873 / mobilityTier) + (1059 / resilienceTier) + (879 / recoveryTier) + (1060 / disciplineTier) + (964 / intellectTier) + (847 / strengthTier)
-
           let totalTier = mobilityTier + resilienceTier + recoveryTier + disciplineTier + intellectTier + strengthTier
 
           if (totalTier >= 30) {
             if (recoveryTier > trackedRecovery) {
               trackedRecovery = recoveryTier
-              exotic[1].pairedItems.length = 0
+              exotic[1].recoveryItems.length = 0
             }
             if (recoveryTier === trackedRecovery) {
               const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
               const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
-              exotic[1].pairedItems.push([loadout, stats])
-              // exotic[1].pairedItems.stats.push(stats)
+              exotic[1].recoveryItems.push([loadout, stats])
+            }
+          }
+
+          if (totalTier >= 30) {
+            if (intellectTier > trackedIntellect) {
+              trackedIntellect = intellectTier
+              exotic[1].intellectItems.length = 0
+            }
+            if (intellectTier === trackedIntellect) {
+              const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
+              const stats = { "mobility": mobilityTier, "resilience": resilienceTier, "recovery": recoveryTier, "discipline": disciplineTier, "intellect": intellectTier, "strength": strengthTier }
+              exotic[1].intellectItems.push([loadout, stats])
             }
           }
         })
       })
     })
-    // console.log(exotics[0][1].pairedItems.stats)
+
+    exotic[1].recoveryItems.sort((a, b) => {
+      return b[1].intellect - a[1].intellect
+    })
+
+    exotic[1].intellectItems.sort((a, b) => {
+      return b[1].recovery - a[1].recovery
+    })
+
+    let highInt = exotic[1].recoveryItems[0][1].intellect
+    let highRec = exotic[1].intellectItems[0][1].recovery
+    const recoveryGroup = exotic[1].recoveryItems.filter(group => group[1].intellect === highInt)
+    const intellectGroup = exotic[1].intellectItems.filter(group => group[1].recovery === highRec)
+    exotic[1].recoveryItems = recoveryGroup
+    exotic[1].intellectItems = intellectGroup
   })
-
-
-  exotics[0][1].pairedItems.sort((a, b) => {
-    return b[1].resilience - a[1].resilience
-  }).sort((a, b) => {
-    return b[1].intellect - a[1].intellect
-  })
-
-  console.log(exotics[0][1].pairedItems)
 
   const copyExotics = [...exotics]
   setExotics(copyExotics)
