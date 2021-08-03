@@ -4,8 +4,7 @@ import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
 import GroupLoop from '../components/armorLoops/GroupLoop'
 import ExoticLoop from '../components/armorLoops/ExoticLoop'
-import DoubleStatLoop from '../components/armorLoops/DoubleStatLoop'
-import DoubleStatLegendary from '../Test'
+import DoubleStatLegendary from '../components/armorLoops/DoubleStatLegendary'
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
@@ -107,16 +106,10 @@ const ArmorEvaluator = () => {
   }
 
   const evaluateArmor = () => {
-    console.log(armorType)
     switch (armorType) {
       case 1:
         if (exotic) {
-          if (evalType === 3) {
-            DoubleStatLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs)
-          }
-          else {
-            ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, evalType)
-          }
+          ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, evalType)
         }
         else {
           if (evalType === 3) {
@@ -129,17 +122,12 @@ const ArmorEvaluator = () => {
         break;
       case 2:
         if (exotic) {
-          if (evalType === 3) {
-            DoubleStatLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs)
-          }
-          else {
-            ExoticLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs, userTier, evalType)
-          }
+          ExoticLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs, userTier, evalType)
         }
         else {
           if (evalType === 3) {
             DoubleStatLegendary(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier)
-          } 
+          }
           else {
             GroupLoop(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
           }
@@ -147,12 +135,7 @@ const ArmorEvaluator = () => {
         break;
       case 3:
         if (exotic) {
-          if (evalType === 3) {
-            DoubleStatLoop(exoticChests, setExoticChests, helmets, gauntlets, legs)
-          }
-          else {
-            ExoticLoop(exoticChests, setExoticChests, helmets, gauntlets, legs, userTier, evalType)
-          }
+          ExoticLoop(exoticChests, setExoticChests, helmets, gauntlets, legs, userTier, evalType)
         }
         else {
           if (evalType === 3) {
@@ -165,12 +148,7 @@ const ArmorEvaluator = () => {
         break;
       case 4:
         if (exotic) {
-          if (evalType === 3) {
-            DoubleStatLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests)
-          }
-          else {
-            ExoticLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests, userTier, evalType)
-          }
+          ExoticLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests, userTier, evalType)
         }
         else {
           if (evalType === 3) {

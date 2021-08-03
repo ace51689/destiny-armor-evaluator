@@ -1,6 +1,8 @@
 import React from 'react'
 
 const CustomDisplay = (props) => {
+  let n = 0
+  
   return (
     <div>
       Total Custom Stat Loadouts: {props.item && props.item.counter}
@@ -11,7 +13,7 @@ const CustomDisplay = (props) => {
           <div>
             Loadout(s):
             {props.item.pairedItems && props.item.pairedItems.map((piece) => {
-              return <div>
+              return <div key={n += 1}>
                 {piece[0]}
                 <br />
                 {`Mobility: ${piece[1].mobility} - Resilience: ${piece[1].resilience} - Recovery: ${piece[1].recovery} - Discipline: ${piece[1].discipline} - Intellect: ${piece[1].intellect} - Strength: ${piece[1].strength}`}
@@ -20,7 +22,7 @@ const CustomDisplay = (props) => {
             <br />
           </div> :
           <div>
-            Tier {props.userTier.totalTier}: {props.item.customTier && props.item.customTier.totalTier}
+            Tier {props.userTier.totalTier}: {props.item.counter && props.item.counter}
             <br />
             Minimum {props.userTier.mobility} Mobility: {props.item.customTier && props.item.customTier.mobility}
             <br />

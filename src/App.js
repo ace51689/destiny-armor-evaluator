@@ -9,12 +9,14 @@ import ArmorEvaluator from "./views/ArmorEvaluator"
 import { Switch, Route } from "react-router-dom"
 import './App.css';
 import SingleEvaluation from "./views/SingleEvaluation"
+import Navigation from "./components/Navigation"
 
 function App() {
 
   return (
     <div className="App">
       <GetManifest />
+      <Navigation />
       <Switch>
         <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />

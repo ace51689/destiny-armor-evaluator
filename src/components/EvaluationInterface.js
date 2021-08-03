@@ -8,7 +8,7 @@ const EvaluationInterface = (props) => {
   return (
     <div>
       <ArmorToggleBar exotic={props.exotic} toggleExotic={props.toggleExotic} armorType={props.armorType} changeArmor={props.changeArmor}/>
-      <EvaluationOptions evalType={props.evalType} handleEvalType={props.handleEvalType} />
+      <EvaluationOptions evalType={props.evalType} handleEvalType={props.handleEvalType} exotic={props.exotic}/>
       <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userTier={props.userTier} />
       {
         props.chosen && props.chosen.map((choice) => (

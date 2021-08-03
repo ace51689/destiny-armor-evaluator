@@ -28,7 +28,7 @@ const ArmorItem = (props) => {
         <Card.Body>
           {
             props.item.pairedExotics && props.item.pairedExotics.map((exotic) => {
-              return <div>{exotic}</div>
+              return <div key={exotic}>{exotic}</div>
             })
           }
         </Card.Body>

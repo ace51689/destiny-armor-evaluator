@@ -86,11 +86,11 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             (choiceIntellect + topIntellect + middleIntellect + bottomIntellect + 2) / 10,
             (choiceStrength + topStrength + middleStrength + bottomStrength + 2) / 10
           ]
-          
+
           let totalTier = Math.floor(statsArr[0]) + Math.floor(statsArr[1]) + Math.floor(statsArr[2]) + Math.floor(statsArr[3]) + Math.floor(statsArr[4]) + Math.floor(statsArr[5])
 
           const tierArr = []
-          
+
           statsArr.forEach((stat) => {
             let tier = stat
             let totalTier = Math.floor(tier)
@@ -103,7 +103,7 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             }
           })
 
-          const statsObj = {"mobility": tierArr[0], "resilience": tierArr[1], "recovery": tierArr[2], "discipline": tierArr[3], "intellect": tierArr[4], "strength": tierArr[5]}
+          const statsObj = { "mobility": tierArr[0], "resilience": tierArr[1], "recovery": tierArr[2], "discipline": tierArr[3], "intellect": tierArr[4], "strength": tierArr[5] }
 
           const finalCombination = (873 / statsObj["mobility"]) + (1059 / statsObj["resilience"]) + (879 / statsObj["recovery"]) + (1060 / statsObj["discipline"]) + (964 / statsObj["intellect"]) + (847 / statsObj["strength"])
 
@@ -211,7 +211,7 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
           const statsObj = { "mobility": tierArr[0], "resilience": tierArr[1], "recovery": tierArr[2], "discipline": tierArr[3], "intellect": tierArr[4], "strength": tierArr[5] }
 
           const finalCombination = (873 / statsObj["mobility"]) + (1059 / statsObj["resilience"]) + (879 / statsObj["recovery"]) + (1060 / statsObj["discipline"]) + (964 / statsObj["intellect"]) + (847 / statsObj["strength"])
-        
+
           if (totalTier >= userTier.totalTier) {
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
