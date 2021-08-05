@@ -11,7 +11,7 @@ const AuthPage = (props) => {
   useEffect(() => {
     console.log(authCode)
     if (authCode !== null) {
-      history.push("/populate")
+      history.push("/select")
     }
     if (queryParam.includes("?code=") && authCode !== props.location.search) {
       localStorage.setItem("AUTH_CODE", props.location.search)
@@ -28,7 +28,7 @@ const AuthPage = (props) => {
                 localStorage.setItem("DESTINY_ID", res.Response.profiles[0].membershipId)
                 localStorage.setItem("MEMBER_TYPE", res.Response.profiles[0].membershipType)
                 setError("Success!")
-                history.push("/populate")
+                history.push("/select")
               }
             })
         })

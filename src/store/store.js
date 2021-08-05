@@ -1,13 +1,12 @@
 import create from "zustand"
 import { devtools, redux } from "zustand/middleware"
 
-const initialState = { staticArmor: [], userArmor: [], titan: false, hunter: false, warlock: false}
+const initialState = { staticArmor: [], userArmor: [], intrinsics: [], playerClass:"" }
 
 export const GET_ARMOR = "GETARMOR"
 export const GET_USER_ARMOR = "GETUSERARMOR"
-export const IS_TITAN = "ISTITAN"
-export const IS_HUNTER = "ISHUNTER"
-export const IS_WARLOCK = "ISWARLOCK"
+export const GET_INTRINSICS = "GETINTRINSICS"
+export const CHANGE_CLASS = "CHANGECLASS"
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -15,12 +14,10 @@ const reducer = (state, action) => {
       return { staticArmor: action.payload }
     case GET_USER_ARMOR:
       return { userArmor: action.payload }
-    case IS_TITAN:
-      return { titan: action.payload } 
-    case IS_HUNTER:
-      return { hunter: action.payload } 
-    case IS_WARLOCK:
-      return { warlock: action.payload } 
+    case GET_INTRINSICS:
+      return { intrinsics: action.payload }  
+    case CHANGE_CLASS:
+      return {playerClass: action.payload}
     default:
       return state
   }

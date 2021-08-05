@@ -2,6 +2,7 @@ import React from "react"
 import GetManifest from "./components/GetManifest"
 import GetUserArmor from "./components/GetUserArmor"
 import AuthPage from "./views/AuthPage"
+import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
 import ExoticBattle from "./views/ExoticBattle"
 import ExtoicPage from "./views/ExtoicPage"
@@ -20,6 +21,9 @@ function App() {
       <Switch>
         <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />
+        }} />
+        <Route path="/select" render={(routeProps) => {
+          return <ClassPage {...routeProps} />
         }} />
         <Route path="/populate" render={(routeProps) => {
           return <GetUserArmor {...routeProps} />

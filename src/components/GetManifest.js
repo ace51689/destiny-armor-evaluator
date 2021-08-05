@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
-import { useStore } from '../store/store'
+import { GET_ARMOR, GET_INTRINSICS, useStore } from '../store/store'
 import { getManifest, getCurrentManifest } from '../endpoints'
-import { GET_ARMOR } from "../store/store"
 
 const GetManifest = (props) => {
   const dispatch = useStore((state) => state.dispatch)
@@ -24,15 +23,32 @@ const GetManifest = (props) => {
           return item
         }
         return false
-      }).filter((item) => {
+      })
+      // .filter((item) => {
         //Where we can change the class for the manifest armor 0 - Titan; 1 - Hunter; 2: Warlock
-        if (item[1].classType === 0) {
+        // if (item[1].classType === 0) {
+        //   return item
+        // }
+        // return false
+      // })
+
+      const intrinsics = Object.entries(current.DestinyInventoryItemDefinition).filter((item) => {
+        if (item[1].plug) {
+          return item
+        }
+        return false
+      }).filter((item) => {
+        if (item[1].plug.plugCategoryIdentifier === "intrinsics") {
           return item
         }
         return false
       })
 
+      console.log(intrinsics)
+
       await dispatch({ type: GET_ARMOR, payload: armor})
+
+      await dispatch({ type: GET_INTRINSICS, payload: intrinsics})
     }
     
     if (mounted) {

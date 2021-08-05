@@ -10,6 +10,7 @@ const GetUserArmor = (props) => {
   const memberType = localStorage.getItem("MEMBER_TYPE")
   const authToken = localStorage.getItem("AUTH_TOKEN")
   const staticArmor = useStore((state) => state.staticArmor)
+  const playerClass = useStore((state) => state.playerClass)
 
   useEffect(() => {
     const armorArray = []
@@ -94,7 +95,7 @@ const GetUserArmor = (props) => {
             obj.stats.strength = statPath[4244567218].value
           })
           //This is where we can change the class of the armor we want to load-----------------------------------
-          if (obj.equippableBy === "Titan") {
+          if (obj.equippableBy === playerClass) {
             itemArray.push(obj)
             armorArray.push(itemArray)
           }
@@ -103,7 +104,7 @@ const GetUserArmor = (props) => {
         dispatch({ type: GET_USER_ARMOR, payload: armorArray })
         history.push("/main")
       })
-  }, [authToken, destinyId, dispatch, history, memberType, staticArmor])
+  }, [authToken, destinyId, dispatch, history, memberType, staticArmor, playerClass])
 
   return (
     <div>
