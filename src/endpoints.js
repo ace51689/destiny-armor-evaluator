@@ -47,7 +47,7 @@ export async function getProfile(destinyMemberId, memberType, token) {
 }
 
 export async function getItem(destinyMemberId, memberType, itemInstanceId) {
-  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Item/" + itemInstanceId + "/?components=304", {
+  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Item/" + itemInstanceId + "/?components=304,305", {
     method: "GET",
     headers: {
       "x-api-key": apiKey,
