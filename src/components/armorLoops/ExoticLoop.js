@@ -1,6 +1,5 @@
 const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, evalType) => {
   //This is where we can create more custom keys and initiallize their values 
-  console.log("ExoticLoop")
   exotics.forEach((exotic) => {
     exotic[1].pairedItems = []
     exotic[1].counter = 0
@@ -15,75 +14,39 @@ const ExoticLoop = (exotics, setExotics, top, middle, bottom, userTier, evalType
 
     const combinations = []
 
-    let exoticMobility = exotic[1].stats.mobility
-    let exoticResilience = exotic[1].stats.resilience
-    let exoticRecovery = exotic[1].stats.recovery
-    let exoticDiscipline = exotic[1].stats.discipline
-    let exoticIntellect = exotic[1].stats.intellect
-    let exoticStrength = exotic[1].stats.strength
-
-    if (!exotic[1].isMasterworked) {
-      exoticMobility += 2
-      exoticResilience += 2
-      exoticRecovery += 2
-      exoticDiscipline += 2
-      exoticIntellect += 2
-      exoticStrength += 2
-    }
+    let exoticMobility = exotic[1].stats.mobility + 2
+    let exoticResilience = exotic[1].stats.resilience + 2
+    let exoticRecovery = exotic[1].stats.recovery + 2
+    let exoticDiscipline = exotic[1].stats.discipline + 2
+    let exoticIntellect = exotic[1].stats.intellect + 2
+    let exoticStrength = exotic[1].stats.strength + 2
 
     top.forEach((top) => {
 
-      let topMobility = top[1].stats.mobility
-      let topResilience = top[1].stats.resilience
-      let topRecovery = top[1].stats.recovery
-      let topDiscipline = top[1].stats.discipline
-      let topIntellect = top[1].stats.intellect
-      let topStrength = top[1].stats.strength
-
-      if (!top[1].isMasterworked) {
-        topMobility += 2
-        topResilience += 2
-        topRecovery += 2
-        topDiscipline += 2
-        topIntellect += 2
-        topStrength += 2
-      }
+      let topMobility = top[1].stats.mobility + 2
+      let topResilience = top[1].stats.resilience + 2
+      let topRecovery = top[1].stats.recovery + 2
+      let topDiscipline = top[1].stats.discipline + 2
+      let topIntellect = top[1].stats.intellect + 2
+      let topStrength = top[1].stats.strength + 2
 
       middle.forEach((middle) => {
 
-        let middleMobility = middle[1].stats.mobility
-        let middleResilience = middle[1].stats.resilience
-        let middleRecovery = middle[1].stats.recovery
-        let middleDiscipline = middle[1].stats.discipline
-        let middleIntellect = middle[1].stats.intellect
-        let middleStrength = middle[1].stats.strength
-
-        if (!middle[1].isMasterworked) {
-          middleMobility += 2
-          middleResilience += 2
-          middleRecovery += 2
-          middleDiscipline += 2
-          middleIntellect += 2
-          middleStrength += 2
-        }
+        let middleMobility = middle[1].stats.mobility + 2
+        let middleResilience = middle[1].stats.resilience + 2
+        let middleRecovery = middle[1].stats.recovery + 2
+        let middleDiscipline = middle[1].stats.discipline + 2
+        let middleIntellect = middle[1].stats.intellect + 2
+        let middleStrength = middle[1].stats.strength + 2
 
         bottom.forEach((bottom) => {
 
-          let bottomMobility = bottom[1].stats.mobility
-          let bottomResilience = bottom[1].stats.resilience
-          let bottomRecovery = bottom[1].stats.recovery
-          let bottomDiscipline = bottom[1].stats.discipline
-          let bottomIntellect = bottom[1].stats.intellect
-          let bottomStrength = bottom[1].stats.strength
-
-          if (!bottom[1].isMasterworked) {
-            bottomMobility += 2
-            bottomResilience += 2
-            bottomRecovery += 2
-            bottomDiscipline += 2
-            bottomIntellect += 2
-            bottomStrength += 2
-          }
+          let bottomMobility = bottom[1].stats.mobility + 2
+          let bottomResilience = bottom[1].stats.resilience + 2
+          let bottomRecovery = bottom[1].stats.recovery + 2
+          let bottomDiscipline = bottom[1].stats.discipline + 2
+          let bottomIntellect = bottom[1].stats.intellect + 2
+          let bottomStrength = bottom[1].stats.strength + 2
 
           const statsArr = [
             (exoticMobility + topMobility + middleMobility + bottomMobility + 2) / 10,

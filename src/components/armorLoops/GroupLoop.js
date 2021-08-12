@@ -22,69 +22,33 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
     let choiceIntellect = choice[1].stats.intellect
     let choiceStrength = choice[1].stats.strength
 
-    if (!choice[1].isMasterworked) {
-      choiceMobility += 2
-      choiceResilience += 2
-      choiceRecovery += 2
-      choiceDiscipline += 2
-      choiceIntellect += 2
-      choiceStrength += 2
-    }
-    // console.log("running")
     //First sub group of loops --------------------------------------------------------------------------------------------------------------
     exoticTop.forEach((top) => {
 
-      let topMobility = top[1].stats.mobility
-      let topResilience = top[1].stats.resilience
-      let topRecovery = top[1].stats.recovery
-      let topDiscipline = top[1].stats.discipline
-      let topIntellect = top[1].stats.intellect
-      let topStrength = top[1].stats.strength
-
-      if (!top[1].isMasterworked) {
-        topMobility += 2
-        topResilience += 2
-        topRecovery += 2
-        topDiscipline += 2
-        topIntellect += 2
-        topStrength += 2
-      }
+      let topMobility = top[1].stats.mobility + 2
+      let topResilience = top[1].stats.resilience + 2
+      let topRecovery = top[1].stats.recovery + 2
+      let topDiscipline = top[1].stats.discipline + 2
+      let topIntellect = top[1].stats.intellect + 2
+      let topStrength = top[1].stats.strength + 2
 
       middle.forEach((middle) => {
 
-        let middleMobility = middle[1].stats.mobility
-        let middleResilience = middle[1].stats.resilience
-        let middleRecovery = middle[1].stats.recovery
-        let middleDiscipline = middle[1].stats.discipline
-        let middleIntellect = middle[1].stats.intellect
-        let middleStrength = middle[1].stats.strength
-
-        if (!middle[1].isMasterworked) {
-          middleMobility += 2
-          middleResilience += 2
-          middleRecovery += 2
-          middleDiscipline += 2
-          middleIntellect += 2
-          middleStrength += 2
-        }
+        let middleMobility = middle[1].stats.mobility + 2
+        let middleResilience = middle[1].stats.resilience + 2
+        let middleRecovery = middle[1].stats.recovery + 2
+        let middleDiscipline = middle[1].stats.discipline + 2
+        let middleIntellect = middle[1].stats.intellect + 2
+        let middleStrength = middle[1].stats.strength + 2
 
         bottom.forEach((bottom) => {
 
-          let bottomMobility = bottom[1].stats.mobility
-          let bottomResilience = bottom[1].stats.resilience
-          let bottomRecovery = bottom[1].stats.recovery
-          let bottomDiscipline = bottom[1].stats.discipline
-          let bottomIntellect = bottom[1].stats.intellect
-          let bottomStrength = bottom[1].stats.strength
-
-          if (!bottom[1].isMasterworked) {
-            bottomMobility += 2
-            bottomResilience += 2
-            bottomRecovery += 2
-            bottomDiscipline += 2
-            bottomIntellect += 2
-            bottomStrength += 2
-          }
+          let bottomMobility = bottom[1].stats.mobility + 2
+          let bottomResilience = bottom[1].stats.resilience + 2
+          let bottomRecovery = bottom[1].stats.recovery + 2
+          let bottomDiscipline = bottom[1].stats.discipline + 2
+          let bottomIntellect = bottom[1].stats.intellect + 2
+          let bottomStrength = bottom[1].stats.strength + 2
 
           //This is where we'll have to do some of the evaluations, at the end of each sub group--------------------------------------------
           const statsArr = [
@@ -171,57 +135,30 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
     //Second sub group of loops --------------------------------------------------------------------------------------------------------------
     top.forEach((top) => {
 
-      let topMobility = top[1].stats.mobility
-      let topResilience = top[1].stats.resilience
-      let topRecovery = top[1].stats.recovery
-      let topDiscipline = top[1].stats.discipline
-      let topIntellect = top[1].stats.intellect
-      let topStrength = top[1].stats.strength
-
-      if (!top[1].isMasterworked) {
-        topMobility += 2
-        topResilience += 2
-        topRecovery += 2
-        topDiscipline += 2
-        topIntellect += 2
-        topStrength += 2
-      }
+      let topMobility = top[1].stats.mobility + 2
+      let topResilience = top[1].stats.resilience + 2
+      let topRecovery = top[1].stats.recovery + 2
+      let topDiscipline = top[1].stats.discipline + 2
+      let topIntellect = top[1].stats.intellect + 2
+      let topStrength = top[1].stats.strength + 2
 
       exoticMiddle.forEach((middle) => {
 
-        let middleMobility = middle[1].stats.mobility
-        let middleResilience = middle[1].stats.resilience
-        let middleRecovery = middle[1].stats.recovery
-        let middleDiscipline = middle[1].stats.discipline
-        let middleIntellect = middle[1].stats.intellect
-        let middleStrength = middle[1].stats.strength
-
-        if (!middle[1].isMasterworked) {
-          middleMobility += 2
-          middleResilience += 2
-          middleRecovery += 2
-          middleDiscipline += 2
-          middleIntellect += 2
-          middleStrength += 2
-        }
+        let middleMobility = middle[1].stats.mobility + 2
+        let middleResilience = middle[1].stats.resilience + 2
+        let middleRecovery = middle[1].stats.recovery + 2
+        let middleDiscipline = middle[1].stats.discipline + 2
+        let middleIntellect = middle[1].stats.intellect + 2
+        let middleStrength = middle[1].stats.strength + 2
 
         bottom.forEach((bottom) => {
 
-          let bottomMobility = bottom[1].stats.mobility
-          let bottomResilience = bottom[1].stats.resilience
-          let bottomRecovery = bottom[1].stats.recovery
-          let bottomDiscipline = bottom[1].stats.discipline
-          let bottomIntellect = bottom[1].stats.intellect
-          let bottomStrength = bottom[1].stats.strength
-
-          if (!bottom[1].isMasterworked) {
-            bottomMobility += 2
-            bottomResilience += 2
-            bottomRecovery += 2
-            bottomDiscipline += 2
-            bottomIntellect += 2
-            bottomStrength += 2
-          }
+          let bottomMobility = bottom[1].stats.mobility + 2
+          let bottomResilience = bottom[1].stats.resilience + 2
+          let bottomRecovery = bottom[1].stats.recovery + 2
+          let bottomDiscipline = bottom[1].stats.discipline + 2
+          let bottomIntellect = bottom[1].stats.intellect + 2
+          let bottomStrength = bottom[1].stats.strength + 2
 
           //This is where we'll have to likely do some of the evaluations, at the end of each sub group---------------------------------------
           const statsArr = [
@@ -305,57 +242,30 @@ const GroupLoop = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exot
     //Third sub group of loops --------------------------------------------------------------------------------------------------------------
     top.forEach((top) => {
 
-      let topMobility = top[1].stats.mobility
-      let topResilience = top[1].stats.resilience
-      let topRecovery = top[1].stats.recovery
-      let topDiscipline = top[1].stats.discipline
-      let topIntellect = top[1].stats.intellect
-      let topStrength = top[1].stats.strength
-
-      if (!top[1].isMasterworked) {
-        topMobility += 2
-        topResilience += 2
-        topRecovery += 2
-        topDiscipline += 2
-        topIntellect += 2
-        topStrength += 2
-      }
+      let topMobility = top[1].stats.mobility + 2
+      let topResilience = top[1].stats.resilience + 2
+      let topRecovery = top[1].stats.recovery + 2
+      let topDiscipline = top[1].stats.discipline + 2
+      let topIntellect = top[1].stats.intellect + 2
+      let topStrength = top[1].stats.strength + 2
 
       middle.forEach((middle) => {
 
-        let middleMobility = middle[1].stats.mobility
-        let middleResilience = middle[1].stats.resilience
-        let middleRecovery = middle[1].stats.recovery
-        let middleDiscipline = middle[1].stats.discipline
-        let middleIntellect = middle[1].stats.intellect
-        let middleStrength = middle[1].stats.strength
-
-        if (!middle[1].isMasterworked) {
-          middleMobility += 2
-          middleResilience += 2
-          middleRecovery += 2
-          middleDiscipline += 2
-          middleIntellect += 2
-          middleStrength += 2
-        }
+        let middleMobility = middle[1].stats.mobility + 2
+        let middleResilience = middle[1].stats.resilience + 2
+        let middleRecovery = middle[1].stats.recovery + 2
+        let middleDiscipline = middle[1].stats.discipline + 2
+        let middleIntellect = middle[1].stats.intellect + 2
+        let middleStrength = middle[1].stats.strength + 2
 
         exoticBottom.forEach((bottom) => {
 
-          let bottomMobility = bottom[1].stats.mobility
-          let bottomResilience = bottom[1].stats.resilience
-          let bottomRecovery = bottom[1].stats.recovery
-          let bottomDiscipline = bottom[1].stats.discipline
-          let bottomIntellect = bottom[1].stats.intellect
-          let bottomStrength = bottom[1].stats.strength
-
-          if (!bottom[1].isMasterworked) {
-            bottomMobility += 2
-            bottomResilience += 2
-            bottomRecovery += 2
-            bottomDiscipline += 2
-            bottomIntellect += 2
-            bottomStrength += 2
-          }
+          let bottomMobility = bottom[1].stats.mobility + 2
+          let bottomResilience = bottom[1].stats.resilience + 2
+          let bottomRecovery = bottom[1].stats.recovery + 2
+          let bottomDiscipline = bottom[1].stats.discipline + 2
+          let bottomIntellect = bottom[1].stats.intellect + 2
+          let bottomStrength = bottom[1].stats.strength + 2
 
           //This is where we'll have to likely do some of the evaluations, at the end of each sub group---------------------------------------
           const statsArr = [

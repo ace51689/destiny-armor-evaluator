@@ -10,6 +10,7 @@ const GetUserArmor = (props) => {
   const memberType = localStorage.getItem("MEMBER_TYPE")
   const authToken = localStorage.getItem("AUTH_TOKEN")
   const staticArmor = useStore((state) => state.staticArmor)
+  const intrinsics = useStore((state) => state.intrinsics)
   const playerClass = useStore((state) => state.playerClass)
 
   useEffect(() => {
@@ -27,7 +28,6 @@ const GetUserArmor = (props) => {
             masterArray.push(item)
           })
         })
-        // console.log(masterArray)
         Object.entries(res.Response.itemComponents.instances.data).filter((item) => {
           if (item[1].primaryStat !== undefined) {
             return item
@@ -50,11 +50,30 @@ const GetUserArmor = (props) => {
           })
           staticArmor.forEach((staticItem) => {
             if (staticItem[0] === (obj.itemHash).toString()) {
-              // console.log("success")
               obj.name = staticItem[1].displayProperties.name
               obj.itemSubType = staticItem[1].itemTypeDisplayName
               obj.itemTier = staticItem[1].inventory.tierTypeName
               obj.icon = staticItem[1].displayProperties.icon
+              obj.categoryHash = staticItem[1].itemCategoryHashes[1]
+              
+              obj.stats = {}
+              obj.stats.mobility = 0
+              obj.stats.recovery = 0
+              obj.stats.resilience = 0
+              obj.stats.discipline = 0
+              obj.stats.intellect = 0
+              obj.stats.strength = 0
+              const statsPath = staticItem[1].stats.stats
+              if (statsPath[2996146975]) {
+                obj.stats.mobility += statsPath[2996146975].value
+              }
+              if (statsPath[392767087]) {
+                obj.stats.resilience += statsPath[392767087].value
+              }
+              if (statsPath[1943323491]) {
+                obj.stats.recovery += statsPath[1943323491].value
+              }
+              
               switch (staticItem[1].classType) {
                 case 0:
                   obj.equippableBy = "Titan"
@@ -83,28 +102,47 @@ const GetUserArmor = (props) => {
             obj.energyType = "Arc"
           }
 
-          // console.log(itemArray)
           getItem(destinyId, memberType, item[0]).then((res) => {
-            const statPath = res.Response.stats.data.stats
-            obj.stats = {}
-            obj.stats.intellect = statPath[144602215].value
-            obj.stats.resilience = statPath[392767087].value
-            obj.stats.discipline = statPath[1735777505].value
-            obj.stats.recovery = statPath[1943323491].value
-            obj.stats.mobility = statPath[2996146975].value
-            obj.stats.strength = statPath[4244567218].value
+            // const statPath = res.Response.stats.data.stats
+            const intrinsicsPath = res.Response.sockets.data.sockets
+            const tops = [intrinsicsPath[6], intrinsicsPath[7]]
+            const bottoms = [intrinsicsPath[8], intrinsicsPath[9]]
+            tops.forEach((hash) => {
+              if (hash !== undefined && hash.isEnabled) {
+                const intrinsic = intrinsics.find(item => item[0] === hash.plugHash.toString())
+                if (intrinsic !== undefined) {
+                  const investmentStats = intrinsic[1].investmentStats
+                  // console.log(investmentStats)
+                  obj.stats.mobility += investmentStats[0].value
+                  obj.stats.recovery += investmentStats[1].value
+                  obj.stats.resilience += investmentStats[2].value
+                }      
+              }
+            })
+
+            bottoms.forEach((hash) => {
+              if (hash !== undefined && hash.isEnabled) {
+                const intrinsic = intrinsics.find(item => item[0] === hash.plugHash.toString())
+                if (intrinsic !== undefined) {
+                  const investmentStats = intrinsic[1].investmentStats
+                  // console.log(investmentStats)
+                  obj.stats.discipline += investmentStats[0].value
+                  obj.stats.intellect += investmentStats[1].value
+                  obj.stats.strength += investmentStats[2].value
+                }      
+              }
+            })
           })
           //This is where we can change the class of the armor we want to load-----------------------------------
-          if (obj.equippableBy === playerClass) {
+          if (obj.equippableBy === playerClass && obj.categoryHash !== 49) {
             itemArray.push(obj)
             armorArray.push(itemArray)
           }
         })
-        // console.log(armorArray)
         dispatch({ type: GET_USER_ARMOR, payload: armorArray })
         history.push("/main")
       })
-  }, [authToken, destinyId, dispatch, history, memberType, staticArmor, playerClass])
+  }, [authToken, destinyId, dispatch, history, memberType, staticArmor, playerClass, intrinsics])
 
   return (
     <div>

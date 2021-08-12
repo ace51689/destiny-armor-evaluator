@@ -113,6 +113,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
+            console.log("Helmet double stat loop")
             DoubleStatLegendary(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier)
           }
           else {
