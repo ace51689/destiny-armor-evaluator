@@ -6,12 +6,12 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
     choice[1].pairedExotics = []
     const combinations = []
 
-    let choiceMobility = choice[1].stats.mobility += 2
-    let choiceResilience = choice[1].stats.resilience += 2
-    let choiceRecovery = choice[1].stats.recovery += 2
-    let choiceDiscipline = choice[1].stats.discipline += 2
-    let choiceIntellect = choice[1].stats.intellect += 2
-    let choiceStrength = choice[1].stats.strength += 2
+    let choiceMobility = choice[1].stats.mobility + 2
+    let choiceResilience = choice[1].stats.resilience + 2
+    let choiceRecovery = choice[1].stats.recovery + 2
+    let choiceDiscipline = choice[1].stats.discipline + 2
+    let choiceIntellect = choice[1].stats.intellect + 2
+    let choiceStrength = choice[1].stats.strength + 2
 
     //First sub group of loops --------------------------------------------------------------------------------------------------------------
     exoticTop.forEach((top) => {
@@ -50,6 +50,8 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             (choiceIntellect + topIntellect + middleIntellect + bottomIntellect + 2) / 10,
             (choiceStrength + topStrength + middleStrength + bottomStrength + 2) / 10
           ]
+
+          console.log(statsArr)
           
           let totalTier = Math.floor(statsArr[0]) + Math.floor(statsArr[1]) + Math.floor(statsArr[2]) + Math.floor(statsArr[3]) + Math.floor(statsArr[4]) + Math.floor(statsArr[5])
 
@@ -250,7 +252,9 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
   })
 
   const copyArmor = [...chosen]
+  // console.log(copyArmor)
   setChosen(copyArmor)
+
 }
 
 export default DoubleStatLegendary
