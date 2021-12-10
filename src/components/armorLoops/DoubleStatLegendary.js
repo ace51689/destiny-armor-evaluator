@@ -50,8 +50,6 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             (choiceIntellect + topIntellect + middleIntellect + bottomIntellect + 2) / 10,
             (choiceStrength + topStrength + middleStrength + bottomStrength + 2) / 10
           ]
-
-          console.log(statsArr)
           
           let totalTier = Math.floor(statsArr[0]) + Math.floor(statsArr[1]) + Math.floor(statsArr[2]) + Math.floor(statsArr[3]) + Math.floor(statsArr[4]) + Math.floor(statsArr[5])
 
@@ -77,13 +75,34 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
+                  // console.log(top[1].name)
                   choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
-                  const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
+                  const stats = { 
+                                  "mobility": statsObj["mobility"], 
+                                  "resilience": statsObj["resilience"], 
+                                  "recovery": statsObj["recovery"], 
+                                  "discipline": statsObj["discipline"], 
+                                  "intellect": statsObj["intellect"], 
+                                  "strength": statsObj["strength"] 
+                                }
                   choice[1].pairedItems.push([loadout, stats])
                   combinations.push(finalCombination)
                   if (!choice[1].pairedExotics.includes(`${top[1].name}`)) {
                     choice[1].pairedExotics.push(`${top[1].name}`)
+                  } else {
+                    // console.log(choice[1].pairedItems)
+                    const found = choice[1].pairedItems.filter((combination) => {
+                      if (combination[0].includes(`${top[1].name}`)) {
+                        return combination
+                      }
+                      return false
+                    })
+                    // console.log(found)
+                    // const index = combinations.indexOf(found)
+                    if (found[0][1]["recovery"] >= statsObj["recovery"] && found[0][1]["intellect"] >= statsObj["intellect"]) {
+                      console.log(found)
+                    }
                   }
                 }
               }
@@ -155,6 +174,7 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
+                  // console.log(middle[1].name)
                   choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
                   const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
@@ -162,6 +182,19 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
                   combinations.push(finalCombination)
                   if (!choice[1].pairedExotics.includes(`${middle[1].name}`)) {
                     choice[1].pairedExotics.push(`${middle[1].name}`)
+                  } else {
+                    // console.log(choice[1].pairedItems)
+                    const found = choice[1].pairedItems.filter((combination) => {
+                      if (combination[0].includes(`${middle[1].name}`)) {
+                        return combination
+                      }
+                      return false
+                    })
+                    // console.log(found)
+                    // const index = combinations.indexOf(found)
+                    if (found[0][1]["recovery"] >= statsObj["recovery"] && found[0][1]["intellect"] >= statsObj["intellect"]) {
+                      console.log(found)
+                    }
                   }
                 }
               }
@@ -232,6 +265,7 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
+                  // console.log(bottom[1].name)
                   choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
                   const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
@@ -239,6 +273,20 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
                   combinations.push(finalCombination)
                   if (!choice[1].pairedExotics.includes(`${bottom[1].name}`)) {
                     choice[1].pairedExotics.push(`${bottom[1].name}`)
+                  } else {
+                    // console.log(choice[1].pairedItems)
+                    const found = choice[1].pairedItems.filter((combination) => {
+                      if (combination[0].includes(`${bottom[1].name}`)) {
+                        return combination
+                      }
+                      return false
+                    })
+                    // console.log(found)
+                    // const index = combinations.indexOf(found)
+                    // console.log(found[1][1]["recovery"])
+                    if (found[0][1]["recovery"] >= statsObj["recovery"] && found[0][1]["intellect"] >= statsObj["intellect"]) {
+                      console.log(found)
+                    }
                   }
                 }
               }

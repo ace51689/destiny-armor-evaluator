@@ -12,13 +12,19 @@ const CustomDisplay = (props) => {
         props.evalType > 1 ?
           <div>
             Loadout(s):
-            {props.item.pairedItems && props.item.pairedItems.map((piece) => {
+            {props.item.pairedItems && props.item.pairedItems.filter((piece) => {
+              if (piece[0].toLowerCase().includes(props.specific.toLowerCase())) {
+                return piece
+              }
+              return false
+            }).map((piece) => {
               return <div key={n += 1}>
                 {piece[0]}
                 <br />
                 {`Mobility: ${piece[1].mobility} - Resilience: ${piece[1].resilience} - Recovery: ${piece[1].recovery} - Discipline: ${piece[1].discipline} - Intellect: ${piece[1].intellect} - Strength: ${piece[1].strength}`}
               </div>
-            })}
+            })
+            }
             <br />
           </div> :
           <div>

@@ -16,7 +16,6 @@ function App() {
 
   return (
     <div className="App">
-      <GetManifest />
       <Navigation />
       <Switch>
         <Route exact path="/" render={(routeProps) => {
@@ -24,6 +23,9 @@ function App() {
         }} />
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
+        }} />
+        <Route path="/manifest" render={(routeProps) => {
+          return <GetManifest {...routeProps} />
         }} />
         <Route path="/populate" render={(routeProps) => {
           return <GetUserArmor {...routeProps} />

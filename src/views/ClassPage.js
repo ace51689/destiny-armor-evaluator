@@ -10,15 +10,15 @@ const ClassPage = () => {
     <div>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Titan" })
-        history.push("/populate")
+        history.push("/manifest")
         }}>Titan</button>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Hunter" })
-        history.push("/populate")
+        history.push("/manifest")
         }}>Hunter</button>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Warlock" })
-        history.push("/populate")
+        history.push("/manifest")
         }}>Warlock</button>
     </div>
   )

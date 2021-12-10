@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { GET_ARMOR, GET_INTRINSICS, useStore } from '../store/store'
 import { getManifest, getCurrentManifest } from '../endpoints'
 
 const GetManifest = (props) => {
   const dispatch = useStore((state) => state.dispatch)
-  // const manifestArmor = useStore((state) => state.armor)
+  const playerClass = useStore((state) => state.playerClass)
+  const history = useHistory()
 
   useEffect(() => {
-    let mounted = true
 
     const gettingTheManifest = async () => {
       const manifest = await getManifest()
@@ -15,6 +16,17 @@ const GetManifest = (props) => {
 
       const armor = Object.entries(current.DestinyInventoryItemDefinition).filter((item) => {
         if (item[1].itemType === 2) {
+          return item
+        }
+        return false
+      }).filter((item) => {
+        if (playerClass === "Titan" && item[1].classType === 0) {
+          return item
+        }
+        if (playerClass === "Hunter" && item[1].classType === 1) {
+          return item
+        }
+        if (playerClass === "Warlock" && item[1].classType === 2) {
           return item
         }
         return false
@@ -42,24 +54,22 @@ const GetManifest = (props) => {
         return false
       })
 
-      console.log(intrinsics)
-
       await dispatch({ type: GET_ARMOR, payload: armor })
 
       await dispatch({ type: GET_INTRINSICS, payload: intrinsics })
+
+      history.push("/populate")
     }
 
-    if (mounted) {
-      gettingTheManifest()
-    }
+    gettingTheManifest()
 
-    return () => {
-      mounted = false
-    }
+  }, [dispatch, history, playerClass])
 
-  }, [dispatch])
-
-  return null
+  return (
+    <div>
+      Loading Destiny Manifest...
+    </div>
+  )
 }
 
 export default GetManifest

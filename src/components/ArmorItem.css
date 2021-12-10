@@ -11,3 +11,10 @@ div.card-header {
 div.card-body {
   text-align: left;
 }
+
+div.resize.card-body {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  /* width: 75px; */
+}

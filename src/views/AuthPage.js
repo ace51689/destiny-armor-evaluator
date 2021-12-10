@@ -15,6 +15,7 @@ const AuthPage = (props) => {
     }
     if (queryParam.includes("?code=") && authCode !== props.location.search) {
       localStorage.setItem("AUTH_CODE", props.location.search)
+      console.log(queryParam.replace("?", ""))
       getAuthToken(queryParam.replace("?", ""))
         .then((res) => {
           if (Object.keys(res).includes("error")) {
