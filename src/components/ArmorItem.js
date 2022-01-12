@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from "react-router-dom"
 import { Card } from "react-bootstrap"
 import CustomDisplay from './CustomDisplay'
 import "./ArmorItem.css"
 
 const ArmorItem = (props) => {
-  const [check, setCheck] = useState(false)
-  const [display, setDisplay] = useState(true)
+  // const [check, setCheck] = useState(false)
+  // const [display, setDisplay] = useState(true)
 
-  const handleChange = (e) => {
-    setCheck(!e.target.value)
-  }
+  // const handleChange = (e) => {
+  //   setCheck(!e.target.value)
+  // }
 
   return (
-    display ?
+    // display ?
       <li>
         <Card>
           <Card.Header>
@@ -21,7 +21,7 @@ const ArmorItem = (props) => {
               <Card.Img style={{ width: "90px" }} src={"https://www.bungie.net" + props.item.icon} alt="" />
             </Link>
           </Card.Header>
-          <Card.Body>
+          <Card.Body id='item-info'>
             Name: <Link to={"/evaluate/" + props.item.itemHash}>{props.item.name}</Link>
             <br />
             Power Level: {props.item.powerLevel}
@@ -33,7 +33,7 @@ const ArmorItem = (props) => {
             Energy: {props.item.energyCapacity}
 
           </Card.Body>
-          <Card.Body>
+          {/* <Card.Body>
             {
               props.item.pairedExotics && props.item.pairedExotics.filter((exotic) => {
                 if (exotic.toLowerCase().includes(props.specific)) {
@@ -44,24 +44,24 @@ const ArmorItem = (props) => {
                 return <div key={exotic}>{exotic} <input onChange={handleChange} type="checkbox" value={check} /></div>
               })
             }
-          </Card.Body>
-          <Card.Body>
+          </Card.Body> */}
+          <Card.Body id='loadouts'>
             <CustomDisplay item={props.item} evalType={props.evalType} userTier={props.userTier} specific={props.specific} />
           </Card.Body>
-          <Card.Body className="resize">
+          {/* <Card.Body className="resize">
             <button onClick={() => setDisplay(!display)}>-</button>
-          </Card.Body>
+          </Card.Body> */}
         </Card>
       </li>
-      :
-      <li>
-        <Card>
-          <Card.Body>Name: <Link to={"/evaluate/" + props.item.itemHash}>{props.item.name}</Link></Card.Body>
-          <Card.Body className="resize">
-            <button onClick={() => setDisplay(!display)}>+</button>
-          </Card.Body>
-        </Card>
-      </li>
+      // :
+      // <li>
+      //   <Card>
+      //     <Card.Body>Name: <Link to={"/evaluate/" + props.item.itemHash}>{props.item.name}</Link></Card.Body>
+      //     <Card.Body className="resize">
+      //       <button onClick={() => setDisplay(!display)}>+</button>
+      //     </Card.Body>
+      //   </Card>
+      // </li>
   )
 }
 

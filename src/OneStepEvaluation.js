@@ -1,5 +1,8 @@
 const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, middle, exoticBottom, bottom, userTier) => {
   //Inital loop of our chosen armor type---------------------------------------------------------------------------------------------------
+  const exoticTopArray = []
+  const exoticMiddleArray = []
+  const exoticBottomArray = []
   chosen.forEach((choice) => {
     choice[1].counter = 0
     choice[1].pairedItems = []
@@ -51,7 +54,7 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             (choiceStrength + topStrength + middleStrength + bottomStrength + 2) / 10
           ]
 
-          console.log(statsArr)
+          // console.log(statsArr)
 
           let totalTier = Math.floor(statsArr[0]) + Math.floor(statsArr[1]) + Math.floor(statsArr[2]) + Math.floor(statsArr[3]) + Math.floor(statsArr[4]) + Math.floor(statsArr[5])
 
@@ -77,40 +80,43 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
-                  choice[1].counter += 1
+                  // choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
                   const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
-                  choice[1].pairedItems.push([loadout, stats])
+                  exoticTopArray.push([loadout, stats])
                   combinations.push(finalCombination)
-                  if (!choice[1].pairedExotics.includes(`${top[1].name}`)) {
-                    choice[1].pairedExotics.push(`${top[1].name}`)
-                  }
+                  // if (!choice[1].pairedExotics.includes(`${top[1].name}`)) {
+                  //   choice[1].pairedExotics.push(`${top[1].name}`)
+                  // }
                 }
               }
             }
           }
+          console.log(exoticTopArray)
         })
       })
     })
 
     //Second sub group of loops --------------------------------------------------------------------------------------------------------------
-    top.forEach((top) => {
+    exoticMiddle.forEach((middle) => {
 
-      let topMobility = top[1].stats.mobility + 2
-      let topResilience = top[1].stats.resilience + 2
-      let topRecovery = top[1].stats.recovery + 2
-      let topDiscipline = top[1].stats.discipline + 2
-      let topIntellect = top[1].stats.intellect + 2
-      let topStrength = top[1].stats.strength + 2
 
-      exoticMiddle.forEach((middle) => {
+      let middleMobility = middle[1].stats.mobility + 2
+      let middleResilience = middle[1].stats.resilience + 2
+      let middleRecovery = middle[1].stats.recovery + 2
+      let middleDiscipline = middle[1].stats.discipline + 2
+      let middleIntellect = middle[1].stats.intellect + 2
+      let middleStrength = middle[1].stats.strength + 2
 
-        let middleMobility = middle[1].stats.mobility + 2
-        let middleResilience = middle[1].stats.resilience + 2
-        let middleRecovery = middle[1].stats.recovery + 2
-        let middleDiscipline = middle[1].stats.discipline + 2
-        let middleIntellect = middle[1].stats.intellect + 2
-        let middleStrength = middle[1].stats.strength + 2
+      top.forEach((top) => {
+
+        let topMobility = top[1].stats.mobility + 2
+        let topResilience = top[1].stats.resilience + 2
+        let topRecovery = top[1].stats.recovery + 2
+        let topDiscipline = top[1].stats.discipline + 2
+        let topIntellect = top[1].stats.intellect + 2
+        let topStrength = top[1].stats.strength + 2
+
 
         bottom.forEach((bottom) => {
 
@@ -155,48 +161,50 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
-                  choice[1].counter += 1
+                  // choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
                   const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
-                  choice[1].pairedItems.push([loadout, stats])
+                  exoticMiddleArray.push([loadout, stats])
                   combinations.push(finalCombination)
-                  if (!choice[1].pairedExotics.includes(`${middle[1].name}`)) {
-                    choice[1].pairedExotics.push(`${middle[1].name}`)
-                  }
+                  // if (!choice[1].pairedExotics.includes(`${middle[1].name}`)) {
+                  //   choice[1].pairedExotics.push(`${middle[1].name}`)
+                  // }
                 }
               }
             }
           }
         })
       })
+      console.log(exoticMiddleArray)
     })
     //Third sub group of loops --------------------------------------------------------------------------------------------------------------
-    top.forEach((top) => {
+    exoticBottom.forEach((bottom) => {
 
-      let topMobility = top[1].stats.mobility + 2
-      let topResilience = top[1].stats.resilience + 2
-      let topRecovery = top[1].stats.recovery + 2
-      let topDiscipline = top[1].stats.discipline + 2
-      let topIntellect = top[1].stats.intellect + 2
-      let topStrength = top[1].stats.strength + 2
+      let bottomMobility = bottom[1].stats.mobility + 2
+      let bottomResilience = bottom[1].stats.resilience + 2
+      let bottomRecovery = bottom[1].stats.recovery + 2
+      let bottomDiscipline = bottom[1].stats.discipline + 2
+      let bottomIntellect = bottom[1].stats.intellect + 2
+      let bottomStrength = bottom[1].stats.strength + 2
 
-      middle.forEach((middle) => {
+      top.forEach((top) => {
 
-        let middleMobility = middle[1].stats.mobility + 2
-        let middleResilience = middle[1].stats.resilience + 2
-        let middleRecovery = middle[1].stats.recovery + 2
-        let middleDiscipline = middle[1].stats.discipline + 2
-        let middleIntellect = middle[1].stats.intellect + 2
-        let middleStrength = middle[1].stats.strength + 2
+        let topMobility = top[1].stats.mobility + 2
+        let topResilience = top[1].stats.resilience + 2
+        let topRecovery = top[1].stats.recovery + 2
+        let topDiscipline = top[1].stats.discipline + 2
+        let topIntellect = top[1].stats.intellect + 2
+        let topStrength = top[1].stats.strength + 2
 
-        exoticBottom.forEach((bottom) => {
+        middle.forEach((middle) => {
 
-          let bottomMobility = bottom[1].stats.mobility + 2
-          let bottomResilience = bottom[1].stats.resilience + 2
-          let bottomRecovery = bottom[1].stats.recovery + 2
-          let bottomDiscipline = bottom[1].stats.discipline + 2
-          let bottomIntellect = bottom[1].stats.intellect + 2
-          let bottomStrength = bottom[1].stats.strength + 2
+          let middleMobility = middle[1].stats.mobility + 2
+          let middleResilience = middle[1].stats.resilience + 2
+          let middleRecovery = middle[1].stats.recovery + 2
+          let middleDiscipline = middle[1].stats.discipline + 2
+          let middleIntellect = middle[1].stats.intellect + 2
+          let middleStrength = middle[1].stats.strength + 2
+
 
           //This is where we'll have to likely do some of the evaluations, at the end of each sub group---------------------------------------
           const statsArr = [
@@ -232,36 +240,37 @@ const DoubleStatLegendary = (chosen, setChosen, exoticTop, top, exoticMiddle, mi
             if (statsObj["recovery"] >= userTier.recovery) {
               if (statsObj["intellect"] >= userTier.intellect) {
                 if (statsObj["recovery"] + statsObj["intellect"] >= userTier.average) {
-                  choice[1].counter += 1
+                  // choice[1].counter += 1
                   const loadout = `Tier ${totalTier}: ${top[1].name} - ${middle[1].name} - ${bottom[1].name}`
                   const stats = { "mobility": statsObj["mobility"], "resilience": statsObj["resilience"], "recovery": statsObj["recovery"], "discipline": statsObj["discipline"], "intellect": statsObj["intellect"], "strength": statsObj["strength"] }
-                  choice[1].pairedItems.push([loadout, stats])
+                  exoticBottomArray.push([loadout, stats])
                   combinations.push(finalCombination)
-                  if (!choice[1].pairedExotics.includes(`${bottom[1].name}`)) {
-                    choice[1].pairedExotics.push(`${bottom[1].name}`)
-                  }
+                  // if (!choice[1].pairedExotics.includes(`${bottom[1].name}`)) {
+                  //   choice[1].pairedExotics.push(`${bottom[1].name}`)
+                  // }
                 }
               }
             }
           }
         })
       })
+      console.log(exoticBottomArray)
     })
     const uniqueCombosSet = new Set(combinations)
     choice[1].uniqueCombos = uniqueCombosSet.size
 
-    function sortHelper() {
-      
-    }
+    // function sortHelper() {
 
-    choice[1].pairedItems.sort((item) => {
-      return item[1].intellect
-    })
+    // }
+
+    // choice[1].pairedItems.sort((item) => {
+    //   return item[1].intellect
+    // })
   })
 
-  const copyArmor = [...chosen]
+  // const copyArmor = [...chosen]
   // console.log(copyArmor)
-  setChosen(copyArmor)
+  // setChosen(copyArmor)
 
 }
 

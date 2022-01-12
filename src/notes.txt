@@ -1,0 +1,14 @@
+For each exotic:
+  1) Save loadouts that match or surpass user imput.
+  2) Sort loadouts by important stats (Int, Rec, etc.)
+  3) Starting at 0 compare each loadout in the following order:
+    - Combined Intellect & Recovery
+    - Intellect
+    - Recovery
+    - Total Tier
+    - Combined Discipline & Resilience
+    - Discipline
+    - Resilience
+    - Combined Mobility & Strength 
+    - Strength
+    - Mobility

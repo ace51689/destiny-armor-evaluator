@@ -4,7 +4,8 @@ import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
 import GroupLoop from '../components/armorLoops/GroupLoop'
 import ExoticLoop from '../components/armorLoops/ExoticLoop'
-import DoubleStatLegendary from '../components/armorLoops/DoubleStatLegendary'
+import DoubleStatLegendary from '../OneStepEvaluation'
+import LegendaryHelmetEvaluation from '../Test'
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
@@ -19,6 +20,7 @@ const ArmorEvaluator = () => {
   const [exoticChests, setExoticChests] = useState([])
   const [legs, setLegs] = useState([])
   const [exoticLegs, setExoticLegs] = useState([])
+  const [noLoadouts, setNoLoadouts] = useState([])
   const [userTier, setUserTier] = useState({
     totalTier: 30,
     mobility: 0,
@@ -113,8 +115,8 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            console.log("Helmet double stat loop")
-            DoubleStatLegendary(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier)
+            // console.log("Helmet double stat loop")
+            LegendaryHelmetEvaluation(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
@@ -196,6 +198,7 @@ const ArmorEvaluator = () => {
             evalType={evalType}
             userTier={userTier}
             chosen={helmets}
+            noLoadouts={noLoadouts}
           />
         )
       }

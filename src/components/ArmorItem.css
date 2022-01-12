@@ -5,7 +5,12 @@ div.card {
 div.card-header {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  width: 10vw;
+}
+
+img.card-img {
+  padding-top: 20px;
 }
 
 div.card-body {
@@ -17,4 +22,23 @@ div.resize.card-body {
   justify-content: flex-end;
   align-items: flex-start;
   /* width: 75px; */
+}
+
+div.loadout {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+div.loadout-display {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div#item-info.card-body {
+  width: 30vw;
+}
+
+div#loadouts.card-body {
+  width: 60vw;
 }

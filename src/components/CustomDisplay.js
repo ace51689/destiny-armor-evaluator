@@ -1,32 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const CustomDisplay = (props) => {
+  const [display, setDisplay] = useState(false)
+
   let n = 0
-  
+
   return (
-    <div>
-      Total Custom Stat Loadouts: {props.item && props.item.counter}
-      <br />
-      Unique Stat Combinations: {props.item.uniqueCombos && props.item.uniqueCombos}
+    <div >
+      <div className='loadout-display'>
+        Top Loadouts: {props.item && props.item.counter}
+        &nbsp;
+        {
+          display ?
+            <button className='loadout-toggle' onClick={() => setDisplay(!display)}>Hide Loadouts</button>
+            :
+            <button className='loadout-toggle' onClick={() => setDisplay(!display)}>Show Loadouts</button>
+        }
+        <br />
+      </div>
+      {/* Unique Stat Combinations: {props.item.uniqueCombos && props.item.uniqueCombos} */}
       {
         props.evalType > 1 ?
+          display &&
           <div>
             Loadout(s):
-            {props.item.pairedItems && props.item.pairedItems.filter((piece) => {
-              if (piece[0].toLowerCase().includes(props.specific.toLowerCase())) {
-                return piece
-              }
-              return false
-            }).map((piece) => {
-              return <div key={n += 1}>
-                {piece[0]}
-                <br />
-                {`Mobility: ${piece[1].mobility} - Resilience: ${piece[1].resilience} - Recovery: ${piece[1].recovery} - Discipline: ${piece[1].discipline} - Intellect: ${piece[1].intellect} - Strength: ${piece[1].strength}`}
-              </div>
-            })
+            {props.item.loadouts && props.item.loadouts
+              // .filter((piece) => {
+              //   if (piece[0].toLowerCase().includes(props.specific.toLowerCase())) {
+              //     return piece
+              //   }
+              //   return false
+              // })
+              .map((piece) => {
+                return <div className="loadout" key={n += 1}>
+                  {piece.loadout}
+                  <br />
+                  {`Mobility: ${piece.stats.mobility} - Resilience: ${piece.stats.resilience} - Recovery: ${piece.stats.recovery} - Discipline: ${piece.stats.discipline} - Intellect: ${piece.stats.intellect} - Strength: ${piece.stats.strength}`}
+                </div>
+              })
             }
+
             <br />
-          </div> :
+
+          </div>
+
+          :
           <div>
             Tier {props.userTier.totalTier}: {props.item.counter && props.item.counter}
             <br />
