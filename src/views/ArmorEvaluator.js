@@ -4,7 +4,7 @@ import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
 import GroupLoop from '../components/armorLoops/GroupLoop'
 import ExoticLoop from '../components/armorLoops/ExoticLoop'
-import DoubleStatLegendary from '../OneStepEvaluation'
+// import DoubleStatLegendary from '../OneStepEvaluation'
 import LegendaryHelmetEvaluation from '../Test'
 
 const ArmorEvaluator = () => {
@@ -129,7 +129,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            DoubleStatLegendary(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier)
+            LegendaryHelmetEvaluation(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
@@ -142,7 +142,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            DoubleStatLegendary(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier)
+            LegendaryHelmetEvaluation(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, evalType)
@@ -155,7 +155,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            DoubleStatLegendary(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier)
+            LegendaryHelmetEvaluation(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, evalType)
@@ -232,6 +232,7 @@ const ArmorEvaluator = () => {
             evalType={evalType}
             userTier={userTier}
             chosen={gauntlets}
+            noLoadouts={noLoadouts}
           />
         )
       }
@@ -265,6 +266,7 @@ const ArmorEvaluator = () => {
             evalType={evalType}
             userTier={userTier}
             chosen={chests}
+            noLoadouts={noLoadouts}
           />
         )
       }
@@ -298,6 +300,7 @@ const ArmorEvaluator = () => {
             evalType={evalType}
             userTier={userTier}
             chosen={legs}
+            noLoadouts={noLoadouts}
           />
         )
       }

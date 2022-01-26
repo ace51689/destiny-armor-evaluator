@@ -33,7 +33,7 @@ const CustomDisplay = (props) => {
               // })
               .map((piece) => {
                 return <div className="loadout" key={n += 1}>
-                  {piece.loadout}
+                  {`${piece.loadout} --- Score: ${piece.stats.score}`}
                   <br />
                   {`Mobility: ${piece.stats.mobility} - Resilience: ${piece.stats.resilience} - Recovery: ${piece.stats.recovery} - Discipline: ${piece.stats.discipline} - Intellect: ${piece.stats.intellect} - Strength: ${piece.stats.strength}`}
                 </div>
