@@ -11,7 +11,7 @@ const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
   const [exotic, setExotic] = useState(false)
   const [armorType, setArmorType] = useState(1)
-  const [evalType, setEvalType] = useState(1)
+  const [evalType, setEvalType] = useState(3)
   const [helmets, setHelmets] = useState([])
   const [exoticHelmets, setExoticHelmets] = useState([])
   const [gauntlets, setGauntlets] = useState([])
@@ -25,11 +25,11 @@ const ArmorEvaluator = () => {
     totalTier: 30,
     mobility: 0,
     resilience: 0,
-    recovery: 0,
+    recovery: 8,
     discipline: 0,
-    intellect: 0,
+    intellect: 8,
     strength: 0,
-    average: 0
+    average: 16
   })
 
   useEffect(() => {
@@ -61,6 +61,18 @@ const ArmorEvaluator = () => {
         legsArray.push(armor)
       }
     })
+
+    const sortArray = (array) => {
+      array.sort((a, b) => {
+        return (b[1].stats.intellect + b[1].stats.recovery) - (a[1].stats.intellect + a[1].stats.recovery)
+      })
+    }
+
+    sortArray(helmetsArray)
+    sortArray(gauntletsArray)
+    sortArray(chestsArray)
+    sortArray(legsArray)
+
     setHelmets(helmetsArray)
     setGauntlets(gauntletsArray)
     setChests(chestsArray)
@@ -85,10 +97,17 @@ const ArmorEvaluator = () => {
         exoticLegsArray.push(armor)
       }
     })
+
+    sortArray(exoticHelmetsArray)
+    sortArray(exoticGauntletsArray)
+    sortArray(exoticChestsArray)
+    sortArray(exoticLegsArray)
+
     setExoticHelmets(exoticHelmetsArray)
     setExoticGauntlets(exoticGauntletsArray)
     setExoticChests(exoticChestsArray)
     setExoticLegs(exoticLegsArray)
+    
   }, [userArmor, setHelmets, setGauntlets, setChests, setLegs])
 
   const handleChange = (e) => {

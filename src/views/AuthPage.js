@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from "react-router-dom"
+// import DragAndDrop from '../components/DragAndDrop'
 import { getAuthToken, getLinkedProfiles } from '../endpoints'
 
 const AuthPage = (props) => {
@@ -40,6 +41,7 @@ const AuthPage = (props) => {
     return (
       <div className="App">
         <a href="https://www.bungie.net/en/OAuth/Authorize?client_id=36791&response_type=code">Login with Bungie.net</a>
+        {/* <DragAndDrop /> */}
       </div>
     )
   } else {
