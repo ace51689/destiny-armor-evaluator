@@ -27,7 +27,7 @@ export async function getAuthToken(code) {
 }
 
 export async function getLinkedProfiles(membershipId) {
-  console.log(process.env)
+  // console.log(process.env)
   return await fetch(basePlatformURL + "Destiny2/-1/Profile/" + membershipId + "/LinkedProfiles/?getAllMemberships=true", {
     method: "GET",
     headers: {
@@ -37,7 +37,7 @@ export async function getLinkedProfiles(membershipId) {
 }
 
 export async function getProfile(destinyMemberId, memberType, token) {
-  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=102,201,205,300", {
+  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=100,102,200,201,205,300", {
     method: "GET",
     headers: {
       "x-api-key": apiKey,
@@ -52,6 +52,16 @@ export async function getItem(destinyMemberId, memberType, itemInstanceId) {
     headers: {
       "x-api-key": apiKey,
       // Authorization: "Bearer " + token
+    },
+  }).then((res) => res.json())
+}
+
+export async function getVendors(memberType, destinyMemberId, characterId, token) {
+  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Character/" + characterId + "/Vendors/?components=402,304", {
+    method: "GET",
+    headers: {
+      "x-api-key": apiKey,
+      Authorization: "Bearer " + token
     },
   }).then((res) => res.json())
 }

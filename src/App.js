@@ -1,6 +1,7 @@
 import React from "react"
 import GetManifest from "./components/GetManifest"
 import GetUserArmor from "./components/GetUserArmor"
+import GetVendorArmor from "./components/GetVendorArmor"
 import AuthPage from "./views/AuthPage"
 import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
@@ -29,6 +30,9 @@ function App() {
         }} />
         <Route path="/populate" render={(routeProps) => {
           return <GetUserArmor {...routeProps} />
+        }} />
+        <Route path="/populate-vendor" render={(routeProps) => {
+          return <GetVendorArmor {...routeProps} />
         }} />
         <Route path="/main" render={(routeProps) => {
           return <Main {...routeProps} />

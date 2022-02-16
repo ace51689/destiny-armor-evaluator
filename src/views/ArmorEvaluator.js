@@ -5,7 +5,8 @@ import EvaluationInterface from '../components/EvaluationInterface'
 import GroupLoop from '../components/armorLoops/GroupLoop'
 import ExoticLoop from '../components/armorLoops/ExoticLoop'
 // import DoubleStatLegendary from '../OneStepEvaluation'
-import LegendaryHelmetEvaluation from '../Test'
+import LegendaryHelmetEvaluation from '../Test2'
+// import exoticEvaluation from '../ExoticEvalTest'
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
@@ -131,11 +132,14 @@ const ArmorEvaluator = () => {
       case 1:
         if (exotic) {
           ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, evalType)
+          // exoticEvaluation(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, setNoLoadouts)
         }
         else {
           if (evalType === 3) {
             // console.log("Helmet double stat loop")
-            LegendaryHelmetEvaluation(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, setNoLoadouts)
+            //(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
+            // LegendaryHelmetEvaluation(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, setNoLoadouts)
+            LegendaryHelmetEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(helmets, setHelmets, exoticGauntlets, gauntlets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
@@ -148,7 +152,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            LegendaryHelmetEvaluation(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, setNoLoadouts)
+            LegendaryHelmetEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(gauntlets, setGauntlets, exoticHelmets, helmets, exoticChests, chests, exoticLegs, legs, userTier, evalType)
@@ -161,7 +165,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            LegendaryHelmetEvaluation(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, setNoLoadouts)
+            LegendaryHelmetEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(chests, setChests, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticLegs, legs, userTier, evalType)
@@ -174,7 +178,7 @@ const ArmorEvaluator = () => {
         }
         else {
           if (evalType === 3) {
-            LegendaryHelmetEvaluation(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, setNoLoadouts)
+            LegendaryHelmetEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
           }
           else {
             GroupLoop(legs, setLegs, exoticHelmets, helmets, exoticGauntlets, gauntlets, exoticChests, chests, userTier, evalType)
