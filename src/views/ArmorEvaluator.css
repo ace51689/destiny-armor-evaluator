@@ -12,3 +12,29 @@ div#unused-exotic {
   padding-right: 6px;
   padding-left: 6px;
 }
+
+div.selectable-stat-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  padding-right: 10vw;
+}
+
+input#stat-input {
+  width: 45px;
+}
+
+div#stat-groups {
+  display: flex;
+  width: 20vw;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+ul.armor-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 0px;
+}

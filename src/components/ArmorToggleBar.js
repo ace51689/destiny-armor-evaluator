@@ -5,6 +5,7 @@ const ArmorToggleBar = (props) => {
 
   return (
     <div>
+
       <ToggleButton
         type="checkbox"
         variant="secondary"
@@ -20,6 +21,17 @@ const ArmorToggleBar = (props) => {
         <ToggleButton value={3}>Chest Armor</ToggleButton>
         <ToggleButton value={4}>Leg Armor</ToggleButton>
       </ToggleButtonGroup>
+      &nbsp;
+      <ToggleButton
+        type="checkbox"
+        variant="secondary"
+        checked={props.showVendor}
+        value="1"
+        onChange={props.toggleVendor}
+      >
+        Show Vendor
+      </ToggleButton>
+
     </div>
   )
 }

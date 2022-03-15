@@ -110,7 +110,7 @@ const GetUserArmor = () => {
           //This is where we can change the class of the armor we want to load-----------------------------------
           if (playerClass === obj.equippableBy) {
             getItem(destinyId, memberType, item[0]).then((res) => {
-              console.log("counter")
+              // console.log("counter")
               // const statPath = res.Response.stats.data.stats
               if (res.Response !== undefined) {
                 const intrinsicsPath = res.Response.sockets.data.sockets
@@ -162,7 +162,12 @@ const GetUserArmor = () => {
               return
           }
         }
-
+        // console.log(classes)
+        // console.log(`Member Type: ${memberType}`)
+        // console.log(`Destiny ID: ${destinyId}`)
+        // console.log(`Class ID: ${getClassId()}`)
+        // console.log(`Auth Token: ${authToken}`)
+        
         getVendors(memberType, destinyId, getClassId(), authToken)
           .then((res) => {
             // console.log(res.Response)
@@ -185,7 +190,7 @@ const GetUserArmor = () => {
             })
 
             // console.log(staticArmor)
-            console.log(Object.values(releventVendorStats[0][1].stats)[0])
+            // console.log(Object.values(releventVendorStats[0][1].stats)[0])
 
             releventVendorSales.forEach((vendor) => {
               const saleItems = Object.values(vendor[1].saleItems)
@@ -281,11 +286,11 @@ const GetUserArmor = () => {
               })
             })
           })
-        console.log(armorArray)
+        // console.log(armorArray)
         dispatch({ type: GET_USER_ARMOR, payload: armorArray })
         history.push("/main")
       })
-  }, [authToken, destinyId, dispatch, history, memberType, staticArmor, playerClass, intrinsics, classes.titan, classes.hunter, classes.warlock])
+  }, [authToken, destinyId, dispatch, history, memberType, staticArmor, playerClass, intrinsics, classes])
 
   return (
     <div>

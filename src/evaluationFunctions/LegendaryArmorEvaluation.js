@@ -591,9 +591,57 @@ export const processingLeftoverLoadouts = (exoticLoadout, topArray, middleArray,
   }
 }
 
-const LegendaryHelmetEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts) => {
+const filterOutVendorExotics = (exoticArray) => {
+  return exoticArray.filter((exotic) => exotic[1].vendor === undefined)
+}
+
+const filterOutVendorDupes = (legendaryArray, dupeItems) => {
+  //IF there are itentical stat rolls in the array AND IF at least one of them is owned THEN filter out the vendor pieces.
+  const copyArray = [...legendaryArray]
+  const vendorItems = copyArray.filter((item) => item[1].vendor !== undefined)
+  const ownedItems = copyArray.filter((item) => item[1].vendor === undefined)
+
+  const dupeItemHashes = []
+  ownedItems.forEach((item) => {
+    const dupeStatItem = vendorItems.find((dupe) => {
+      const mobility = dupe[1].stats.mobility === item[1].stats.mobility
+      const resilience = dupe[1].stats.resilience === item[1].stats.resilience
+      const recovery = dupe[1].stats.recovery === item[1].stats.recovery
+      const discipline = dupe[1].stats.discipline === item[1].stats.discipline
+      const intellect = dupe[1].stats.intellect === item[1].stats.intellect
+      const strength = dupe[1].stats.strength === item[1].stats.strength
+
+      if (mobility && resilience && recovery && discipline && intellect && strength) {
+        return dupe
+      }
+      return false
+    })
+    if (dupeStatItem !== undefined) {
+      dupeItemHashes.push(dupeStatItem[0])
+      dupeItems.push(dupeStatItem)
+    }
+  })
+
+  const releventVendorItems = vendorItems.filter((item) => !dupeItemHashes.includes(item[0]))
+
+  return [...ownedItems, ...releventVendorItems]
+}
+
+const addBackDupeVendorItems = (releventArray, dupeArray) => {
+  if (dupeArray.length > 0) {
+    dupeArray.forEach((dupe) => {
+      releventArray.push(dupe)
+    })
+  }
+}
+
+const LegendaryArmorEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts) => {
   const noLoadouts = []
   const tieLoadouts = []
+  const dupeHelmets = []
+  const dupeGauntlets = []
+  const dupeChests = []
+  const dupeLegs = []
 
   //Reset counters and necessary arrays to 0 and empty respectfully
   resetEvaluation(helmets)
@@ -601,42 +649,57 @@ const LegendaryHelmetEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets
   resetEvaluation(chests)
   resetEvaluation(legs)
 
+  const filteredExoticHelmets = filterOutVendorExotics(exoticHelmets)
+  const filteredExoticGauntlets = filterOutVendorExotics(exoticGauntlets)
+  const filteredExoticChests = filterOutVendorExotics(exoticChests)
+  const filteredExoticLegs = filterOutVendorExotics(exoticLegs)
+
+  const releventHelmets = filterOutVendorDupes(helmets, dupeHelmets)
+  const releventGauntlets = filterOutVendorDupes(gauntlets, dupeGauntlets)
+  const releventChests = filterOutVendorDupes(chests, dupeChests)
+  const releventLegs = filterOutVendorDupes(legs, dupeLegs)
+
   //Firts we start with Exotic Helmets...
-  calculateStats(exoticHelmets, gauntlets, chests, legs, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticHelmets, releventGauntlets, releventChests, releventLegs, userTier, noLoadouts, tieLoadouts)
 
   //First we start with Exotic Gauntlets...
-  calculateStats(exoticGauntlets, helmets, chests, legs, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticGauntlets, releventHelmets, releventChests, releventLegs, userTier, noLoadouts, tieLoadouts)
 
   //Next we go through all the Exotic Chests...
-  calculateStats(exoticChests, helmets, gauntlets, legs, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticChests, releventHelmets, releventGauntlets, releventLegs, userTier, noLoadouts, tieLoadouts)
 
   //Lastly we go through the Exotic Legs...
-  calculateStats(exoticLegs, helmets, gauntlets, chests, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticLegs, releventHelmets, releventGauntlets, releventChests, userTier, noLoadouts, tieLoadouts)
 
-  //Here is where we'll eventually setHelmets and maybe some other housekeeping stuff...
+  //Here is where we'll eventually setArmor and maybe some other housekeeping stuff...
   tieLoadouts.forEach((exoticLoadout) => {
     const armorInfoArray = []
     if (exoticLoadout[0].exoticType === "Helmet") {
-      processingLeftoverLoadouts(exoticLoadout, gauntlets, chests, legs, armorInfoArray, tieLoadouts)
+      processingLeftoverLoadouts(exoticLoadout, releventGauntlets, releventChests, releventLegs, armorInfoArray, tieLoadouts)
     }
     if (exoticLoadout[0].exoticType === "Gauntlets") {
-      processingLeftoverLoadouts(exoticLoadout, helmets, chests, legs, armorInfoArray, tieLoadouts)
+      processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventChests, releventLegs, armorInfoArray, tieLoadouts)
     }
     if (exoticLoadout[0].exoticType === "Chest Armor") {
-      processingLeftoverLoadouts(exoticLoadout, helmets, gauntlets, legs, armorInfoArray, tieLoadouts)
+      processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventGauntlets, releventLegs, armorInfoArray, tieLoadouts)
     }
     if (exoticLoadout[0].exoticType === "Leg Armor") {
-      processingLeftoverLoadouts(exoticLoadout, helmets, gauntlets, chests, armorInfoArray, tieLoadouts)
+      processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventGauntlets, releventChests, armorInfoArray, tieLoadouts)
     }
   })
 
+  addBackDupeVendorItems(releventHelmets, dupeHelmets)
+  addBackDupeVendorItems(releventGauntlets, dupeGauntlets)
+  addBackDupeVendorItems(releventChests, dupeChests)
+  addBackDupeVendorItems(releventLegs, dupeLegs)
+
   //Sort and set each Armor array...
-  organizeAndSetArray(helmets, setHelmets)
-  organizeAndSetArray(gauntlets, setGauntlets)
-  organizeAndSetArray(chests, setChests)
-  organizeAndSetArray(legs, setLegs)
+  organizeAndSetArray(releventHelmets, setHelmets)
+  organizeAndSetArray(releventGauntlets, setGauntlets)
+  organizeAndSetArray(releventChests, setChests)
+  organizeAndSetArray(releventLegs, setLegs)
 
   setNoLoadouts(noLoadouts)
 }
 
-export default LegendaryHelmetEvaluation
+export default LegendaryArmorEvaluation

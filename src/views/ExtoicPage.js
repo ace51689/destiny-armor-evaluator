@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/store'
-import ExoticLoop from '../components/armorLoops/ExoticLoop'
+import ExoticLoop from '../evaluationFunctions/ExoticLoop'
 import EvaluationInterface from '../components/EvaluationInterface'
 
 const ExtoicPage = (props) => {

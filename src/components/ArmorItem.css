@@ -1,17 +1,19 @@
 div.card {
   flex-direction: row;
+  width: 96vw;
+  margin-bottom: 5px;
 }
 
 div.card-header {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 10vw;
 }
 
-img.card-img {
+/* img.card-img {
   padding-top: 20px;
-}
+} */
 
 div.card-body {
   text-align: left;
