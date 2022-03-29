@@ -19,6 +19,8 @@ div.selectable-stat-group {
   align-items: center;
   justify-content: space-evenly;
   padding-right: 10vw;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 input#stat-input {
@@ -37,4 +39,8 @@ ul.armor-list {
   flex-direction: column;
   align-items: center;
   padding-left: 0px;
+}
+
+div.armor-toggle-bar {
+  padding-top: 5px;
 }

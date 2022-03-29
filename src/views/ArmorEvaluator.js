@@ -25,11 +25,11 @@ const ArmorEvaluator = () => {
     totalTier: 30,
     mobility: 1,
     resilience: 1,
-    recovery: 8,
+    recovery: 1,
     discipline: 1,
-    intellect: 8,
+    intellect: 1,
     strength: 1,
-    average: 16
+    average: 10
   })
 
   useEffect(() => {

@@ -8,6 +8,7 @@ const ClassPage = () => {
   
   return (
     <div>
+      <h4>Select the class you would like to analyze:</h4>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Titan" })
         history.push("/manifest")

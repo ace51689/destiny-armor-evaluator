@@ -14,7 +14,7 @@ const EvaluationInterface = (props) => {
 
   return (
     <div>
-      <ArmorToggleBar exotic={props.exotic} toggleExotic={props.toggleExotic} showVendor={props.showVendor} toggleVendor={props.toggleVendor} armorType={props.armorType} changeArmor={props.changeArmor} />
+      <ArmorToggleBar exotic={props.exotic} toggleExotic={props.toggleExotic} showVendor={props.showVendor} toggleVendor={props.toggleVendor} armorType={props.armorType} changeArmor={props.changeArmor} evaluateArmor={props.evaluateArmor} />
       <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userTier={props.userTier} />
       <div className='no-loadouts-display'>
         {(props.noLoadouts && props.noLoadouts.length > 0) && <div>No Applicable Loadouts for:</div>}

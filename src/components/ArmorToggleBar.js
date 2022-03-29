@@ -1,10 +1,10 @@
 import React from 'react'
-import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap'
+import { ToggleButtonGroup, ToggleButton, Button } from 'react-bootstrap'
 
 const ArmorToggleBar = (props) => {
 
   return (
-    <div>
+    <div className="armor-toggle-bar">
 
       <ToggleButton
         type="checkbox"
@@ -31,6 +31,8 @@ const ArmorToggleBar = (props) => {
       >
         Show Vendor
       </ToggleButton>
+      &nbsp;
+      <Button variant="success" onClick={props.evaluateArmor}>Evaluate Loadouts</Button>
 
     </div>
   )
