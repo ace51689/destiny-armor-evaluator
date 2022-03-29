@@ -1,9 +1,9 @@
 const apiKey = process.env.REACT_APP_API_KEY
+const clientId = process.env.REACT_APP_CLIENT_ID
 const baseURL = "https://www.bungie.net/"
 const basePlatformURL = "https://www.bungie.net/Platform/"
 
 export async function getManifest() {
-  // console.log(process.env)
   return await fetch(basePlatformURL + "Destiny2/Manifest", {
     method: "GET",
     headers: {
@@ -22,12 +22,11 @@ export async function getAuthToken(code) {
   return await fetch(basePlatformURL + "app/oauth/token/", {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `client_id=36791&grant_type=authorization_code&${code}`
+    body: `client_id=${clientId}&grant_type=authorization_code&${code}`
   }).then((res) => res.json())
 }
 
 export async function getLinkedProfiles(membershipId) {
-  // console.log(process.env)
   return await fetch(basePlatformURL + "Destiny2/-1/Profile/" + membershipId + "/LinkedProfiles/?getAllMemberships=true", {
     method: "GET",
     headers: {
@@ -51,7 +50,6 @@ export async function getItem(destinyMemberId, memberType, itemInstanceId) {
     method: "GET",
     headers: {
       "x-api-key": apiKey,
-      // Authorization: "Bearer " + token
     },
   }).then((res) => res.json())
 }
