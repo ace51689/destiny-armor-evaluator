@@ -5,6 +5,7 @@ import { getAuthToken, getLinkedProfiles, getProfile } from '../endpoints'
 import { useStore, GET_CLASSES } from '../store/store'
 
 const AuthPage = (props) => {
+  const clientId = process.env.REACT_APP_CLIENT_ID
   const [error, setError] = useState("")
   const dispatch = useStore((state) => state.dispatch)
   const authCode = localStorage.getItem("AUTH_CODE")
@@ -90,7 +91,7 @@ const AuthPage = (props) => {
       <div className="App">
         <h1>Destiny Armor Evaluator</h1>
         <h4>An easy way to clean your vault without fear of losing high Recovery/Intellect loadouts.</h4>
-        <a href="https://www.bungie.net/en/OAuth/Authorize?client_id=36791&response_type=code">Login with Bungie.net</a>
+        <a href={`https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=codeLoginwithBungie.net`}></a>
         {/* <DragAndDrop /> */}
       </div>
     )
