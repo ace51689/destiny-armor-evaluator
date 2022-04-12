@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { useStore, GET_USER_ARMOR, CHANGE_CLASS } from './store/store'
-import { gettingUserArmor } from './Test2'
+import { useStore, GET_USER_ARMOR, CHANGE_CLASS } from '../store/store'
+import { demoArmor } from '../DemoArmor'
 import { useHistory } from 'react-router-dom'
 
-function Test() {
+function DemoPopulate() {
   const history = useHistory()
   const dispatch = useStore((state) => state.dispatch)
-  const destinyId = localStorage.getItem("DESTINY_ID")
-  const memberType = localStorage.getItem("MEMBER_TYPE")
-  const authToken = localStorage.getItem("AUTH_TOKEN")
+  // const destinyId = localStorage.getItem("DESTINY_ID")
+  // const memberType = localStorage.getItem("MEMBER_TYPE")
+  // const authToken = localStorage.getItem("AUTH_TOKEN")
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     if (mounted) {
-      gettingUserArmor(destinyId, memberType, authToken, setLoading).then((array) => {
-        // console.log(array)
-        dispatch({ type: GET_USER_ARMOR, payload: array })
-      })
+      dispatch({ type: GET_USER_ARMOR, payload: demoArmor })
+      setLoading(false)
     }
-    
-    if(!mounted) {
+
+    if (!mounted) {
       setMounted(true)
     }
 
-  }, [mounted, destinyId, memberType, authToken, dispatch])
+  }, [mounted, dispatch])
 
   if (loading) {
     return (
@@ -52,4 +50,4 @@ function Test() {
   }
 }
 
-export default Test
+export default DemoPopulate

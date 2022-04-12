@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useStore, GET_USER_ARMOR, CHANGE_CLASS } from './store/store'
-import { gettingUserArmor } from './Test2'
+import { useStore, GET_USER_ARMOR, CHANGE_CLASS } from '../store/store'
+import { gettingUserArmor } from './GetUserArmor'
 import { useHistory } from 'react-router-dom'
 
-function Test() {
+function Populate() {
   const history = useHistory()
   const dispatch = useStore((state) => state.dispatch)
   const destinyId = localStorage.getItem("DESTINY_ID")
@@ -19,8 +19,8 @@ function Test() {
         dispatch({ type: GET_USER_ARMOR, payload: array })
       })
     }
-    
-    if(!mounted) {
+
+    if (!mounted) {
       setMounted(true)
     }
 
@@ -52,4 +52,4 @@ function Test() {
   }
 }
 
-export default Test
+export default Populate

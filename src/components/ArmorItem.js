@@ -5,12 +5,12 @@ import CustomDisplay from './CustomDisplay'
 import "./ArmorItem.css"
 
 const ArmorItem = (props) => {
-  // const [check, setCheck] = useState(false)
-  // const [display, setDisplay] = useState(true)
-
-  // const handleChange = (e) => {
-  //   setCheck(!e.target.value)
-  // }
+  let armorIcon
+  if (props.item.ornament !== false) {
+    armorIcon = props.item.ornament
+  } else {
+    armorIcon = props.item.icon
+  }
 
   return (
     // display ?
@@ -18,7 +18,7 @@ const ArmorItem = (props) => {
       <Card>
         <Card.Header>
           <Link to={"/evaluate/" + props.item.itemHash}>
-            <Card.Img style={{ width: "90px" }} src={"https://www.bungie.net" + props.item.icon} alt="" />
+            <Card.Img style={{ width: "90px" }} src={"https://www.bungie.net" + armorIcon} alt="" />
           </Link>
         </Card.Header>
         <Card.Body id='item-info'>

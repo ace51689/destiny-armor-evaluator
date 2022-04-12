@@ -1,7 +1,7 @@
 import create from "zustand"
 import { devtools, redux } from "zustand/middleware"
 
-const initialState = { classes: {}, staticArmor: [], userArmor: [], vendorArmor: [], intrinsics: [], playerClass: "" }
+const initialState = { classIds: [], userArmor: [], vendorArmor: [], activeClass: "" }
 
 export const GET_CLASSES = "GETCLASSES"
 export const GET_ARMOR = "GETARMOR"
@@ -13,7 +13,7 @@ export const CHANGE_CLASS = "CHANGECLASS"
 const reducer = (state, action) => {
   switch (action.type) {
     case GET_CLASSES:
-      return { classes: action.payload }
+      return { classIds: action.payload }
     case GET_ARMOR:
       return { staticArmor: action.payload }
     case GET_USER_ARMOR:
@@ -23,7 +23,7 @@ const reducer = (state, action) => {
     case GET_INTRINSICS:
       return { intrinsics: action.payload }
     case CHANGE_CLASS:
-      return { playerClass: action.payload }
+      return { activeClass: action.payload }
     default:
       return state
   }

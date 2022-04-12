@@ -25,13 +25,21 @@ export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, t
     if (statsObject["recovery"] >= userTier.recovery) {
       if (statsObject["intellect"] >= userTier.intellect) {
         if (statsObject["recovery"] + statsObject["intellect"] >= userTier.average) {
+          let containsVendor
+          if (top.vendor || middle.vendor || bottom.vendor) {
+            containsVendor = true
+          }
+          else {
+            containsVendor = false
+          }
           loadoutArray.push({
             "loadout": `Tier ${totalTier}: ${exoticName} - ${top.name} - ${middle.name} - ${bottom.name}`,
             "stats": statsObject,
             "instanceIds": instanceIds,
             "exoticName": exoticName,
             "exoticType": exoticType,
-            "armorCounter": [top.counter, middle.counter, bottom.counter]
+            "armorCounter": [top.counter, middle.counter, bottom.counter],
+            "containsVendor": containsVendor
           })
         }
       }
@@ -173,9 +181,11 @@ const findingTieLoadouts = (array, type) => {
         loadout.totalCount = armorCountSum
       })
 
+      //Sort by the combined armor count
       filteredArmorArray.sort((a, b) => b.totalCount - a.totalCount)
       const highestTotalCount = filteredArmorArray[0].totalCount
 
+      //Filter out any loadouts that have a lower armor count than the loadout with the highest armor count
       const sortedArmorArray = filteredArmorArray.filter(loadout => loadout.totalCount === highestTotalCount)
       const finalArmorArray = sortArray(sortedArmorArray, type)
 
@@ -378,24 +388,49 @@ const assignSimpleLoadouts = (array, topArray, middleArray, bottomArray, tieLoad
     else {
       //Create copies of the array, one for each focus:
       array.sort((a, b) => a.stats.intRecDiff - b.stats.intRecDiff)
-      const lowestDifference = array[0].stats.intRecDiff
-      const intellectFocusedArray = array.filter((loadout) => loadout.stats.intRecDiff === lowestDifference)
-      const recoveryFocusedArray = array.filter((loadout) => loadout.stats.intRecDiff === lowestDifference)
+      const intRecThreshold = array[0].stats.intRecDiff + 0.5
 
-      //Sort each array by the respectave focus:
-      sortArray(intellectFocusedArray, "intellect")
-      sortArray(recoveryFocusedArray, "recovery")
+      const testArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
 
-      //Check for identical loadouts:
-      const finalIntellectArray = findingTieLoadouts(intellectFocusedArray, "intellect")
-      const finalRecoveryArray = findingTieLoadouts(recoveryFocusedArray, "recovery")
-      if (finalIntellectArray === false || finalRecoveryArray === false) {
-        tieLoadouts.push(array)
+      if (testArray.length === 1) {
+        const intellectFocusedArray = array
+        const recoveryFocusedArray = array
+
+        //Sort each array by the respectave focus:
+        sortArray(intellectFocusedArray, "intellect")
+        sortArray(recoveryFocusedArray, "recovery")
+
+        //Check for identical loadouts:
+        const finalIntellectArray = findingTieLoadouts(intellectFocusedArray, "intellect")
+        const finalRecoveryArray = findingTieLoadouts(recoveryFocusedArray, "recovery")
+        if (finalIntellectArray === false || finalRecoveryArray === false) {
+          tieLoadouts.push(array)
+        }
+        //Add the best loadouts:
+        else {
+          processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
+          processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
+        }
       }
-      //Add the best loadouts:
       else {
-        processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
-        processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
+        const intellectFocusedArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
+        const recoveryFocusedArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
+
+        //Sort each array by the respectave focus:
+        sortArray(intellectFocusedArray, "intellect")
+        sortArray(recoveryFocusedArray, "recovery")
+
+        //Check for identical loadouts:
+        const finalIntellectArray = findingTieLoadouts(intellectFocusedArray, "intellect")
+        const finalRecoveryArray = findingTieLoadouts(recoveryFocusedArray, "recovery")
+        if (finalIntellectArray === false || finalRecoveryArray === false) {
+          tieLoadouts.push(array)
+        }
+        //Add the best loadouts:
+        else {
+          processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
+          processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
+        }
       }
     }
   }
@@ -650,6 +685,7 @@ const LegendaryArmorEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets,
   calculateStats(filteredExoticLegs, releventHelmets, releventGauntlets, releventChests, userTier, noLoadouts, tieLoadouts)
 
   //Here is where we'll eventually setArmor and maybe some other housekeeping stuff...
+
   if (tieLoadouts.length !== 0) {
     tieLoadouts.forEach((exoticLoadout) => {
       const armorInfoArray = []

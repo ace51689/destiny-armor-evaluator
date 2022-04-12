@@ -1,4 +1,4 @@
-import { getManifest, getCurrentManifest, getProfile, getVendors } from "../endpoints";
+import { getManifest, getCurrentManifest, getProfile, getVendors } from "./endpoints";
 
 async function getStaticArmor() {
   const manifest = await getManifest()
@@ -214,10 +214,7 @@ async function createArmorArray(destinyId, memberType, authToken, staticArmor, i
 
 async function gettingVendorArmor(memberType, destinyId, authToken, staticArmor) {
   const vendorHashes = ["2190858386", "350061650", "69482069", "248695599", "3603221665", "396892126", "1576276905"]
-  const titanId = process.env.REACT_APP_TITAN_ID
-  const hunterId = process.env.REACT_APP_HUNTER_ID
-  const warlockId = process.env.REACT_APP_WARLOCK_ID
-  const classIds = [titanId, hunterId, warlockId]
+  const classIds = ['2305843009261410595', '2305843009261410597', '2305843009261410598']
   const vendorArray = []
 
   for (const classId of classIds) {
@@ -235,6 +232,7 @@ async function gettingVendorArmor(memberType, destinyId, authToken, staticArmor)
 
         releventVendorSales.forEach((vendor) => {
           const saleItems = Object.values(vendor[1].saleItems)
+          // console.log(saleItems)
           saleItems.forEach((item) => {
             const staticPiece = staticArmor.find((staticItem) => staticItem[0] === item.itemHash.toString())
             const vendorStats = releventVendorStats.find((vendorToFind) => vendorToFind[0] === vendor[0])
@@ -245,7 +243,7 @@ async function gettingVendorArmor(memberType, destinyId, authToken, staticArmor)
               const itemArray = [item.itemHash]
               armorObject.itemType = "Armor"
               armorObject.owned = false
-              armorObject.powerLevel = 1350
+              armorObject.powerLevel = 1100
               armorObject.vendorItemIndex = vendorItemIndex
               armorObject.vendorHash = vendor[0]
               armorObject.stats = {}

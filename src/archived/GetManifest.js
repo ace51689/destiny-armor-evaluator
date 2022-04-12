@@ -54,9 +54,9 @@ const GetManifest = (props) => {
         return false
       })
 
-      await dispatch({ type: GET_ARMOR, payload: armor })
+      dispatch({ type: GET_ARMOR, payload: armor })
 
-      await dispatch({ type: GET_INTRINSICS, payload: intrinsics })
+      dispatch({ type: GET_INTRINSICS, payload: intrinsics })
 
       history.push("/populate")
     }

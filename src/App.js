@@ -1,7 +1,5 @@
 import React from "react"
-import GetManifest from "./components/GetManifest"
-import GetUserArmor from "./components/GetUserArmor"
-import GetVendorArmor from "./components/GetVendorArmor"
+import Populate from "./components/Populate"
 import AuthPage from "./views/AuthPage"
 import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
@@ -10,8 +8,9 @@ import ExtoicPage from "./views/ExtoicPage"
 import ArmorEvaluator from "./views/ArmorEvaluator"
 import { Switch, Route } from "react-router-dom"
 import './App.css';
-import SingleEvaluation from "./views/SingleEvaluation"
+import SingleEvaluation from "./archived/SingleEvaluation"
 import Navigation from "./components/Navigation"
+import DemoPopulate from "./components/DemoPopulate"
 
 function App() {
 
@@ -25,14 +24,11 @@ function App() {
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
         }} />
-        <Route path="/manifest" render={(routeProps) => {
-          return <GetManifest {...routeProps} />
-        }} />
         <Route path="/populate" render={(routeProps) => {
-          return <GetUserArmor {...routeProps} />
+          return <Populate {...routeProps} />
         }} />
-        <Route path="/populate-vendor" render={(routeProps) => {
-          return <GetVendorArmor {...routeProps} />
+        <Route path="/demo-populate" render={(routeProps) => {
+          return <DemoPopulate {...routeProps} />
         }} />
         <Route path="/main" render={(routeProps) => {
           return <Main {...routeProps} />

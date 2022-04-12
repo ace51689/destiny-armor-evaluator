@@ -11,15 +11,15 @@ const ClassPage = () => {
       <h4>Select the class you would like to analyze:</h4>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Titan" })
-        history.push("/manifest")
+        history.push("/evaluate")
         }}>Titan</button>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Hunter" })
-        history.push("/manifest")
+        history.push("/evaluate")
         }}>Hunter</button>
       <button onClick={() => {
         dispatch({ type: CHANGE_CLASS, payload: "Warlock" })
-        history.push("/manifest")
+        history.push("/evaluate")
         }}>Warlock</button>
     </div>
   )

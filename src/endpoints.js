@@ -36,22 +36,44 @@ export async function getLinkedProfiles(membershipId) {
 }
 
 export async function getProfile(destinyMemberId, memberType, token) {
-  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=100,102,200,201,205,300", {
-    method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-      Authorization: "Bearer " + token
-    },
-  }).then((res) => res.json())
+  let flag = true
+  while (flag) {
+    const res = await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=100,102,200,201,205,300,304,305,310", {
+      method: "GET",
+      headers: {
+        "x-api-key": apiKey,
+        Authorization: "Bearer " + token
+      },
+    })
+
+    const data = await res.json()
+    // console.log(data)
+
+    if (data.ErrorCode === 1) {
+      flag = false
+      return data
+    }
+  }
 }
 
 export async function getItem(destinyMemberId, memberType, itemInstanceId) {
-  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Item/" + itemInstanceId + "/?components=304,305", {
-    method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-    },
-  }).then((res) => res.json())
+  let flag = true
+  while (flag) {
+    const res = await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Item/" + itemInstanceId + "/?components=304,305", {
+      method: "GET",
+      headers: {
+        "x-api-key": apiKey,
+      },
+    })
+
+    const data = await res.json()
+
+    if (data.ErrorCode === 1) {
+      // console.log(data.ErrorCode)
+      flag = false
+      return data
+    }
+  }
 }
 
 export async function getVendors(memberType, destinyMemberId, characterId, token) {

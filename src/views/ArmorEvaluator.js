@@ -8,6 +8,7 @@ import LegendaryArmorEvaluation from '../evaluationFunctions/LegendaryArmorEvalu
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
+  const playerClass = useStore((state) => state.activeClass)
   const [exotic, setExotic] = useState(false)
   const [armorType, setArmorType] = useState(1)
   const [evalType, setEvalType] = useState(3)
@@ -47,7 +48,8 @@ const ArmorEvaluator = () => {
         return armor
       }
       return false
-    }).forEach((armor) => {
+    }).filter((armor) => armor[1].equippableBy === playerClass)
+    .forEach((armor) => {
       if (armor[1].itemSubType === "Helmet") {
         helmetsArray.push(armor)
       }
@@ -83,7 +85,8 @@ const ArmorEvaluator = () => {
         return armor
       }
       return false
-    }).forEach((armor) => {
+    }).filter((armor) => armor[1].equippableBy === playerClass)
+    .forEach((armor) => {
       if (armor[1].itemSubType === "Helmet") {
         exoticHelmetsArray.push(armor)
       }
@@ -108,7 +111,7 @@ const ArmorEvaluator = () => {
     setExoticChests(exoticChestsArray)
     setExoticLegs(exoticLegsArray)
 
-  }, [userArmor, setHelmets, setGauntlets, setChests, setLegs])
+  }, [userArmor, setHelmets, setGauntlets, setChests, setLegs, playerClass])
 
   const handleChange = (e) => {
     setUserTier((state) => ({ ...state, [e.target.name]: parseInt(e.target.value) }))
