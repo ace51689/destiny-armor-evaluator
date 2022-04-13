@@ -36,25 +36,57 @@ export async function getLinkedProfiles(membershipId) {
 }
 
 export async function getProfile(destinyMemberId, memberType, token) {
-  let flag = true
-  while (flag) {
-    const res = await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=100,102,200,201,205,300,304,305,310", {
-      method: "GET",
-      headers: {
-        "x-api-key": apiKey,
-        Authorization: "Bearer " + token
-      },
-    })
-
-    const data = await res.json()
-    // console.log(data)
-
-    if (data.ErrorCode === 1) {
-      flag = false
-      return data
+  
+  try {
+    for (let n = 0; n < 3; n ++) {
+      const res = await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/?components=100,102,200,201,205,300,304,305,310", {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey,
+          Authorization: "Bearer " + token
+        },
+      })
+  
+      const data = await res.json()
+  
+      if (data.ErrorCode === 1) {
+        n = 3
+        return data
+      }
+  
     }
   }
+  catch (TypeError) {
+    return false
+  }
 }
+
+
+export async function getVendors(memberType, destinyMemberId, characterId, token) {
+  try {
+    for (let n = 0; n < 3; n ++) {
+      const res = await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Character/" + characterId + "/Vendors/?components=402,304", {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey,
+          Authorization: "Bearer " + token
+        },
+      })
+
+      const data = await res.json()
+
+      if (data.ErrorCode === 1) {
+        n = 3
+        return data
+      }
+
+    }
+  }
+  catch (TypeError) {
+    return false
+  }
+}
+
 
 export async function getItem(destinyMemberId, memberType, itemInstanceId) {
   let flag = true
@@ -69,19 +101,8 @@ export async function getItem(destinyMemberId, memberType, itemInstanceId) {
     const data = await res.json()
 
     if (data.ErrorCode === 1) {
-      // console.log(data.ErrorCode)
       flag = false
       return data
     }
   }
-}
-
-export async function getVendors(memberType, destinyMemberId, characterId, token) {
-  return await fetch(basePlatformURL + "Destiny2/" + memberType + "/Profile/" + destinyMemberId + "/Character/" + characterId + "/Vendors/?components=402,304", {
-    method: "GET",
-    headers: {
-      "x-api-key": apiKey,
-      Authorization: "Bearer " + token
-    },
-  }).then((res) => res.json())
 }

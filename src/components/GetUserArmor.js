@@ -47,9 +47,13 @@ async function getIntrinsics() {
 
 
 async function createArmorArray(destinyId, memberType, authToken, staticArmor, intrinsics) {
-  const armorArray = []
+  let armorArray = []
   await getProfile(destinyId, memberType, authToken)
     .then((response) => {
+      if (!response) {
+        armorArray = false
+        return false
+      }
       const info = response.Response
 
       //Create an array of item components. Used to get some information about the armor piece (instanceId & static itemHash)
@@ -218,7 +222,7 @@ async function gettingVendorArmor(memberType, destinyId, authToken, staticArmor)
   const hunterId = process.env.REACT_APP_HUNTER_ID
   const warlockId = process.env.REACT_APP_WARLOCK_ID
   const classIds = [titanId, hunterId, warlockId]
-  const vendorArray = []
+  let vendorArray = []
 
   for (const classId of classIds) {
     await getVendors(memberType, destinyId, classId, authToken)
@@ -335,13 +339,16 @@ export async function gettingUserArmor(destinyId, memberType, authToken, setLoad
   const staticArmor = await getStaticArmor()
   const intrinsics = await getIntrinsics()
   const userArray = await createArmorArray(destinyId, memberType, authToken, staticArmor, intrinsics)
+  
+  if (!userArray) {
+    return false
+  }
+  
   const vendorArray = await gettingVendorArmor(memberType, destinyId, authToken, staticArmor)
 
   const armorArray = [...userArray, ...vendorArray]
 
-  setTimeout(() => {
-    setLoading(false)
-  }, 1000)
+  setLoading(false)
 
   return armorArray
 }

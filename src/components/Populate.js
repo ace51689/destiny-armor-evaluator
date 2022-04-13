@@ -15,7 +15,9 @@ function Populate() {
   useEffect(() => {
     if (mounted) {
       gettingUserArmor(destinyId, memberType, authToken, setLoading).then((array) => {
-        // console.log(array)
+        if (!array) {
+          history.push('/reauth')
+        }
         dispatch({ type: GET_USER_ARMOR, payload: array })
       })
     }
@@ -24,7 +26,7 @@ function Populate() {
       setMounted(true)
     }
 
-  }, [mounted, destinyId, memberType, authToken, dispatch])
+  }, [mounted, destinyId, memberType, authToken, dispatch, history])
 
   if (loading) {
     return (

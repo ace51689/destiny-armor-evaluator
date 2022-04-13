@@ -11,6 +11,7 @@ import './App.css';
 import SingleEvaluation from "./archived/SingleEvaluation"
 import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
+import ReAuth from "./views/ReAuth"
 
 function App() {
 
@@ -20,6 +21,9 @@ function App() {
       <Switch>
         <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />
+        }} />
+        <Route exact path="/reauth" render={(routeProps) => {
+          return <ReAuth {...routeProps} />
         }} />
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
