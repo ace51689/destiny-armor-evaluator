@@ -18,12 +18,18 @@ const ReAuth = (props) => {
       const authToken = localStorage.getItem('AUTH_TOKEN')
       getProfile(destinyId, memberType, authToken)
         .then((res) => {
-          const classes = []
-          const characters = Object.entries(res.Response.characters.data)
-          characters.forEach((character) => {
-            classes.push(character[0])
-          })
-          dispatch({ type: GET_CLASSES, payload: classes })
+          if (!res) {
+            history.push('/')
+            return
+          } 
+          else {
+            const classes = []
+            const characters = Object.entries(res.Response.characters.data)
+            characters.forEach((character) => {
+              classes.push(character[0])
+            })
+            dispatch({ type: GET_CLASSES, payload: classes })
+          }
         })
       history.push("/populate")
     }

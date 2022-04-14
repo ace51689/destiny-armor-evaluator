@@ -22,6 +22,8 @@ const ArmorEvaluator = () => {
   const [exoticLegs, setExoticLegs] = useState([])
   const [noLoadouts, setNoLoadouts] = useState([])
   const [showVendor, setShowVendor] = useState(true)
+  const [showKeeps, setShowKeeps] = useState(true)
+  const [showJunks, setShowJunks] = useState(true)
   const [userTier, setUserTier] = useState({
     totalTier: 30,
     mobility: 1,
@@ -132,6 +134,14 @@ const ArmorEvaluator = () => {
   const handleToggleVendor = (e) => {
     setShowVendor(e.currentTarget.checked)
   }
+  
+  const handleToggleKeeps = (e) => {
+    setShowKeeps(e.currentTarget.checked)
+  }
+  
+  const handleToggleJunks = (e) => {
+    setShowJunks(e.currentTarget.checked)
+  }
 
   const evaluateArmor = () => {
     switch (armorType) {
@@ -189,6 +199,10 @@ const ArmorEvaluator = () => {
             chosen={exoticHelmets}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -208,6 +222,10 @@ const ArmorEvaluator = () => {
             noLoadouts={noLoadouts}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -227,6 +245,10 @@ const ArmorEvaluator = () => {
             chosen={exoticGauntlets}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -246,6 +268,10 @@ const ArmorEvaluator = () => {
             noLoadouts={noLoadouts}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -265,6 +291,10 @@ const ArmorEvaluator = () => {
             chosen={exoticChests}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -284,6 +314,10 @@ const ArmorEvaluator = () => {
             noLoadouts={noLoadouts}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -303,6 +337,10 @@ const ArmorEvaluator = () => {
             chosen={exoticLegs}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }
@@ -322,6 +360,10 @@ const ArmorEvaluator = () => {
             noLoadouts={noLoadouts}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
+            showKeeps={showKeeps}
+            toggleKeeps={handleToggleKeeps}
+            showJunks={showJunks}
+            toggleJunks={handleToggleJunks}
           />
         )
       }

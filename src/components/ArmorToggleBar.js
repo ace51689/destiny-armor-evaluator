@@ -25,11 +25,31 @@ const ArmorToggleBar = (props) => {
       <ToggleButton
         type="checkbox"
         variant="secondary"
+        checked={props.showKeeps}
+        value="1"
+        onChange={props.toggleKeeps}
+      >
+        &nbsp;Keeps
+      </ToggleButton>
+      &nbsp;
+      <ToggleButton
+        type="checkbox"
+        variant="secondary"
+        checked={props.showJunks}
+        value="1"
+        onChange={props.toggleJunks}
+      >
+        &nbsp;Junks
+      </ToggleButton>
+      &nbsp;
+      <ToggleButton
+        type="checkbox"
+        variant="secondary"
         checked={props.showVendor}
         value="1"
         onChange={props.toggleVendor}
       >
-        Show Vendor
+        &nbsp;Vendor
       </ToggleButton>
       &nbsp;
       <Button variant="success" onClick={props.evaluateArmor}>Evaluate Loadouts</Button>

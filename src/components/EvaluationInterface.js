@@ -14,7 +14,19 @@ const EvaluationInterface = (props) => {
 
   return (
     <div>
-      <ArmorToggleBar exotic={props.exotic} toggleExotic={props.toggleExotic} showVendor={props.showVendor} toggleVendor={props.toggleVendor} armorType={props.armorType} changeArmor={props.changeArmor} evaluateArmor={props.evaluateArmor} />
+      <ArmorToggleBar
+        exotic={props.exotic}
+        toggleExotic={props.toggleExotic}
+        showVendor={props.showVendor}
+        toggleVendor={props.toggleVendor}
+        armorType={props.armorType}
+        changeArmor={props.changeArmor}
+        evaluateArmor={props.evaluateArmor}
+        showKeeps={props.showKeeps}
+        toggleKeeps={props.toggleKeeps}
+        showJunks={props.showJunks}
+        toggleJunks={props.toggleJunks}
+      />
       <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userTier={props.userTier} />
       <div className='no-loadouts-display'>
         {(props.noLoadouts && props.noLoadouts.length > 0) && <div>No Applicable Loadouts for:</div>}
@@ -37,13 +49,44 @@ const EvaluationInterface = (props) => {
           props.chosen && props.chosen
             // .filter((choice) => choice[1].name.toLowerCase().includes(query.toLowerCase()))
             .filter((choice) => {
-              if (!props.showVendor) {
-                return choice[1].owned
+              const showVendor = props.showVendor
+              const showKeeps = props.showKeeps
+              const showJunks = props.showJunks
+
+              if (choice[1].counter !== undefined) {
+                if (showVendor && showKeeps && !showJunks) {
+                  return choice[1].counter > 0 || !choice[1].owned
+                }
+                if (showVendor && !showKeeps && showJunks) {
+                  return choice[1].counter === 0 || !choice[1].owned
+                }
+                if (showVendor && !showKeeps && !showJunks) {
+                  return !choice[1].owned
+                }
+                if (!showVendor && showKeeps && showJunks) {
+                  return choice[1].owned
+                }
+                if (!showVendor && showKeeps && !showJunks) {
+                  return choice[1].counter > 0 && choice[1].owned
+                }
+                if (!showVendor && !showKeeps && showJunks) {
+                  return choice[1].counter === 0 && choice[1].owned
+                }
+                if (!showVendor && !showKeeps && !showJunks) {
+                  return false
+                }
               }
               else {
-                return choice
+                if (!showVendor) {
+                  return choice[1].owned
+                }
+                else {
+                  return choice
+                }
               }
-            }).map(choice => (
+              return choice
+            })
+            .map(choice => (
               <ArmorItem
                 key={choice[0]}
                 item={choice[1]}
