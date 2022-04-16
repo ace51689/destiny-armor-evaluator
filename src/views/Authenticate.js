@@ -18,20 +18,25 @@ function Authenticate(props) {
     if (mounted) {
       getUserInformation(authcode)
         .then(data => {
-          //Shorten the paths to the access and profile data:
-          const accessInformation = data.accessToken
-          const profileInformation = data.destinyId
-          //Set important items in local storage:
-          localStorage.setItem("accessToken", accessInformation.accessToken)
-          localStorage.setItem("bungieId", accessInformation.bungieId)
-          localStorage.setItem("destinyId", profileInformation.destinyId)
-          localStorage.setItem("membershipType", profileInformation.membershipType)
-          //Shorten the path to the character data:
-          const characterInformation = data.characterInformation
-          //Dispatch the character information to global state:
-          dispatch({ type: GET_CLASS_INFO, payload: characterInformation })
-          //Send the user to "/populate" to load user armor:
-          history.push('/populate')
+          if (!data) {
+            history.push('/login')
+          }
+          else {
+            //Shorten the paths to the access and profile data:
+            const accessInformation = data.accessToken
+            const profileInformation = data.destinyId
+            //Set important items in local storage:
+            localStorage.setItem("accessToken", accessInformation.accessToken)
+            localStorage.setItem("bungieId", accessInformation.bungieId)
+            localStorage.setItem("destinyId", profileInformation.destinyId)
+            localStorage.setItem("membershipType", profileInformation.membershipType)
+            //Shorten the path to the character data:
+            const characterInformation = data.characterInformation
+            //Dispatch the character information to global state:
+            dispatch({ type: GET_CLASS_INFO, payload: characterInformation })
+            //Send the user to "/populate" to load user armor:
+            history.push('/populate')
+          }
         })
     }
     //If mounted is false, then set it to true. Used to control when/how often getUserInformation is run.
@@ -41,7 +46,11 @@ function Authenticate(props) {
   }, [mounted, authcode, dispatch, history])
 
   return (
-    <div>Getting account information...</div>
+    <div className='Authenticate'>
+      <div className='Auth-Box'>
+        Getting account information...
+      </div>
+    </div>
   )
 }
 

@@ -15,6 +15,11 @@ async function getAccessToken(code) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `client_id=${clientId}&grant_type=authorization_code&code=${code}`
   })
+  //Checke the request status
+  if (request.status !== 200) {
+    //If the request fails return false
+    return false
+  }
   //Convert the response to JSON:
   const response = await request.json()
   //Define the access token
@@ -35,6 +40,11 @@ async function getDestinyId(bungieId) {
     method: "GET",
     headers: { "x-api-key": apiKey }
   })
+  //Check the request status:
+  if (request.status !== 200) {
+    //If the request fails return false:
+    return false
+  }
   //Convert the response to JSON:
   const response = await request.json()
   //Define the user's destiny id:
@@ -79,6 +89,11 @@ async function getCharacterInformation(membershipType, destinyId, token) {
       Authorization: "Bearer " + token
     }
   })
+  //Check the request status:
+  if (request.status !== 200) {
+    //If the request fails return false:
+    return false
+  }
   //Convert the response to JSON:
   const response = await request.json()
   //Define the user's character data:
@@ -93,10 +108,25 @@ async function getCharacterInformation(membershipType, destinyId, token) {
 export async function getUserInformation(code) {
   //Get the access token and bungie id:
   const accessToken = await getAccessToken(code)
+  //Check to see if getAccessToken returned false:
+  if (!accessToken) {
+    //If so, return false:
+    return false
+  }
   //Get the destiny id and membership type:
   const destinyId = await getDestinyId(accessToken.bungieId)
+  //Check to see if getDestinyId returned false:
+  if (!destinyId) {
+    //If so, return false:
+    return false
+  }
   //Get the character information:
   const characterInformation = await getCharacterInformation(destinyId.membershipType, destinyId.destinyId, accessToken.accessToken)
+  //Check to see if getCharacterInformation returned false:
+  if (!characterInformation) {
+    //If so, return false:
+    return false
+  }
   //Return all of the important user information:
   return { accessToken: accessToken, destinyId: destinyId, characterInformation: characterInformation }
 }
