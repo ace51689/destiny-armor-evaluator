@@ -12,6 +12,73 @@ export async function getManifest() {
   }).then((res) => res.json())
 }
 
+export async function getDestinyInventoryItemDefinitions() {
+  const response = await fetch(`${basePlatformURL}Destiny2/Manifest`, {
+    method: "GET",
+    headers: {
+      "x-api-key": apiKey
+    }
+  })
+
+  const manifest = await response.json()
+  const inventoryItemDefinitionsPath = manifest.Response.jsonWorldComponentContentPaths.en.DestinyInventoryItemDefinition
+
+  return baseURL + inventoryItemDefinitionsPath
+}
+
+
+function findingStaticArmor(inventoryItemDefinitions) {
+  const staticArmor = Object.entries(inventoryItemDefinitions).filter((item) => {
+    if (item[1].itemType === 2) {
+      return item
+    }
+    return false
+  }).filter((item) => {
+    if (item[1].inventory.tierType > 4) {
+      return item
+    }
+    return false
+  }).filter((item) => {
+    if (item[1].itemCategoryHashes[1] !== 49) {
+      return item
+    }
+    return false
+  })
+
+  return staticArmor
+}
+
+
+function findingIntrinsics(inventoryItemDefinitions) {
+  const intrinsics = Object.entries(inventoryItemDefinitions).filter((item) => {
+    if (item[1].plug) {
+      return item
+    }
+    return false
+  }).filter((item) => {
+    const isIntrinsic = item[1].plug.plugCategoryIdentifier === "intrinsics"
+    const isOrnament = item[1].plug.plugCategoryIdentifier.includes('skins')
+    if (isIntrinsic || isOrnament) {
+      return item
+    }
+    return false
+  })
+
+  return intrinsics
+}
+
+export async function getStaticArmor() {
+  const inventoryItemDefinitionsPath = await getDestinyInventoryItemDefinitions()
+  const response = await fetch(inventoryItemDefinitionsPath)
+  const inventoryItemDefinitions = await response.json()
+  const staticArmor = findingStaticArmor(inventoryItemDefinitions)
+  const intrinsics = findingIntrinsics(inventoryItemDefinitions)
+  
+  console.log({ staticArmor: staticArmor, intrinsics: intrinsics })
+
+  return {staticArmor: staticArmor, intrinsics: intrinsics}
+}
+
 export async function getCurrentManifest(currentManifest) {
   return await fetch(baseURL + currentManifest, {
     method: "GET",
@@ -22,7 +89,7 @@ export async function getAuthToken(code) {
   return await fetch(basePlatformURL + "app/oauth/token/", {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `client_id=${clientId}&grant_type=authorization_code&${code}`
+    body: `client_id=${clientId}&grant_type=authorization_code&code=${code}`
   }).then((res) => res.json())
 }
 

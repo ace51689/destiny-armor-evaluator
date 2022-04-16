@@ -6,9 +6,9 @@ import { useHistory } from 'react-router-dom'
 function Populate() {
   const history = useHistory()
   const dispatch = useStore((state) => state.dispatch)
-  const destinyId = localStorage.getItem("DESTINY_ID")
-  const memberType = localStorage.getItem("MEMBER_TYPE")
-  const authToken = localStorage.getItem("AUTH_TOKEN")
+  const destinyId = localStorage.getItem("destinyId")
+  const memberType = localStorage.getItem("membershipType")
+  const authToken = localStorage.getItem("accessToken")
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
 

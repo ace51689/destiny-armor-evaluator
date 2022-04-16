@@ -9,7 +9,7 @@ const Navigation = () => {
 
   const handle_restart = () => {
     localStorage.clear()
-    history.push("/")
+    history.push("/login")
   }
 
   return (

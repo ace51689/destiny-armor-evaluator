@@ -1,17 +1,19 @@
 import React from "react"
+import { Switch, Route, Redirect } from "react-router-dom"
+import Login from "./views/Login"
+import Authenticate from "./views/Authenticate"
 import Populate from "./components/Populate"
-import AuthPage from "./views/AuthPage"
+// import AuthPage from "./views/AuthPage"
 import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
 import ExoticBattle from "./views/ExoticBattle"
 import ExtoicPage from "./views/ExtoicPage"
 import ArmorEvaluator from "./views/ArmorEvaluator"
-import { Switch, Route } from "react-router-dom"
-import './App.css';
 import SingleEvaluation from "./archived/SingleEvaluation"
 import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
-import ReAuth from "./views/ReAuth"
+// import ReAuth from "./views/ReAuth"
+import './App.css';
 
 function App() {
 
@@ -19,12 +21,19 @@ function App() {
     <div className="App">
       <Navigation />
       <Switch>
-        <Route exact path="/" render={(routeProps) => {
+        <Redirect exact from='/' to='/login' />
+        <Route exact path="/login" render={(routeProps) => {
+          return <Login {...routeProps} />
+        }} />
+        <Route path='/authenticate' render={(routeProps) => {
+          return <Authenticate {...routeProps} />
+        }} />
+        {/* <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />
-        }} />
-        <Route exact path="/reauth" render={(routeProps) => {
+        }} /> */}
+        {/* <Route exact path="/reauth" render={(routeProps) => {
           return <ReAuth {...routeProps} />
-        }} />
+        }} /> */}
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
         }} />
