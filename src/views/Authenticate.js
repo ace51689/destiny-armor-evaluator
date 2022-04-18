@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useStore, GET_CLASS_INFO } from '../store/store'
+import { useStore, GET_CHAR_INFO } from '../store/store'
 import { getUserInformation } from '../functions/ProfileHelpers'
 
 function Authenticate(props) {
@@ -33,9 +33,9 @@ function Authenticate(props) {
             //Shorten the path to the character data:
             const characterInformation = data.characterInformation
             //Dispatch the character information to global state:
-            dispatch({ type: GET_CLASS_INFO, payload: characterInformation })
+            dispatch({ type: GET_CHAR_INFO, payload: characterInformation })
             //Send the user to "/populate" to load user armor:
-            history.push('/populate')
+            history.push('/populate-user')
           }
         })
     }

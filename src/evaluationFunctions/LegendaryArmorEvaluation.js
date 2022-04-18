@@ -105,12 +105,12 @@ export const getLoadoutStats = (statsArray) => {
 
 const addLoadout = (chosen, loadout, choiceId, exoticName) => {
   chosen.find((choice) => {
-    if (choice[1].itemInstanceId === choiceId) {
-      choice[1].counter += 1
-      choice[1].loadouts.push(loadout)
-      if (choice[1].pairedExotics !== undefined) {
-        if (!choice[1].pairedExotics.includes(exoticName)) {
-          choice[1].pairedExotics.push(exoticName)
+    if (choice.itemInstanceId === choiceId) {
+      choice.counter += 1
+      choice.loadouts.push(loadout)
+      if (choice.pairedExotics !== undefined) {
+        if (!choice.pairedExotics.includes(exoticName)) {
+          choice.pairedExotics.push(exoticName)
         }
       }
       return true
@@ -456,43 +456,43 @@ const assignSimpleLoadouts = (array, topArray, middleArray, bottomArray, tieLoad
 export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, userTier, noLoadouts, tieLoadouts) => {
   exoticArray.forEach((exotic) => {
     const exoticLoadouts = []
-    const exoticName = exotic[1].name
-    const exoticType = exotic[1].itemSubType
+    const exoticName = exotic.name
+    const exoticType = exotic.itemSubType
 
-    let exoticMobility = exotic[1].stats.mobility + 2
-    let exoticResilience = exotic[1].stats.resilience + 2
-    let exoticRecovery = exotic[1].stats.recovery + 2
-    let exoticDiscipline = exotic[1].stats.discipline + 2
-    let exoticIntellect = exotic[1].stats.intellect + 2
-    let exoticStrength = exotic[1].stats.strength + 2
+    let exoticMobility = exotic.baseStats.mobility + 2
+    let exoticResilience = exotic.baseStats.resilience + 2
+    let exoticRecovery = exotic.baseStats.recovery + 2
+    let exoticDiscipline = exotic.baseStats.discipline + 2
+    let exoticIntellect = exotic.baseStats.intellect + 2
+    let exoticStrength = exotic.baseStats.strength + 2
 
     //Then we move on to the target of this evaluation function...
     topArray.forEach((top) => {
 
-      let topMobility = top[1].stats.mobility + 2
-      let topResilience = top[1].stats.resilience + 2
-      let topRecovery = top[1].stats.recovery + 2
-      let topDiscipline = top[1].stats.discipline + 2
-      let topIntellect = top[1].stats.intellect + 2
-      let topStrength = top[1].stats.strength + 2
+      let topMobility = top.baseStats.mobility + 2
+      let topResilience = top.baseStats.resilience + 2
+      let topRecovery = top.baseStats.recovery + 2
+      let topDiscipline = top.baseStats.discipline + 2
+      let topIntellect = top.baseStats.intellect + 2
+      let topStrength = top.baseStats.strength + 2
 
       middleArray.forEach((middle) => {
 
-        let middleMobility = middle[1].stats.mobility + 2
-        let middleResilience = middle[1].stats.resilience + 2
-        let middleRecovery = middle[1].stats.recovery + 2
-        let middleDiscipline = middle[1].stats.discipline + 2
-        let middleIntellect = middle[1].stats.intellect + 2
-        let middleStrength = middle[1].stats.strength + 2
+        let middleMobility = middle.baseStats.mobility + 2
+        let middleResilience = middle.baseStats.resilience + 2
+        let middleRecovery = middle.baseStats.recovery + 2
+        let middleDiscipline = middle.baseStats.discipline + 2
+        let middleIntellect = middle.baseStats.intellect + 2
+        let middleStrength = middle.baseStats.strength + 2
 
         bottomArray.forEach((bottom) => {
 
-          let bottomMobility = bottom[1].stats.mobility + 2
-          let bottomResilience = bottom[1].stats.resilience + 2
-          let bottomRecovery = bottom[1].stats.recovery + 2
-          let bottomDiscipline = bottom[1].stats.discipline + 2
-          let bottomIntellect = bottom[1].stats.intellect + 2
-          let bottomStrength = bottom[1].stats.strength + 2
+          let bottomMobility = bottom.baseStats.mobility + 2
+          let bottomResilience = bottom.baseStats.resilience + 2
+          let bottomRecovery = bottom.baseStats.recovery + 2
+          let bottomDiscipline = bottom.baseStats.discipline + 2
+          let bottomIntellect = bottom.baseStats.intellect + 2
+          let bottomStrength = bottom.baseStats.strength + 2
 
           const statsArray = [
             (exoticMobility + topMobility + middleMobility + bottomMobility + 2) / 10,
@@ -507,7 +507,7 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
 
           const statsObject = getLoadoutStats(statsArray)
 
-          filterLoadouts(totalTier, userTier, statsObject, exoticLoadouts, top[1], middle[1], bottom[1], exoticName, exoticType)
+          filterLoadouts(totalTier, userTier, statsObject, exoticLoadouts, top, middle, bottom, exoticName, exoticType)
 
         })
 
@@ -530,21 +530,21 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
 
 export const resetEvaluation = (armorArray) => {
   armorArray.forEach((armor) => {
-    armor[1].counter = 0
-    armor[1].loadouts = []
-    armor[1].pairedExotics = []
+    armor.counter = 0
+    armor.loadouts = []
+    armor.pairedExotics = []
   })
 }
 
 export const organizeAndSetArray = (array, setArray) => {
   array.forEach((item) => {
-    item[1].loadouts.sort((a, b) => {
+    item.loadouts.sort((a, b) => {
       return b.stats.totalIntRec - a.stats.totalIntRec
     })
   })
 
   array.sort((a, b) => {
-    return b[1].counter - a[1].counter
+    return b.counter - a.counter
   })
 
   const copyArray = [...array]
@@ -555,10 +555,10 @@ export const processingLeftoverLoadouts = (exoticLoadout, topArray, middleArray,
 
   exoticLoadout.forEach((loadout) => {
     const instanceIds = loadout.instanceIds
-    const topArmor = topArray.filter((choice) => choice[1].itemInstanceId === instanceIds[0])
-    const middleArmor = middleArray.filter((choice) => choice[1].itemInstanceId === instanceIds[1])
-    const bottomArmor = bottomArray.filter((choice) => choice[1].itemInstanceId === instanceIds[2])
-    armorInfoArray.push({ "instanceIds": instanceIds, "armorCounter": [topArmor[0][1].counter, middleArmor[0][1].counter, bottomArmor[0][1].counter] })
+    const topArmor = topArray.filter((choice) => choice.itemInstanceId === instanceIds[0])
+    const middleArmor = middleArray.filter((choice) => choice.itemInstanceId === instanceIds[1])
+    const bottomArmor = bottomArray.filter((choice) => choice.itemInstanceId === instanceIds[2])
+    armorInfoArray.push({ "instanceIds": instanceIds, "armorCounter": [topArmor[0].counter, middleArmor[0].counter, bottomArmor[0].counter] })
   })
 
 
@@ -605,24 +605,24 @@ export const processingLeftoverLoadouts = (exoticLoadout, topArray, middleArray,
 }
 
 const filterOutVendorExotics = (exoticArray) => {
-  return exoticArray.filter((exotic) => exotic[1].vendor === undefined)
+  return exoticArray.filter((exotic) => exotic.vendor === undefined)
 }
 
 const filterOutVendorDupes = (legendaryArray, dupeItems) => {
   //IF there are itentical stat rolls in the array AND IF at least one of them is owned THEN filter out the vendor pieces.
   const copyArray = [...legendaryArray]
-  const vendorItems = copyArray.filter((item) => item[1].vendor !== undefined)
-  const ownedItems = copyArray.filter((item) => item[1].vendor === undefined)
+  const vendorItems = copyArray.filter((item) => item.vendor !== undefined)
+  const ownedItems = copyArray.filter((item) => item.vendor === undefined)
 
   const dupeItemHashes = []
   ownedItems.forEach((item) => {
     const dupeStatItem = vendorItems.find((dupe) => {
-      const mobility = dupe[1].stats.mobility === item[1].stats.mobility
-      const resilience = dupe[1].stats.resilience === item[1].stats.resilience
-      const recovery = dupe[1].stats.recovery === item[1].stats.recovery
-      const discipline = dupe[1].stats.discipline === item[1].stats.discipline
-      const intellect = dupe[1].stats.intellect === item[1].stats.intellect
-      const strength = dupe[1].stats.strength === item[1].stats.strength
+      const mobility = dupe.baseStats.mobility === item.baseStats.mobility
+      const resilience = dupe.baseStats.resilience === item.baseStats.resilience
+      const recovery = dupe.baseStats.recovery === item.baseStats.recovery
+      const discipline = dupe.baseStats.discipline === item.baseStats.discipline
+      const intellect = dupe.baseStats.intellect === item.baseStats.intellect
+      const strength = dupe.baseStats.strength === item.baseStats.strength
 
       if (mobility && resilience && recovery && discipline && intellect && strength) {
         return dupe

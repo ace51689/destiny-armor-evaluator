@@ -47,30 +47,30 @@ const EvaluationInterface = (props) => {
       <ul className='armor-list'>
         {
           props.chosen && props.chosen
-            // .filter((choice) => choice[1].name.toLowerCase().includes(query.toLowerCase()))
+            // .filter((choice) => choice.name.toLowerCase().includes(query.toLowerCase()))
             .filter((choice) => {
               const showVendor = props.showVendor
               const showKeeps = props.showKeeps
               const showJunks = props.showJunks
 
-              if (choice[1].counter !== undefined) {
+              if (choice.counter !== undefined) {
                 if (showVendor && showKeeps && !showJunks) {
-                  return choice[1].counter > 0 || !choice[1].owned
+                  return choice.counter > 0 || !choice.owned
                 }
                 if (showVendor && !showKeeps && showJunks) {
-                  return choice[1].counter === 0 || !choice[1].owned
+                  return choice.counter === 0 || !choice.owned
                 }
                 if (showVendor && !showKeeps && !showJunks) {
-                  return !choice[1].owned
+                  return !choice.owned
                 }
                 if (!showVendor && showKeeps && showJunks) {
-                  return choice[1].owned
+                  return choice.owned
                 }
                 if (!showVendor && showKeeps && !showJunks) {
-                  return choice[1].counter > 0 && choice[1].owned
+                  return choice.counter > 0 && choice.owned
                 }
                 if (!showVendor && !showKeeps && showJunks) {
-                  return choice[1].counter === 0 && choice[1].owned
+                  return choice.counter === 0 && choice.owned
                 }
                 if (!showVendor && !showKeeps && !showJunks) {
                   return false
@@ -78,7 +78,7 @@ const EvaluationInterface = (props) => {
               }
               else {
                 if (!showVendor) {
-                  return choice[1].owned
+                  return choice.owned
                 }
                 else {
                   return choice
@@ -88,8 +88,8 @@ const EvaluationInterface = (props) => {
             })
             .map(choice => (
               <ArmorItem
-                key={choice[0]}
-                item={choice[1]}
+                key={choice.itemInstanceId}
+                item={choice}
                 userTier={props.userTier}
                 evalType={props.evalType}
               // specific={query}

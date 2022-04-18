@@ -2,7 +2,7 @@ import React from "react"
 import { Switch, Route, Redirect } from "react-router-dom"
 import Login from "./views/Login"
 import Authenticate from "./views/Authenticate"
-import Populate from "./components/Populate"
+import PopulateUser from "./views/PopulateUser"
 // import AuthPage from "./views/AuthPage"
 import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
@@ -14,6 +14,7 @@ import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
 // import ReAuth from "./views/ReAuth"
 import './App.css';
+import PopulateVendor from "./views/PopulateVendor"
 
 function App() {
 
@@ -28,6 +29,12 @@ function App() {
         <Route path='/authenticate' render={(routeProps) => {
           return <Authenticate {...routeProps} />
         }} />
+        <Route path="/populate-user" render={(routeProps) => {
+          return <PopulateUser {...routeProps} />
+        }} />
+        <Route path="/populate-vendor" render={(routeProps) => {
+          return <PopulateVendor {...routeProps} />
+        }} />
         {/* <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />
         }} /> */}
@@ -36,9 +43,6 @@ function App() {
         }} /> */}
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
-        }} />
-        <Route path="/populate" render={(routeProps) => {
-          return <Populate {...routeProps} />
         }} />
         <Route path="/demo-populate" render={(routeProps) => {
           return <DemoPopulate {...routeProps} />

@@ -8,6 +8,7 @@ import LegendaryArmorEvaluation from '../evaluationFunctions/LegendaryArmorEvalu
 
 const ArmorEvaluator = () => {
   const userArmor = useStore((state) => state.userArmor)
+  const vendorArmor = useStore(state => state.vendorArmor)
   const playerClass = useStore((state) => state.activeClass)
   const [exotic, setExotic] = useState(false)
   const [armorType, setArmorType] = useState(1)
@@ -45,30 +46,32 @@ const ArmorEvaluator = () => {
     const legsArray = []
     const exoticLegsArray = []
 
-    userArmor.filter((armor) => {
-      if (armor[1].itemTier === "Legendary") {
+    const masterArray = [...userArmor, ...vendorArmor]
+
+    masterArray.filter((armor) => {
+      if (armor.itemTier === "Legendary") {
         return armor
       }
       return false
-    }).filter((armor) => armor[1].equippableBy === playerClass)
+    }).filter((armor) => armor.equippableBy === playerClass)
     .forEach((armor) => {
-      if (armor[1].itemSubType === "Helmet") {
+      if (armor.itemSubType === "Helmet") {
         helmetsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Gauntlets") {
+      if (armor.itemSubType === "Gauntlets") {
         gauntletsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Chest Armor") {
+      if (armor.itemSubType === "Chest Armor") {
         chestsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Leg Armor") {
+      if (armor.itemSubType === "Leg Armor") {
         legsArray.push(armor)
       }
     })
 
     const sortArray = (array) => {
       array.sort((a, b) => {
-        return (b[1].stats.intellect + b[1].stats.recovery) - (a[1].stats.intellect + a[1].stats.recovery)
+        return (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery)
       })
     }
 
@@ -82,23 +85,23 @@ const ArmorEvaluator = () => {
     setChests(chestsArray)
     setLegs(legsArray)
 
-    userArmor.filter((armor) => {
-      if (armor[1].itemTier === "Exotic") {
+    masterArray.filter((armor) => {
+      if (armor.itemTier === "Exotic") {
         return armor
       }
       return false
-    }).filter((armor) => armor[1].equippableBy === playerClass)
+    }).filter((armor) => armor.equippableBy === playerClass)
     .forEach((armor) => {
-      if (armor[1].itemSubType === "Helmet") {
+      if (armor.itemSubType === "Helmet") {
         exoticHelmetsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Gauntlets") {
+      if (armor.itemSubType === "Gauntlets") {
         exoticGauntletsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Chest Armor") {
+      if (armor.itemSubType === "Chest Armor") {
         exoticChestsArray.push(armor)
       }
-      if (armor[1].itemSubType === "Leg Armor") {
+      if (armor.itemSubType === "Leg Armor") {
         exoticLegsArray.push(armor)
       }
     })
@@ -113,7 +116,7 @@ const ArmorEvaluator = () => {
     setExoticChests(exoticChestsArray)
     setExoticLegs(exoticLegsArray)
 
-  }, [userArmor, setHelmets, setGauntlets, setChests, setLegs, playerClass])
+  }, [userArmor, vendorArmor, setHelmets, setGauntlets, setChests, setLegs, playerClass])
 
   const handleChange = (e) => {
     setUserTier((state) => ({ ...state, [e.target.name]: parseInt(e.target.value) }))
