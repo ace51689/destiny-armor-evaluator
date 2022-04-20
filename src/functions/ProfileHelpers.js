@@ -15,7 +15,7 @@ async function getAccessToken(code) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `client_id=${clientId}&grant_type=authorization_code&code=${code}`
   })
-  //Checke the request status
+  //Check the request status
   if (request.status !== 200) {
     //If the request fails return false
     return false

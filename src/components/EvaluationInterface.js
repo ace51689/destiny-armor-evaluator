@@ -5,8 +5,16 @@ import ArmorItem from './ArmorItem'
 // import { Form } from 'react-bootstrap'
 
 const EvaluationInterface = (props) => {
+  const key = (choice) => {
+    if (choice.itemInstanceId !== undefined) {
+      return choice.itemInstanceId
+    }
+    else {
+      return choice.itemHash
+    }
+  }
   // const [query, setQuery] = useState("")
-  let n = 0
+  // let n = 0
 
   // const handleSearch = (e) => {
   //   setQuery(e.target.value)
@@ -33,7 +41,7 @@ const EvaluationInterface = (props) => {
         &nbsp;
         {
           props.noLoadouts && props.noLoadouts.map((exotic) => {
-            return <div id='unused-exotic' key={n += 1}>
+            return <div id='unused-exotic' key={exotic.itemInstanceId}>
               {exotic}
             </div>
           })
@@ -88,7 +96,7 @@ const EvaluationInterface = (props) => {
             })
             .map(choice => (
               <ArmorItem
-                key={choice.itemInstanceId}
+                key={key(choice)}
                 item={choice}
                 userTier={props.userTier}
                 evalType={props.evalType}

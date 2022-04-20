@@ -43,7 +43,7 @@ const Navigation = () => {
       {/* &nbsp; */}
       <div>
         <Nav.Item>
-          <Nav.Link href="/populate">Refresh Gear</Nav.Link>
+          <Nav.Link href="/populate-user">Refresh Gear</Nav.Link>
         </Nav.Item>
       </div>
     </Nav>

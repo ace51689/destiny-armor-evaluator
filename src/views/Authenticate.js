@@ -32,6 +32,8 @@ function Authenticate(props) {
             localStorage.setItem("membershipType", profileInformation.membershipType)
             //Shorten the path to the character data:
             const characterInformation = data.characterInformation
+            //Set the character Id's in local storage:
+            localStorage.setItem('characterIds', characterInformation.characterIds)
             //Dispatch the character information to global state:
             dispatch({ type: GET_CHAR_INFO, payload: characterInformation })
             //Send the user to "/populate" to load user armor:

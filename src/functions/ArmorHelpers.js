@@ -13,6 +13,10 @@ async function getInventoryItemDefinitionsPath() {
       "x-api-key": apiKey
     }
   })
+  //Check the request status:
+  if (request.status !== 200) {
+    return false
+  }
   //Store the response:
   const response = await request.json()
   //Store the URL path
@@ -65,8 +69,16 @@ function findingOrnaments(inventoryItemDefinitions) {
 export async function getStaticItems() {
   //Get the path to fetch:
   const requestPath = await getInventoryItemDefinitionsPath()
+  //Check the request status:
+  if (!requestPath) {
+    return false
+  }
   //Store the response:
   const request = await fetch(requestPath)
+  //Check the request status:
+  if (request.status !== 200) {
+    return false
+  }
   //Convert to JSON:
   const response = await request.json()
   //Store static armor:
@@ -139,6 +151,10 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
       Authorization: "Bearer " + accessToken
     }
   })
+  //Check the request status:
+  if (request.status !== 200) {
+    return false
+  }
   //Convert the response to JSON
   const response = await request.json()
   //Shorten the object path:
@@ -212,7 +228,7 @@ function getBasicArmorInfo(item, armorObject) {
 }
 
 
-export function getArmorClassType(currentStatic, armorObject) {
+function getArmorClassType(currentStatic, armorObject) {
   //Switch on the static definition's class type:
   switch (currentStatic[1].classType) {
     //Titan case:
@@ -234,7 +250,7 @@ export function getArmorClassType(currentStatic, armorObject) {
 }
 
 
-export function assessHiddenStats(currentStatic, armorObject) {
+function assessHiddenStats(currentStatic, armorObject) {
   //Shorten the object path:
   const statsPath = currentStatic[1].stats.stats
   //If 2996146975 is present:
@@ -331,45 +347,57 @@ function assessArmorOrnament(currentSockets, ornaments, armorObject) {
 
 
 export async function getUserArmor(destinyId, membershipType, accessToken) {
+  //Get the static items and define them individually:
   const staticItems = await getStaticItems()
+  //Check if staticItems returns false:
+  if (!staticItems) {
+    return false
+  }
   const staticArmor = staticItems.staticArmor
   const intrinsics = staticItems.intrinsics
   const ornaments = staticItems.ornaments
-
+  //Get the user armor information and define each array individually
   const armorInformation = await getArmorInformation(destinyId, membershipType, accessToken)
+  //Check if armorInformation returns false:
+  if (!armorInformation) {
+    return false
+  }
   const instancesArray = armorInformation.instancesArray
   const masterArray = armorInformation.masterArray
   const socketsArray = armorInformation.socketsArray
-
+  //Create an armor array that will hold each instance of armor:
   const armorArray = []
+  //For each item in the instances array:
   instancesArray.forEach(item => {
+    //Create an object that will hold all of the info for each armor piece:
     const armorObject = {}
+    //Get the basic armor information:
     getBasicArmorInfo(item, armorObject)
-
+    //Find the current instanced armor in the master array:
     const currentArmor = masterArray.find(item => item.itemInstanceId === armorObject.itemInstanceId)
-
+    //If there is no matching armor in the master array return false to move to the next item:
     if (currentArmor === undefined) {
       return false
     }
-
+    //Define the current item's item hash:
     armorObject.itemHash = currentArmor.itemHash
-
+    //Use the item hash to find the static armor that matches the current item:
     const currentStatic = staticArmor.find(item => item[0] === armorObject.itemHash.toString())
-
+    //If there's no static armor that matches the current item hash return false to move to the next item:
     if (currentStatic === undefined) {
       return false
     }
-
+    //Use the matching static item to get advanced armor info:
     getAdvancedArmorInfo(currentStatic, armorObject)
-
+    //Find the instanced items current sockets:
     const currentSockets = socketsArray.find(item => item[0] === armorObject.itemInstanceId)
-
+    //Use the current sockets to get the base armor stats:
     getBaseArmorStats(currentSockets, intrinsics, armorObject)
+    //Determine whether or not the current armor has an ornament equipped:
     assessArmorOrnament(currentSockets, ornaments, armorObject)
-
+    //Push the completed armor object to the armor array and move to the next item:
     armorArray.push(armorObject)
   })
-
+  //Return the completed armor array:
   return armorArray
-
 }
