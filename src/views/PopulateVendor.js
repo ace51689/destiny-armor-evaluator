@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getVendorArmor } from '../functions/VendorHelpers'
-import { useStore, GET_VENDOR_ARMOR } from '../store/store'
+import { useStore, GET_VENDOR_ARMOR, SET_ERROR } from '../store/store'
 
 function PopulateVendor() {
    //Define the user's membership type:
@@ -29,6 +29,12 @@ function PopulateVendor() {
         .then(array => {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
           if (!array) {
+            dispatch({
+              type: SET_ERROR,
+              payload: {
+                message: "There was an error retrieving current vendor information. Please try authenticating with Bungie again."
+              }
+            })
             history.push('/login')
           }
           //If the array isn't false:

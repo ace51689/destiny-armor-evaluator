@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getUserArmor } from '../functions/ArmorHelpers'
-import { useStore, GET_USER_ARMOR } from '../store/store'
+import { useStore, GET_USER_ARMOR, SET_ERROR } from '../store/store'
 
 function PopulateUser() {
   //Define a boolean to control when we run our master function:
@@ -25,6 +25,12 @@ function PopulateUser() {
         .then(array => {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
           if (!array) {
+            dispatch({
+              type: SET_ERROR,
+              payload: {
+                message: "There was an error retrieving your armor. Please try authenticating with Bungie again."
+              }
+            })
             history.push('/login')
           }
           //If the array isn't false:

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useStore, GET_CHAR_INFO } from '../store/store'
+import { useStore, GET_CHAR_INFO, SET_ERROR } from '../store/store'
 import { getUserInformation } from '../functions/ProfileHelpers'
 
 function Authenticate(props) {
@@ -19,6 +19,7 @@ function Authenticate(props) {
       getUserInformation(authcode)
         .then(data => {
           if (!data) {
+            dispatch({ type: SET_ERROR, payload: { message: "There was a problem with your request, please try again." } })
             history.push('/login')
           }
           else {
@@ -35,7 +36,7 @@ function Authenticate(props) {
             //Set the character Id's in local storage:
             localStorage.setItem('characterIds', characterInformation.characterIds)
             //Dispatch the character information to global state:
-            dispatch({ type: GET_CHAR_INFO, payload: characterInformation })
+            dispatch({ type: GET_CHAR_INFO, payload: characterInformation.characterClasses })
             //Send the user to "/populate" to load user armor:
             history.push('/populate-user')
           }
