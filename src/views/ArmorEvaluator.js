@@ -3,6 +3,7 @@ import { useStore } from '../store/store'
 import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
 import ExoticLoop from '../evaluationFunctions/ExoticLoop'
+import { ExoticDupeEvaluation } from '../evaluationFunctions/ExoticDupeEvaluation'
 import LegendaryArmorEvaluation from '../evaluationFunctions/LegendaryArmorEvaluation'
 
 
@@ -21,6 +22,10 @@ const ArmorEvaluator = () => {
   const [exoticChests, setExoticChests] = useState([])
   const [legs, setLegs] = useState([])
   const [exoticLegs, setExoticLegs] = useState([])
+  const [dupeHelmets, setDupeHelmets] = useState([])
+  const [dupeGauntlets, setDupeGauntlets] = useState([])
+  const [dupeChests, setDupeChests] = useState([])
+  const [dupeLegs, setDupeLegs] = useState([])
   const [noLoadouts, setNoLoadouts] = useState([])
   const [showVendor, setShowVendor] = useState(true)
   const [showKeeps, setShowKeeps] = useState(true)
@@ -54,20 +59,20 @@ const ArmorEvaluator = () => {
       }
       return false
     }).filter((armor) => armor.equippableBy === playerClass)
-    .forEach((armor) => {
-      if (armor.itemSubType === "Helmet") {
-        helmetsArray.push(armor)
-      }
-      if (armor.itemSubType === "Gauntlets") {
-        gauntletsArray.push(armor)
-      }
-      if (armor.itemSubType === "Chest Armor") {
-        chestsArray.push(armor)
-      }
-      if (armor.itemSubType === "Leg Armor") {
-        legsArray.push(armor)
-      }
-    })
+      .forEach((armor) => {
+        if (armor.itemSubType === "Helmet") {
+          helmetsArray.push(armor)
+        }
+        if (armor.itemSubType === "Gauntlets") {
+          gauntletsArray.push(armor)
+        }
+        if (armor.itemSubType === "Chest Armor") {
+          chestsArray.push(armor)
+        }
+        if (armor.itemSubType === "Leg Armor") {
+          legsArray.push(armor)
+        }
+      })
 
     const sortArray = (array) => {
       array.sort((a, b) => {
@@ -91,25 +96,64 @@ const ArmorEvaluator = () => {
       }
       return false
     }).filter((armor) => armor.equippableBy === playerClass)
-    .forEach((armor) => {
-      if (armor.itemSubType === "Helmet") {
-        exoticHelmetsArray.push(armor)
-      }
-      if (armor.itemSubType === "Gauntlets") {
-        exoticGauntletsArray.push(armor)
-      }
-      if (armor.itemSubType === "Chest Armor") {
-        exoticChestsArray.push(armor)
-      }
-      if (armor.itemSubType === "Leg Armor") {
-        exoticLegsArray.push(armor)
-      }
-    })
+      .forEach((armor) => {
+        if (armor.itemSubType === "Helmet") {
+          exoticHelmetsArray.push(armor)
+        }
+        if (armor.itemSubType === "Gauntlets") {
+          exoticGauntletsArray.push(armor)
+        }
+        if (armor.itemSubType === "Chest Armor") {
+          exoticChestsArray.push(armor)
+        }
+        if (armor.itemSubType === "Leg Armor") {
+          exoticLegsArray.push(armor)
+        }
+      })
 
     sortArray(exoticHelmetsArray)
     sortArray(exoticGauntletsArray)
     sortArray(exoticChestsArray)
     sortArray(exoticLegsArray)
+
+
+    const findExoticDupes = (exoticArray) => {
+      const exoticHashes = []
+      const dupeExoticHashes = []
+
+      exoticArray.forEach(item => {
+        if (exoticHashes.includes(item.itemHash) && !dupeExoticHashes.includes(item.itemHash)) {
+          dupeExoticHashes.push(item.itemHash)
+        }
+        else {
+          exoticHashes.push(item.itemHash)
+        }
+      })
+
+      if (dupeExoticHashes.length === 0) {
+        return false
+      }
+
+      const dupeExotics = []
+      dupeExoticHashes.forEach(dupe => {
+        const dupes = exoticArray.filter(item => item.itemHash === dupe)
+        dupeExotics.push(dupes)
+      })
+
+      return dupeExotics
+    }
+
+    const dupeExoticHelmets = findExoticDupes(exoticHelmetsArray)
+    const dupeExoticGauntlets = findExoticDupes(exoticGauntletsArray)
+    const dupeExoticChests = findExoticDupes(exoticChestsArray)
+    const dupeExoticLegs = findExoticDupes(exoticLegsArray)
+
+    setDupeHelmets(dupeExoticHelmets)
+    setDupeGauntlets(dupeExoticGauntlets)
+    setDupeChests(dupeExoticChests)
+    setDupeLegs(dupeExoticLegs)
+
+    console.log(dupeExoticGauntlets)
 
     setExoticHelmets(exoticHelmetsArray)
     setExoticGauntlets(exoticGauntletsArray)
@@ -133,15 +177,15 @@ const ArmorEvaluator = () => {
   const handleToggleExotic = (e) => {
     setExotic(e.currentTarget.checked)
   }
-  
+
   const handleToggleVendor = (e) => {
     setShowVendor(e.currentTarget.checked)
   }
-  
+
   const handleToggleKeeps = (e) => {
     setShowKeeps(e.currentTarget.checked)
   }
-  
+
   const handleToggleJunks = (e) => {
     setShowJunks(e.currentTarget.checked)
   }
@@ -150,7 +194,7 @@ const ArmorEvaluator = () => {
     switch (armorType) {
       case 1:
         if (exotic) {
-          ExoticLoop(exoticHelmets, setExoticHelmets, gauntlets, chests, legs, userTier, evalType)
+          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, gauntlets, chests, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -158,7 +202,7 @@ const ArmorEvaluator = () => {
         break;
       case 2:
         if (exotic) {
-          ExoticLoop(exoticGauntlets, setExoticGauntlets, helmets, chests, legs, userTier, evalType)
+          ExoticDupeEvaluation(dupeGauntlets, setDupeGauntlets, helmets, chests, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -166,7 +210,7 @@ const ArmorEvaluator = () => {
         break;
       case 3:
         if (exotic) {
-          ExoticLoop(exoticChests, setExoticChests, helmets, gauntlets, legs, userTier, evalType)
+          ExoticDupeEvaluation(dupeChests, setDupeChests, helmets, gauntlets, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -174,10 +218,10 @@ const ArmorEvaluator = () => {
         break;
       case 4:
         if (exotic) {
-          ExoticLoop(exoticLegs, setExoticLegs, helmets, gauntlets, chests, userTier, evalType)
+          ExoticDupeEvaluation(dupeLegs, setDupeLegs, helmets, gauntlets, chests, userTier, setNoLoadouts)
         }
         else {
-            LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
+          LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
         }
         break;
       default:
@@ -199,7 +243,7 @@ const ArmorEvaluator = () => {
             exotic={exotic}
             evalType={evalType}
             userTier={userTier}
-            chosen={exoticHelmets}
+            chosen={dupeHelmets}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
             showKeeps={showKeeps}
@@ -245,7 +289,7 @@ const ArmorEvaluator = () => {
             exotic={exotic}
             evalType={evalType}
             userTier={userTier}
-            chosen={exoticGauntlets}
+            chosen={dupeGauntlets}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
             showKeeps={showKeeps}
@@ -291,7 +335,7 @@ const ArmorEvaluator = () => {
             exotic={exotic}
             evalType={evalType}
             userTier={userTier}
-            chosen={exoticChests}
+            chosen={dupeChests}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
             showKeeps={showKeeps}
@@ -337,7 +381,7 @@ const ArmorEvaluator = () => {
             exotic={exotic}
             evalType={evalType}
             userTier={userTier}
-            chosen={exoticLegs}
+            chosen={dupeLegs}
             showVendor={showVendor}
             toggleVendor={handleToggleVendor}
             showKeeps={showKeeps}

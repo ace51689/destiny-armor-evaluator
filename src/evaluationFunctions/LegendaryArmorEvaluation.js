@@ -1,10 +1,11 @@
-const findingBestLoadouts = (armorArray) => {
+export const findingBestLoadouts = (armorArray) => {
   armorArray.sort((a, b) => {
     return b.stats.totalIntRec - a.stats.totalIntRec
   })
 
   let n = armorArray[0].stats.totalIntRec
 
+  //Change to if n === Math.floor(n) THEN n -= 0.5 ????
   if (n !== Math.floor(n)) {
     n -= 0.5
   }
@@ -17,7 +18,7 @@ const findingBestLoadouts = (armorArray) => {
   })
 }
 
-export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, top, middle, bottom, exoticName, exoticType) => {
+export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, top, middle, bottom, exoticName, exoticType, exoticInstance) => {
   // const instanceIds = { "topId": top.itemInstanceId, "middleId": middle.itemInstanceId, "bottomId": bottom.itemInstanceId }
   const instanceIds = [top.itemInstanceId, middle.itemInstanceId, bottom.itemInstanceId]
 
@@ -38,6 +39,7 @@ export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, t
             "instanceIds": instanceIds,
             "exoticName": exoticName,
             "exoticType": exoticType,
+            "exoticInstance": exoticInstance,
             "armorCounter": [top.counter, middle.counter, bottom.counter],
             "containsVendor": containsVendor
           })
@@ -131,7 +133,7 @@ const assignVariables = (exoticArray) => {
   return bestLoadout
 }
 
-const sortArray = (array, type) => {
+export const sortArray = (array, type) => {
   array
     .sort((a, b) => b.stats.mobility - a.stats.mobility)
     .sort((a, b) => b.stats.strength - a.stats.strength)
@@ -264,7 +266,7 @@ const findSmallestDifference = (array) => {
 
 
 //A function that processes all of our exotic loadouts, using different conditionals:
-const assignSimpleLoadouts = (array, topArray, middleArray, bottomArray, tieLoadouts) => {
+export const assignSimpleLoadouts = (array, topArray, middleArray, bottomArray, tieLoadouts) => {
   //If there is only one loadout in the array:
   if (array.length === 1) {
     //Add that one loadout:

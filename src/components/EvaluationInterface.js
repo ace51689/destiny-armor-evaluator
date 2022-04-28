@@ -2,6 +2,7 @@ import React from 'react'
 import SelectableStatGroup from './SelectableStatGroup'
 import ArmorToggleBar from '../components/ArmorToggleBar'
 import ArmorItem from './ArmorItem'
+import ExoticItem from './ExoticItem'
 // import { Form } from 'react-bootstrap'
 
 const EvaluationInterface = (props) => {
@@ -94,15 +95,25 @@ const EvaluationInterface = (props) => {
               }
               return choice
             })
-            .map(choice => (
-              <ArmorItem
-                key={key(choice)}
-                item={choice}
-                userTier={props.userTier}
-                evalType={props.evalType}
-              // specific={query}
-              />
-            ))
+            .map(choice => {
+              if (choice.length > 1) {
+                return <ExoticItem
+                  key={choice[0].itemHash}
+                  item={choice}
+                  userTier={props.userTier}
+                  evalType={props.evalType}
+                />
+              }
+              else {
+                return <ArmorItem
+                  key={key(choice)}
+                  item={choice}
+                  userTier={props.userTier}
+                  evalType={props.evalType}
+                // specific={query}
+                />
+              }
+            })
         }
       </ul>
     </div>

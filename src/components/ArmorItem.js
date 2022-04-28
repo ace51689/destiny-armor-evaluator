@@ -13,7 +13,6 @@ const ArmorItem = (props) => {
   }
 
   return (
-    // display ?
     <li>
       <Card>
         <Card.Header>
@@ -42,35 +41,14 @@ const ArmorItem = (props) => {
           }
 
         </Card.Body>
-        {/* <Card.Body>
-            {
-              props.item.pairedExotics && props.item.pairedExotics.filter((exotic) => {
-                if (exotic.toLowerCase().includes(props.specific)) {
-                  return exotic
-                }
-                return false
-              }).map((exotic) => {
-                return <div key={exotic}>{exotic} <input onChange={handleChange} type="checkbox" value={check} /></div>
-              })
-            }
-          </Card.Body> */}
-        <Card.Body id='loadouts'>
-          <CustomDisplay item={props.item} evalType={props.evalType} userTier={props.userTier} specific={props.specific} />
-        </Card.Body>
-        {/* <Card.Body className="resize">
-            <button onClick={() => setDisplay(!display)}>-</button>
-          </Card.Body> */}
+        {
+          props.item.itemIier === "Legendary" &&
+          <Card.Body id='loadouts'>
+            <CustomDisplay item={props.item} evalType={props.evalType} userTier={props.userTier} specific={props.specific} />
+          </Card.Body>
+        }
       </Card>
     </li>
-    // :
-    // <li>
-    //   <Card>
-    //     <Card.Body>Name: <Link to={"/evaluate/" + props.item.itemHash}>{props.item.name}</Link></Card.Body>
-    //     <Card.Body className="resize">
-    //       <button onClick={() => setDisplay(!display)}>+</button>
-    //     </Card.Body>
-    //   </Card>
-    // </li>
   )
 }
 
