@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
 
 const CustomDisplay = (props) => {
   const [display, setDisplay] = useState(false)
@@ -12,9 +13,9 @@ const CustomDisplay = (props) => {
         &nbsp;
         {
           display ?
-            <button className='loadout-toggle' onClick={() => setDisplay(!display)}>Hide Loadouts</button>
+            <Button variant='secondary' className='loadout-toggle' onClick={() => setDisplay(!display)}>Hide Loadouts</Button>
             :
-            <button className='loadout-toggle' onClick={() => setDisplay(!display)}>Show Loadouts</button>
+            <Button variant='secondary' className='loadout-toggle' onClick={() => setDisplay(!display)}>Show Loadouts</Button>
         }
         <br />
       </div>
