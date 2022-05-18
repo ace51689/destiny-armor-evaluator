@@ -80,8 +80,6 @@ function getBasicVendorArmorInfo(item, vendor, currentStatic, vendorStats, armor
     armorObject.itemType = "Armor"
     //Set owned as false, for filtering purposes later:
     armorObject.owned = false
-    //Set the power level: (currently all vendor armor is 1350 power, likely will only change after major expansions)
-    armorObject.powerLevel = 1350
     //Set the vendor item index:
     armorObject.vendorItemIndex = vendorItemIndex
     //Set the vendor hash:
@@ -132,8 +130,8 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
     vendorSales.forEach(vendor => {
       //Get the vendors items for sale:
       const saleItems = Object.values(vendor[1].saleItems)
-        //Filter out non-armor items:
-        .filter(item => staticHashes.includes(item.itemHash.toString()))
+      //Filter out non-armor items:
+      .filter(item => staticHashes.includes(item.itemHash.toString()))
       //If the sale items array is empty return false return to the beginning of the loop:
       if (saleItems.length === 0) {
         return false
@@ -148,9 +146,9 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
         }
         //If the armor piece is exotic:
         if (currentStatic[1].inventory.tierTypeName === "Exotic"
-          &&
-          //AND if the vendor array already includes that exotic:
-          vendorArray.some(item => item.name === currentStatic[1].displayProperties.name)) {
+        &&
+        //AND if the vendor array already includes that exotic:
+        vendorArray.some(item => item.name === currentStatic[1].displayProperties.name)) {
           //Return false to return to the beginning of the loop:
           return false
         }
@@ -166,6 +164,15 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
         }
         //Get more advanced armor info:
         getAdvancedArmorInfo(currentStatic, armorObject)
+        //Set the power level: 
+        //currently all legendary vendor armor is 1350 power, likely will only change after major expansions
+        if (armorObject.itemTier === "Legendary") {
+          armorObject.powerLevel = 1350
+        }
+        else {
+          //Xur's vendor exotics are currently capped at 1550
+          armorObject.powerLevel = 1550
+        }
         //Push the armor object to the vendor array:
         vendorArray.push(armorObject)
       })

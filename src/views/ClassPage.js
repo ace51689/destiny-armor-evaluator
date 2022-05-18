@@ -1,9 +1,9 @@
 import React from 'react'
-import { useStore, CHANGE_CLASS } from "../store/store"
+import { useStore } from "../store/store"
 import { useHistory } from "react-router-dom"
+import { Button } from 'react-bootstrap'
 
 const ClassPage = () => {
-  const dispatch = useStore((state) => state.dispatch)
   const characterClasses = useStore(state => state.characterClasses)
   const history = useHistory()
 
@@ -12,23 +12,21 @@ const ClassPage = () => {
       <h4>Select the class you would like to analyze:</h4>
       {
         characterClasses.includes("Titan") &&
-        <button onClick={() => {
-          dispatch({ type: CHANGE_CLASS, payload: "Titan" })
-          history.push("/evaluate")
-        }}>Titan</button>
+        <Button onClick={() => {
+          history.push('/evaluate/Titan')
+        }}><img src={'https://www.bungie.net/common/destiny2_content/icons/e78f012b19b5f6c6026c12547895b756.png'} alt='titan logo' style={{ width: '25px' }} /> Titan</Button>
       }
+      &nbsp;
       {
         characterClasses.includes("Hunter") &&
         <button onClick={() => {
-          dispatch({ type: CHANGE_CLASS, payload: "Hunter" })
-          history.push("/evaluate")
+          history.push("/evaluate/Hunter")
         }}>Hunter</button>
       }
       {
         characterClasses.includes("Warlock") &&
         <button onClick={() => {
-          dispatch({ type: CHANGE_CLASS, payload: "Warlock" })
-          history.push("/evaluate")
+          history.push("/evaluate/Warlock")
         }}>Warlock</button>
       }
     </div>

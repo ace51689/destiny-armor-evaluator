@@ -5,7 +5,7 @@ export const findingBestLoadouts = (armorArray) => {
 
   let n = armorArray[0].stats.totalIntRec
 
-  //Change to if n === Math.floor(n) THEN n -= 0.5 ????
+  //Original: if n !== Math.floor(n) THEN n -= 0.5
   if (n !== Math.floor(n)) {
     n -= 0.5
   }
@@ -21,6 +21,7 @@ export const findingBestLoadouts = (armorArray) => {
 export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, top, middle, bottom, exoticName, exoticType, exoticInstance) => {
   // const instanceIds = { "topId": top.itemInstanceId, "middleId": middle.itemInstanceId, "bottomId": bottom.itemInstanceId }
   const instanceIds = [top.itemInstanceId, middle.itemInstanceId, bottom.itemInstanceId]
+  const allMasterworked = top.isMasterworked && middle.isMasterworked && bottom.isMasterworked
 
   if (totalTier >= userTier.totalTier) {
     if (statsObject["recovery"] >= userTier.recovery) {
@@ -41,7 +42,8 @@ export const filterLoadouts = (totalTier, userTier, statsObject, loadoutArray, t
             "exoticType": exoticType,
             "exoticInstance": exoticInstance,
             "armorCounter": [top.counter, middle.counter, bottom.counter],
-            "containsVendor": containsVendor
+            "containsVendor": containsVendor,
+            "allMasterworked": allMasterworked
           })
         }
       }
@@ -110,11 +112,6 @@ const addLoadout = (chosen, loadout, choiceId, exoticName) => {
     if (choice.itemInstanceId === choiceId) {
       choice.counter += 1
       choice.loadouts.push(loadout)
-      if (choice.pairedExotics !== undefined) {
-        if (!choice.pairedExotics.includes(exoticName)) {
-          choice.pairedExotics.push(exoticName)
-        }
-      }
       return true
     }
     return false
@@ -155,6 +152,7 @@ export const sortArray = (array, type) => {
 
 const findingTieLoadouts = (array, type) => {
   const topLoadout = array.shift()
+
 
   const filteredArmorArray = array.filter((loadout) => {
     const stats = loadout.stats
@@ -230,6 +228,7 @@ const findingTieLoadouts = (array, type) => {
 }
 
 const processOneLoadout = (array, topArray, middleArray, bottomArray) => {
+  // console.log(array)
   const onlyLoadout = assignVariables(array)
   const topId = onlyLoadout.instanceIds[0]
   const middleId = onlyLoadout.instanceIds[1]
@@ -239,227 +238,200 @@ const processOneLoadout = (array, topArray, middleArray, bottomArray) => {
   addLoadout(bottomArray, onlyLoadout, bottomId, onlyLoadout.exoticName)
 }
 
-const zeroArmorCounterGuard = (array, topArray, middleArray, bottomArray, tieLoadouts) => {
-  //Add the best intellect focused loadout:
-  const finalArmorArray = findingTieLoadouts(array)
-  if (finalArmorArray === false) {
-    tieLoadouts.push(array)
+// const zeroArmorCounterGuard = (array, topArray, middleArray, bottomArray, tieLoadouts) => {
+//   //Add the best intellect focused loadout:
+//   const finalArmorArray = findingTieLoadouts(array)
+//   if (finalArmorArray === false) {
+//     tieLoadouts.push(array)
+//   }
+//   else {
+//     processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
+//   }
+// }
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+//TODO: create a function that handles checking if a loadouts array has inverse loadouts of >= 1 intRecDiff.
+const checkForLargeDifference = (loadouts) => {
+  if (loadouts.every(loadout => loadout.stats.intRecDiff >= 1)) {
+    const highIntellectLoadout = loadouts.some(loadout => loadout.stats.intellect > loadout.stats.recovery)
+    const highRecoveryLoadout = loadouts.some(loadout => loadout.stats.recovery > loadout.stats.intellect)
+    if (highIntellectLoadout && highRecoveryLoadout) {
+      return true
+    }
+  }
+  return false
+}
+
+const findInverseLoadouts = (loadouts) => {
+  const intellectFocusedArray = loadouts.filter(loadout => loadout.stats.intellect > loadout.stats.recovery)
+  const recoveryFocusedArray = loadouts.filter(loadout => loadout.stats.recovery > loadout.stats.intellect)
+
+  const intellectSortedArray = sortArray(intellectFocusedArray, 'intellect')
+  const recoverySortedArray = sortArray(recoveryFocusedArray, 'recovery')
+
+  const finalIntellectArray = findingTieLoadouts(intellectSortedArray, 'intellect')
+  const finalRecoveryArray = findingTieLoadouts(recoverySortedArray, 'recovery')
+
+  // console.log(loadouts[0].exoticName)
+
+  return {
+    intellectLoadout: finalIntellectArray,
+    recoveryLoadout: finalRecoveryArray
+  }
+}
+
+//TODO: create a function that handles finding the fewest mods to max and filtering out loadouts that require more mods to max.
+const findFewestModsToMax = (loadouts) => {
+  loadouts.sort((a, b) => a.stats.numberOfMods - b.stats.numberOfMods)
+  const fewestModsToMax = loadouts[0].stats.numberOfMods
+  const fewestModsToMaxArray = loadouts.filter(loadout => loadout.stats.numberOfMods === fewestModsToMax)
+  return fewestModsToMaxArray
+}
+
+//TODO: create a function that handles finding the smallest intRecDiff and filtering out loadouts that have larger intRecDiffs.
+const findSmallestIntRecDiff = (loadouts) => {
+  loadouts.sort((a, b) => a.stats.intRecDiff - b.stats.intRecDiff)
+  const smallestIntRecDiff = loadouts[0].stats.intRecDiff
+  let smallestIntRecDiffArray
+  if (smallestIntRecDiff < 1) {
+    smallestIntRecDiffArray = loadouts.filter(loadout => loadout.stats.intRecDiff < 1)
   }
   else {
-    processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
+    smallestIntRecDiffArray = loadouts.filter(loadout => loadout.stats.intRecDiff === smallestIntRecDiff)
   }
+  return smallestIntRecDiffArray
 }
 
-const findSmallestDifference = (array) => {
-  array.sort((a, b) => a.stats.numberOfMods - b.stats.numberOfMods)
-  //Get the lowest number of mods needed to reach 10 INT - 10 REC:
-  const fewestNumberOfMods = array[0].stats.numberOfMods
-  //Keep loadouts that have the lowest number of mods needed to max INT & REC:
-  const fewestNumberOfModsArray = array.filter(loadout => loadout.stats.numberOfMods === fewestNumberOfMods)
-  //Sort the array lowest intRecDiff:
-  fewestNumberOfModsArray.sort((a, b) => a.stats.pointsFromMax - b.stats.pointsFromMax)
-  //Get the lowest intRecDiff:
-  const smallestPointsFromMax = fewestNumberOfModsArray[0].stats.pointsFromMax
-  //Keep loadouts that have the lowest intRecDiff:
-  return fewestNumberOfModsArray.filter(loadout => loadout.stats.pointsFromMax === smallestPointsFromMax)
+//TODO: create a function that handles finding the smallest pointsToMax and filtering out loadouts that require more points to max.
+// const findsmallestPointsFromMax = (loadouts) => {
+//   loadouts.sort((a, b) => a.stats.pointsFromMax - b.stats.pointsFromMax)
+//   const smallestPointsFromMax = loadouts[0].stats.pointsFromMax
+//   const smallestPointsFromMaxArray = loadouts.filter(loadout => loadout.stats.pointsFromMax === smallestPointsFromMax)
+//   return smallestPointsFromMaxArray
+// }
+
+// const findHighestTotalIntRec = (loadouts) => {
+//   loadouts.sort((a, b) => b.stats.totalIntRec - a.stats.totalIntRec)
+//   const highestTotalIntRec = loadouts[0].stats.totalIntRec
+//   const highestTotalIntRecArray = loadouts.filter(loadout => loadout.stats.totalIntRec === highestTotalIntRec)
+//   return highestTotalIntRecArray
+// }
+
+const findZeroArmorCountLoadouts = (loadouts) => {
+  if (loadouts[0].armorCounter.includes(0)) {
+    return true
+  }
+  return false
 }
 
-
-//A function that processes all of our exotic loadouts, using different conditionals:
-export const assignSimpleLoadouts = (array, topArray, middleArray, bottomArray, tieLoadouts) => {
-  //If there is only one loadout in the array:
-  if (array.length === 1) {
-    //Add that one loadout:
-    processOneLoadout(array, topArray, middleArray, bottomArray)
+const findLoadoutsToKeep = (loadoutsArray, topArray, middleArray, bottomArray, tieLoadouts) => {
+  // console.log(loadoutsArray[0].exoticName)
+  // console.log(loadoutsArray)
+  if (loadoutsArray.length === 1) {
+    //If there's only one loadout that meets the user's criteria:
+    // console.log(loadoutsArray)
+    processOneLoadout(loadoutsArray, topArray, middleArray, bottomArray)
   }
-
-  //If any loadout in the array has a totalIntRec of 19.5 or greater:
-  else if (array.some(loadout => loadout.stats.totalIntRec >= 19.5)) {
-    //Filter out any totals under 19.5:
-    const filteredArmorArray = array.filter(loadout => loadout.stats.totalIntRec >= 19.5)
-    //Sort by intellect:
-    const sortedArmorArray = sortArray(filteredArmorArray, "intellect")
-    //Add the best loadout:
-    const finalArmorArray = findingTieLoadouts(sortedArmorArray, "intellect")
-    if (finalArmorArray === false) {
-      tieLoadouts.push(array)
+  else if (loadoutsArray.every(loadout => loadout.stats.totalIntRec >= 19)) {
+    // console.log("The totalIntRec was 19 or higher:")
+    //If any loadout in the array has a totalIntRec of 19 or higher:
+    //Find the smallest number of mods to max
+    const fewestModsToMaxArray = findFewestModsToMax(loadoutsArray)
+    //Find the smallest difference:
+    const smallestIntRecDiffArray = findSmallestIntRecDiff(fewestModsToMaxArray)
+    //Check for a large difference:
+    //Sort by intellect
+    const finalArray = sortArray(smallestIntRecDiffArray, 'intellect')
+    //process that loadout.
+    const bestLoadout = findingTieLoadouts(finalArray, 'intellect')
+    // const unusedArmor = findZeroArmorCountLoadouts(bestLoadout)
+    // if (unusedArmor) {
+    //   tieLoadouts.push(loadoutsArray)
+    // }
+    // else {
+    processOneLoadout(bestLoadout, topArray, middleArray, bottomArray)
+    // }
+  }
+  else if (loadoutsArray.every(loadout => loadout.stats.totalIntRec !== Math.floor(loadout.stats.totalIntRec))) {
+    //If every loadout in the array has a totalIntRec that ends in a .5:
+    //No need to filter by number of mods to max, all that end in .5 need the same number of mods to max
+    //Check for a large difference:
+    const largeDifference = checkForLargeDifference(loadoutsArray)
+    if (largeDifference) {
+      const finalLoadouts = findInverseLoadouts(loadoutsArray)
+      const unusedIntellect = findZeroArmorCountLoadouts(finalLoadouts.intellectLoadout)
+      const unusedRecovery = findZeroArmorCountLoadouts(finalLoadouts.recoveryLoadout)
+      if (unusedIntellect || unusedRecovery) {
+        tieLoadouts.push(loadoutsArray)
+      }
+      else {
+        processOneLoadout(finalLoadouts.intellectLoadout, topArray, middleArray, bottomArray)
+        processOneLoadout(finalLoadouts.recoveryLoadout, topArray, middleArray, bottomArray)
+      }
     }
     else {
-      processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
+      const smallestIntRecDiffArray = findSmallestIntRecDiff(loadoutsArray)
+      //Sort by intellect
+      const finalArray = sortArray(smallestIntRecDiffArray, 'intellect')
+      //process that loadout.
+      const bestLoadout = findingTieLoadouts(finalArray, 'intellect')
+      // console.log(bestLoadout)
+      const unusedArmor = findZeroArmorCountLoadouts(bestLoadout)
+      if (unusedArmor) {
+        tieLoadouts.push(loadoutsArray)
+      }
+      else {
+        processOneLoadout(bestLoadout, topArray, middleArray, bottomArray)
+      }
     }
+
   }
-
-  //If any loadout in the array has a totalIntRec of 19:
-  else if (array.some(loadout => loadout.stats.totalIntRec === 19)) {
-    //If every loadout has a combo of 9.5 and 9.5:
-    if (array.every(loadout => loadout.stats.intellect !== 10 && loadout.stats.recovery !== 10)) {
-      //Sort the array:
-      const sortedArmorArray = sortArray(array)
-      zeroArmorCounterGuard(sortedArmorArray, topArray, middleArray, bottomArray, tieLoadouts)
-    }
-    //If every loadout has a combo of 10 and 9:
-    else if (array.every(loadout => loadout.stats.intellect === 10 || loadout.stats.recovery === 10)) {
-      //Sort the array by intellect:
-      const sortedArmorArray = sortArray(array, "intellect")
-      zeroArmorCounterGuard(sortedArmorArray, topArray, middleArray, bottomArray, tieLoadouts)
-    }
-    //If there are loadouts of both 9.5-9.5 AND 10-9:
-    else {
-      //Filter out the 9.5-9.5 loadouts:
-      const finalArray = array.filter(loadout => loadout.stats.intellect === 10 || loadout.stats.recovery === 10)
-      //sort by intellect:
-      const sortedArmorArray = sortArray(finalArray, "intellect")
-      //Send to zeroArmorCounterGuard to check for unused armor pieces:
-      zeroArmorCounterGuard(sortedArmorArray, topArray, middleArray, bottomArray, tieLoadouts)
-    }
-  }
-
-  //If every loadout in the array has an intRecDiff less than one (i.e. 0.5 or 0):
-  else if (array.every(loadout => loadout.stats.intRecDiff < 1)) {
-    //Sort the array by lowest pointsFromMax:
-    const pointsFromMaxArray = array.sort((a, b) => a.stats.pointsFromMax - b.stats.pointsFromMax)
-    //Find the lowest pointsFromMax:
-    const closestToMax = pointsFromMaxArray[0].stats.pointsFromMax
-    //If every loadout in the array has the same pointsFromMax (in this case all combos should have identical INT-REC, i.e. 9-9, 8-8, etc.):
-    if (array.every(loadout => loadout.stats.pointsFromMax === closestToMax)) {
-      //Sort the array:
-      const sortedArmorArray = sortArray(pointsFromMaxArray)
-      //Check for identical loadouts:
-      const finalArmorArray = findingTieLoadouts(sortedArmorArray)
-      if (finalArmorArray === false) {
-        tieLoadouts.push(array)
-      }
-      // Add the best loadout:
-      else {
-        processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
-      }
-    }
-    //If all the loadouts have different pointsFromMax:  
-    else {
-      //Filter the array, keeping all loadouts with the lowest pointsFromMax:
-      const filteredArmorArray = pointsFromMaxArray.filter(loadout => loadout.stats.pointsFromMax === closestToMax)
-      //Sort the array:
-      const sortedArmorArray = sortArray(filteredArmorArray)
-      //Check for identical loadouts:
-      const finalArmorArray = findingTieLoadouts(sortedArmorArray)
-      if (finalArmorArray === false) {
-        tieLoadouts.push(array)
-      }
-      // Add the best loadout:
-      else {
-        processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
-      }
-    }
-  }
-
-  //If every loadout has an intRecDiff of 1 or more:
-  else if (array.every(loadout => loadout.stats.intRecDiff >= 1)) {
-    //If every loadout has more intellect than recovery:
-    if (array.every(loadout => loadout.stats.intellect > loadout.stats.recovery)) {
-      //Sort the array:
-      const intellectFocusedArray = sortArray(array, "intellect")
-      //Find the loadouts with the smallest difference between INT and REC:
-      const smallestDifferenceArray = findSmallestDifference(intellectFocusedArray)
-      //Check for identical loadouts:
-      const finalIntellectArray = findingTieLoadouts(smallestDifferenceArray, "intellect")
-      if (finalIntellectArray === false) {
-        tieLoadouts.push(intellectFocusedArray)
-      }
-      //Add the best loadout:
-      else {
-        processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
-      }
-    }
-    //If every loadout has more recovery than intellect:
-    else if (array.every(loadout => loadout.stats.intellect < loadout.stats.recovery)) {
-      //Sort the array:
-      const recoveryFocusedArray = sortArray(array, "recovery")
-      //Find the loadouts with the smallest difference between INT and REC:
-      const smallestDifferenceArray = findSmallestDifference(recoveryFocusedArray)
-      //Check for identical loadouts:
-      const finalRecoveryArray = findingTieLoadouts(smallestDifferenceArray, "recovery")
-      if (finalRecoveryArray === false) {
-        tieLoadouts.push(recoveryFocusedArray)
-      }
-      //Add the best loadout:
-      else {
-        processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
-      }
-    }
-    //If there are both high intellect and high recovery loadouts:
-    else {
-      //Create copies of the array, one for each focus:
-      array.sort((a, b) => a.stats.intRecDiff - b.stats.intRecDiff)
-      const intRecThreshold = array[0].stats.intRecDiff + 0.5
-
-      const testArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
-
-      if (testArray.length === 1) {
-        const intellectFocusedArray = array
-        const recoveryFocusedArray = array
-
-        //Sort each array by the respectave focus:
-        sortArray(intellectFocusedArray, "intellect")
-        sortArray(recoveryFocusedArray, "recovery")
-
-        //Check for identical loadouts:
-        const finalIntellectArray = findingTieLoadouts(intellectFocusedArray, "intellect")
-        const finalRecoveryArray = findingTieLoadouts(recoveryFocusedArray, "recovery")
-        if (finalIntellectArray === false || finalRecoveryArray === false) {
-          tieLoadouts.push(array)
-        }
-        //Add the best loadouts:
-        else {
-          processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
-          processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
-        }
-      }
-      else {
-        const intellectFocusedArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
-        const recoveryFocusedArray = array.filter(loadout => loadout.stats.intRecDiff <= intRecThreshold)
-
-        //Sort each array by the respectave focus:
-        sortArray(intellectFocusedArray, "intellect")
-        sortArray(recoveryFocusedArray, "recovery")
-
-        //Check for identical loadouts:
-        const finalIntellectArray = findingTieLoadouts(intellectFocusedArray, "intellect")
-        const finalRecoveryArray = findingTieLoadouts(recoveryFocusedArray, "recovery")
-        if (finalIntellectArray === false || finalRecoveryArray === false) {
-          tieLoadouts.push(array)
-        }
-        //Add the best loadouts:
-        else {
-          processOneLoadout(finalIntellectArray, topArray, middleArray, bottomArray)
-          processOneLoadout(finalRecoveryArray, topArray, middleArray, bottomArray)
-        }
-      }
-    }
-  }
-
-  //Any leftover loadouts are processed here:
   else {
-    //Keep loadouts that have the lowest intRecDiff:
-    const filteredDifferenceArray = findSmallestDifference(array)
-
-    //Sort the array with intellect focus:
-    const sortedArmorArray = sortArray(filteredDifferenceArray, "intellect")
-    const finalArmorArray = findingTieLoadouts(sortedArmorArray, "intellect")
-    if (finalArmorArray === false) {
-      tieLoadouts.push(array)
+    //If every loadout in the array has varying totalIntRec stats:
+    const fewestModsToMaxArray = findFewestModsToMax(loadoutsArray)
+    const largeDifference = checkForLargeDifference(fewestModsToMaxArray)
+    if (largeDifference) {
+      const finalLoadouts = findInverseLoadouts(fewestModsToMaxArray)
+      const unusedIntellect = findZeroArmorCountLoadouts(finalLoadouts.intellectLoadout)
+      const unusedRecovery = findZeroArmorCountLoadouts(finalLoadouts.recoveryLoadout)
+      if (unusedIntellect || unusedRecovery) {
+        tieLoadouts.push(loadoutsArray)
+      }
+      else {
+        processOneLoadout(finalLoadouts.intellectLoadout, topArray, middleArray, bottomArray)
+        processOneLoadout(finalLoadouts.recoveryLoadout, topArray, middleArray, bottomArray)
+      }
     }
-    //Add the best loadout:
     else {
-      processOneLoadout(finalArmorArray, topArray, middleArray, bottomArray)
+      // console.log(fewestModsToMaxArray)
+      const smallestIntRecDiffArray = findSmallestIntRecDiff(fewestModsToMaxArray)
+      const finalArray = sortArray(smallestIntRecDiffArray, 'intellect')
+      // console.log(finalArray)
+      const bestLoadout = findingTieLoadouts(finalArray)
+      // console.log(bestLoadout)
+      const unusedArmor = findZeroArmorCountLoadouts(bestLoadout)
+      if (unusedArmor) {
+        tieLoadouts.push(loadoutsArray)
+      }
+      else {
+        processOneLoadout(bestLoadout, topArray, middleArray, bottomArray)
+      }
     }
   }
 }
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, userTier, noLoadouts, tieLoadouts) => {
   exoticArray.forEach((exotic) => {
+
+    if (exotic.ignore) {
+      return false
+    }
+
     const exoticLoadouts = []
     const exoticName = exotic.name
     const exoticType = exotic.itemSubType
+    const exoticInstance = exotic.itemInstanceId
 
     let exoticMobility = exotic.baseStats.mobility + 2
     let exoticResilience = exotic.baseStats.resilience + 2
@@ -471,6 +443,10 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
     //Then we move on to the target of this evaluation function...
     topArray.forEach((top) => {
 
+      if (top.ignore) {
+        return false
+      }
+
       let topMobility = top.baseStats.mobility + 2
       let topResilience = top.baseStats.resilience + 2
       let topRecovery = top.baseStats.recovery + 2
@@ -480,6 +456,10 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
 
       middleArray.forEach((middle) => {
 
+        if (middle.ignore) {
+          return false
+        }
+
         let middleMobility = middle.baseStats.mobility + 2
         let middleResilience = middle.baseStats.resilience + 2
         let middleRecovery = middle.baseStats.recovery + 2
@@ -488,6 +468,10 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
         let middleStrength = middle.baseStats.strength + 2
 
         bottomArray.forEach((bottom) => {
+
+          if (bottom.ignore) {
+            return false
+          }
 
           let bottomMobility = bottom.baseStats.mobility + 2
           let bottomResilience = bottom.baseStats.resilience + 2
@@ -509,7 +493,7 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
 
           const statsObject = getLoadoutStats(statsArray)
 
-          filterLoadouts(totalTier, userTier, statsObject, exoticLoadouts, top, middle, bottom, exoticName, exoticType)
+          filterLoadouts(totalTier, userTier, statsObject, exoticLoadouts, top, middle, bottom, exoticName, exoticType, exoticInstance)
 
         })
 
@@ -524,17 +508,9 @@ export const calculateStats = (exoticArray, topArray, middleArray, bottomArray, 
 
       const filteredArmorArray = findingBestLoadouts(exoticLoadouts)
 
-      assignSimpleLoadouts(filteredArmorArray, topArray, middleArray, bottomArray, tieLoadouts)
+      findLoadoutsToKeep(filteredArmorArray, topArray, middleArray, bottomArray, tieLoadouts)
 
     }
-  })
-}
-
-export const resetEvaluation = (armorArray) => {
-  armorArray.forEach((armor) => {
-    armor.counter = 0
-    armor.loadouts = []
-    armor.pairedExotics = []
   })
 }
 
@@ -553,6 +529,14 @@ export const organizeAndSetArray = (array, setArray) => {
   setArray(copyArray)
 }
 
+const forceSetArmorCounter = (loadouts) => {
+  loadouts.forEach(loadout => {
+    loadout.armorCounter = [1, 1, 1]
+  })
+
+  return loadouts
+}
+
 export const processingLeftoverLoadouts = (exoticLoadout, topArray, middleArray, bottomArray, armorInfoArray, tieLoadouts) => {
 
   exoticLoadout.forEach((loadout) => {
@@ -560,131 +544,216 @@ export const processingLeftoverLoadouts = (exoticLoadout, topArray, middleArray,
     const topArmor = topArray.filter((choice) => choice.itemInstanceId === instanceIds[0])
     const middleArmor = middleArray.filter((choice) => choice.itemInstanceId === instanceIds[1])
     const bottomArmor = bottomArray.filter((choice) => choice.itemInstanceId === instanceIds[2])
+    // loadout.armorCounter = [topArmor[0].counter, middleArmor[0].counter, bottomArmor[0].counter]
     armorInfoArray.push({ "instanceIds": instanceIds, "armorCounter": [topArmor[0].counter, middleArmor[0].counter, bottomArmor[0].counter] })
   })
 
 
-  const filteredArmorInfoArray = armorInfoArray
-  // .filter((info) => !info.armorCounter.includes(0))
+  exoticLoadout.forEach(loadout => {
+    const updatedLoadoutInfo = armorInfoArray.find(info => info.instanceIds === loadout.instanceIds)
+    loadout.armorCounter = updatedLoadoutInfo.armorCounter
+  })
 
 
-  if (filteredArmorInfoArray.length === 0) {
-    exoticLoadout.forEach((loadout) => {
-      loadout.armorCounter = [1, 1, 1]
-    })
-
-    assignSimpleLoadouts(exoticLoadout, topArray, middleArray, bottomArray, tieLoadouts)
-
+  if (armorInfoArray.every(info => !info.armorCounter.includes(0))) {
+    findLoadoutsToKeep(exoticLoadout, topArray, middleArray, bottomArray, tieLoadouts)
   }
-
+  else if (armorInfoArray.every(info => info.armorCounter.includes(0))) {
+    const finalLoadout = forceSetArmorCounter(exoticLoadout)
+    findLoadoutsToKeep(finalLoadout, topArray, middleArray, bottomArray, tieLoadouts)
+  }
   else {
-    const instanceIdsArray = []
-    filteredArmorInfoArray.forEach((info) => {
-      instanceIdsArray.push(info.instanceIds)
-    })
+    if (checkForLargeDifference(exoticLoadout)) {
+      // console.log(exoticLoadout)
+      // const filteredArray = exoticLoadout.filter(loadout => !loadout.armorCounter.includes(0))
+      const intellectLoadouts = exoticLoadout.filter(loadout => loadout.stats.intellect > loadout.stats.recovery)
+      const recoveryLoadouts = exoticLoadout.filter(loadout => loadout.stats.recovery > loadout.stats.intellect)
+      const zeroIntellect = intellectLoadouts.every(loadout => loadout.armorCounter.includes(0))
+      const zeroRecovery = recoveryLoadouts.every(loadout => loadout.armorCounter.includes(0))
+      if (!zeroIntellect && !zeroRecovery) {
+        // Both arrays have loadouts with non-zero armor counters
+        const finalArray = exoticLoadout.filter(loadout => !loadout.armorCounter.includes(0))
+        findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
 
-    const filteredExoticLoadouts = []
-
-    filteredArmorInfoArray.forEach(info => {
-      exoticLoadout.forEach(loadout => {
-        if (info.instanceIds === loadout.instanceIds) {
-          filteredExoticLoadouts.push(loadout)
+      }
+      else if (zeroIntellect && !zeroRecovery) {
+        // Intellect array only has armor counters containing zero
+        const filteredRecoveryLoadouts = recoveryLoadouts.filter(loadout => !loadout.armorCounter.includes(0))
+        const someMasterworked = intellectLoadouts.some(loadout => loadout.allMasterworked)
+        if (someMasterworked) {
+          const finalIntellectLoadouts = intellectLoadouts.filter(loadout => loadout.allMasterworked)
+          const combinedArray = [...finalIntellectLoadouts, ...filteredRecoveryLoadouts]
+          const finalArray = forceSetArmorCounter(combinedArray)
+          findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
         }
-      })
-    })
-
-    filteredArmorInfoArray.forEach((info) => {
-      filteredExoticLoadouts.forEach((loadout) => {
-        if (loadout.instanceIds === info.instanceIds) {
-          loadout.armorCounter = info.armorCounter
+        else {
+          const combinedArray = [...intellectLoadouts, ...filteredRecoveryLoadouts]
+          const finalArray = forceSetArmorCounter(combinedArray)
+          findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
         }
-      })
-    })
-
-    assignSimpleLoadouts(filteredExoticLoadouts, topArray, middleArray, bottomArray, tieLoadouts)
-
+      }
+      else if (!zeroIntellect && zeroRecovery) {
+        // Recovery array only has armor counters containing zero
+        const filteredIntellectLoadouts = intellectLoadouts.filter(loadout => !loadout.armorCounter.includes(0))
+        const someMasterworked = recoveryLoadouts.some(loadout => loadout.allMasterworked)
+        if (someMasterworked) {
+          const finalRecoveryLoadouts = recoveryLoadouts.filter(loadout => loadout.allMasterworked)
+          const combinedArray = [...finalRecoveryLoadouts, ...filteredIntellectLoadouts]
+          const finalArray = forceSetArmorCounter(combinedArray)
+          findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
+        }
+        else {
+          const combinedArray = [...recoveryLoadouts, ...filteredIntellectLoadouts]
+          const finalArray = forceSetArmorCounter(combinedArray)
+          findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
+        }
+      }
+      else {
+        // Both arrays only have loadouts with armor counters containing zero
+        console.log(exoticLoadout[0].exoticName)
+      }
+    }
+    else {
+      const finalArray = exoticLoadout.filter(loadout => !loadout.armorCounter.includes(0))
+      findLoadoutsToKeep(finalArray, topArray, middleArray, bottomArray, tieLoadouts)
+    }
   }
 }
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// A function to compare individual stats 1:1
+// Returns a boolean
+const compareStat = (originalStats, comparisonStats, statType, comparisonType) => {
+  // If the parent functions calls for equality:
+  if (comparisonType === "equal") {
+    // Compare the stats
+    const dupeStat = originalStats[statType] === comparisonStats[statType]
+    // Return the boolean
+    return dupeStat
+  }
+  // If the parent function calls for equal or greater comparison:
+  if (comparisonType === "equalOrGreater") {
+    // Compare the stats
+    const dupeStat = originalStats[statType] <= comparisonStats[statType]
+    // Return the boolean
+    return dupeStat
+  }
+}
+
+
+// A function to find items with duplicate stats
+// Returns a boolean 
+const findDuplicateItem = (originalStats, comparisonItem) => {
+  // Define a stats path for the comparison item:
+  const comparisonStats = comparisonItem.baseStats
+  // Define a boolean variable for each stat comparison:
+  const dupeMobility = compareStat(originalStats, comparisonStats, 'mobility', 'equal')
+  const dupeResilience = compareStat(originalStats, comparisonStats, 'resilience', 'equal')
+  const dupeRecovery = compareStat(originalStats, comparisonStats, 'recovery', 'equal')
+  const dupeDiscipline = compareStat(originalStats, comparisonStats, 'discipline', 'equal')
+  const dupeIntellect = compareStat(originalStats, comparisonStats, 'intellect', 'equal')
+  const dupeStrength = compareStat(originalStats, comparisonStats, 'strength', 'equal')
+  // Define a boolean variable for item hash comparison
+  // If all stats are identical return true:
+  if (dupeMobility && dupeResilience && dupeRecovery && dupeDiscipline && dupeIntellect && dupeStrength) {
+    return true
+  }
+  // If as little as one stat is not identical return false:
+  return false
+}
+
+
+// A function that finds vendor armor that is currently owned by the user
+// Changes the ignore property on the vendor armor item to true
+const filterOutVendorDupes = (legendaryArray, exoticArray) => {
+  // Create a copy of the legendary array
+  const copyArray = [...legendaryArray, ...exoticArray]
+  // Create an array of vendor items
+  const vendorItems = copyArray.filter((item) => item.vendor !== undefined)
+  // Create an array of user items
+  const ownedItems = copyArray.filter((item) => item.vendor === undefined)
+  // Create an array of user item's item hashes
+  const ownedHashes = ownedItems.map(item => item.itemHash)
+  // For each vendor item:
+  vendorItems.forEach(vendorItem => {
+    // If the vendor item's item hash is included in the array of owned item hashes
+    if (ownedHashes.includes(vendorItem.itemHash)) {
+      // Create an array of owned items that match the vendor item's hash
+      const ownedDupes = ownedItems.filter(owned => owned.itemHash === vendorItem.itemHash)
+      // For every owned duplicate
+      ownedDupes.every(dupe => {
+        // Check to see if the base stats are itentical:
+        const exactMatch = findDuplicateItem(vendorItem.baseStats, dupe)
+        // If the base stats are itentical
+        if (exactMatch) {
+          // Set the vendor items ignore property to true
+          vendorItem.ignore = true
+          // Return false to exit the every iteration
+          return false
+        }
+        // If the base stats aren't identical return true to continue
+        return true
+      })
+    }
+  })
+}
+
+
+// A function that resets certian armor properties before evaluation
+// Resets armor counter to 0, and empties out armor's loadout array
+export const resetEvaluation = (armorArray, exoticArray) => {
+  // For each armor item
+  armorArray.forEach((armor) => {
+    // Reset it's counter to 0
+    armor.counter = 0
+    // Empty it's loadouts array
+    armor.loadouts = []
+  })
+  // Find vendor duplicates and set thier ignore property to true
+  filterOutVendorDupes(armorArray, exoticArray)
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const filterOutVendorExotics = (exoticArray) => {
-  return exoticArray.filter((exotic) => exotic.vendor === undefined)
-}
-
-const filterOutVendorDupes = (legendaryArray, dupeItems) => {
-  //IF there are itentical stat rolls in the array AND IF at least one of them is owned THEN filter out the vendor pieces.
-  const copyArray = [...legendaryArray]
-  const vendorItems = copyArray.filter((item) => item.vendor !== undefined)
-  const ownedItems = copyArray.filter((item) => item.vendor === undefined)
-
-  const dupeItemHashes = []
-  ownedItems.forEach((item) => {
-    const dupeStatItem = vendorItems.find((dupe) => {
-      const mobility = dupe.baseStats.mobility === item.baseStats.mobility
-      const resilience = dupe.baseStats.resilience === item.baseStats.resilience
-      const recovery = dupe.baseStats.recovery === item.baseStats.recovery
-      const discipline = dupe.baseStats.discipline === item.baseStats.discipline
-      const intellect = dupe.baseStats.intellect === item.baseStats.intellect
-      const strength = dupe.baseStats.strength === item.baseStats.strength
-
-      if (mobility && resilience && recovery && discipline && intellect && strength) {
-        return dupe
-      }
-      return false
-    })
-    if (dupeStatItem !== undefined) {
-      dupeItemHashes.push(dupeStatItem[0])
-      dupeItems.push(dupeStatItem)
+  const copyArray = [...exoticArray]
+  copyArray.forEach(exotic => {
+    if (exotic.vendor !== undefined) {
+      exotic.ignore = true
     }
   })
 
-  const releventVendorItems = vendorItems.filter((item) => !dupeItemHashes.includes(item[0]))
-
-  return [...ownedItems, ...releventVendorItems]
-}
-
-const addBackDupeVendorItems = (releventArray, dupeArray) => {
-  if (dupeArray.length > 0) {
-    dupeArray.forEach((dupe) => {
-      releventArray.push(dupe)
-    })
-  }
+  return copyArray
+  // return exoticArray.filter((exotic) => exotic.vendor === undefined)
 }
 
 const LegendaryArmorEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts) => {
   const noLoadouts = []
   const tieLoadouts = []
-  const dupeHelmets = []
-  const dupeGauntlets = []
-  const dupeChests = []
-  const dupeLegs = []
-
+  
   //Reset counters and necessary arrays to 0 and empty respectfully
-  resetEvaluation(helmets)
-  resetEvaluation(gauntlets)
-  resetEvaluation(chests)
-  resetEvaluation(legs)
-
+  resetEvaluation(helmets, exoticHelmets)
+  resetEvaluation(gauntlets, exoticGauntlets)
+  resetEvaluation(chests, exoticChests)
+  resetEvaluation(legs, exoticLegs)
+  
   const filteredExoticHelmets = filterOutVendorExotics(exoticHelmets)
   const filteredExoticGauntlets = filterOutVendorExotics(exoticGauntlets)
   const filteredExoticChests = filterOutVendorExotics(exoticChests)
   const filteredExoticLegs = filterOutVendorExotics(exoticLegs)
 
-  const releventHelmets = filterOutVendorDupes(helmets, dupeHelmets)
-  const releventGauntlets = filterOutVendorDupes(gauntlets, dupeGauntlets)
-  const releventChests = filterOutVendorDupes(chests, dupeChests)
-  const releventLegs = filterOutVendorDupes(legs, dupeLegs)
+  //First we start with Exotic Helmets...
+  calculateStats(filteredExoticHelmets, gauntlets, chests, legs, userTier, noLoadouts, tieLoadouts)
 
-  //Firts we start with Exotic Helmets...
-  calculateStats(filteredExoticHelmets, releventGauntlets, releventChests, releventLegs, userTier, noLoadouts, tieLoadouts)
-
-  //First we start with Exotic Gauntlets...
-  calculateStats(filteredExoticGauntlets, releventHelmets, releventChests, releventLegs, userTier, noLoadouts, tieLoadouts)
+  //Then with Exotic Gauntlets...
+  calculateStats(filteredExoticGauntlets, helmets, chests, legs, userTier, noLoadouts, tieLoadouts)
 
   //Next we go through all the Exotic Chests...
-  calculateStats(filteredExoticChests, releventHelmets, releventGauntlets, releventLegs, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticChests, helmets, gauntlets, legs, userTier, noLoadouts, tieLoadouts)
 
   //Lastly we go through the Exotic Legs...
-  calculateStats(filteredExoticLegs, releventHelmets, releventGauntlets, releventChests, userTier, noLoadouts, tieLoadouts)
+  calculateStats(filteredExoticLegs, helmets, gauntlets, chests, userTier, noLoadouts, tieLoadouts)
 
   //Here is where we'll eventually setArmor and maybe some other housekeeping stuff...
 
@@ -692,30 +761,25 @@ const LegendaryArmorEvaluation = (helmets, exoticHelmets, setHelmets, gauntlets,
     tieLoadouts.forEach((exoticLoadout) => {
       const armorInfoArray = []
       if (exoticLoadout[0].exoticType === "Helmet") {
-        processingLeftoverLoadouts(exoticLoadout, releventGauntlets, releventChests, releventLegs, armorInfoArray, tieLoadouts)
+        processingLeftoverLoadouts(exoticLoadout, gauntlets, chests, legs, armorInfoArray, tieLoadouts)
       }
       if (exoticLoadout[0].exoticType === "Gauntlets") {
-        processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventChests, releventLegs, armorInfoArray, tieLoadouts)
+        processingLeftoverLoadouts(exoticLoadout, helmets, chests, legs, armorInfoArray, tieLoadouts)
       }
       if (exoticLoadout[0].exoticType === "Chest Armor") {
-        processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventGauntlets, releventLegs, armorInfoArray, tieLoadouts)
+        processingLeftoverLoadouts(exoticLoadout, helmets, gauntlets, legs, armorInfoArray, tieLoadouts)
       }
       if (exoticLoadout[0].exoticType === "Leg Armor") {
-        processingLeftoverLoadouts(exoticLoadout, releventHelmets, releventGauntlets, releventChests, armorInfoArray, tieLoadouts)
+        processingLeftoverLoadouts(exoticLoadout, helmets, gauntlets, chests, armorInfoArray, tieLoadouts)
       }
     })
   }
 
-  addBackDupeVendorItems(releventHelmets, dupeHelmets)
-  addBackDupeVendorItems(releventGauntlets, dupeGauntlets)
-  addBackDupeVendorItems(releventChests, dupeChests)
-  addBackDupeVendorItems(releventLegs, dupeLegs)
-
   //Sort and set each Armor array...
-  organizeAndSetArray(releventHelmets, setHelmets)
-  organizeAndSetArray(releventGauntlets, setGauntlets)
-  organizeAndSetArray(releventChests, setChests)
-  organizeAndSetArray(releventLegs, setLegs)
+  organizeAndSetArray(helmets, setHelmets)
+  organizeAndSetArray(gauntlets, setGauntlets)
+  organizeAndSetArray(chests, setChests)
+  organizeAndSetArray(legs, setLegs)
 
   setNoLoadouts(noLoadouts)
 }

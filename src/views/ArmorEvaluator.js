@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/store'
 import "./ArmorEvaluator.css"
 import EvaluationInterface from '../components/EvaluationInterface'
-import ExoticLoop from '../evaluationFunctions/ExoticLoop'
 import { ExoticDupeEvaluation } from '../evaluationFunctions/ExoticDupeEvaluation'
 import LegendaryArmorEvaluation from '../evaluationFunctions/LegendaryArmorEvaluation'
 
 
-const ArmorEvaluator = () => {
+const ArmorEvaluator = (props) => {
   const userArmor = useStore((state) => state.userArmor)
   const vendorArmor = useStore(state => state.vendorArmor)
-  const playerClass = useStore((state) => state.activeClass)
+  const playerClass = props.match.params.class
   const [exotic, setExotic] = useState(false)
   const [armorType, setArmorType] = useState(1)
   const [evalType, setEvalType] = useState(3)
@@ -30,6 +29,7 @@ const ArmorEvaluator = () => {
   const [showVendor, setShowVendor] = useState(true)
   const [showKeeps, setShowKeeps] = useState(true)
   const [showJunks, setShowJunks] = useState(true)
+  const [hasExoticDupes, setHasExoticDupes] = useState(true)
   const [userTier, setUserTier] = useState({
     totalTier: 30,
     mobility: 1,
@@ -153,7 +153,9 @@ const ArmorEvaluator = () => {
     setDupeChests(dupeExoticChests)
     setDupeLegs(dupeExoticLegs)
 
-    console.log(dupeExoticGauntlets)
+    if (!dupeExoticHelmets && !dupeExoticGauntlets && !dupeExoticChests && !dupeExoticLegs) {
+      setHasExoticDupes(false)
+    }
 
     setExoticHelmets(exoticHelmetsArray)
     setExoticGauntlets(exoticGauntletsArray)
@@ -194,7 +196,7 @@ const ArmorEvaluator = () => {
     switch (armorType) {
       case 1:
         if (exotic) {
-          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, gauntlets, chests, legs, userTier, setNoLoadouts)
+          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -202,7 +204,7 @@ const ArmorEvaluator = () => {
         break;
       case 2:
         if (exotic) {
-          ExoticDupeEvaluation(dupeGauntlets, setDupeGauntlets, helmets, chests, legs, userTier, setNoLoadouts)
+          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -210,7 +212,7 @@ const ArmorEvaluator = () => {
         break;
       case 3:
         if (exotic) {
-          ExoticDupeEvaluation(dupeChests, setDupeChests, helmets, gauntlets, legs, userTier, setNoLoadouts)
+          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -218,7 +220,7 @@ const ArmorEvaluator = () => {
         break;
       case 4:
         if (exotic) {
-          ExoticDupeEvaluation(dupeLegs, setDupeLegs, helmets, gauntlets, chests, userTier, setNoLoadouts)
+          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
         }
         else {
           LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
@@ -250,6 +252,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -273,6 +276,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -296,6 +300,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -319,6 +324,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -342,6 +348,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -365,6 +372,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -388,6 +396,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }
@@ -411,6 +420,7 @@ const ArmorEvaluator = () => {
             toggleKeeps={handleToggleKeeps}
             showJunks={showJunks}
             toggleJunks={handleToggleJunks}
+            hasExoticDupes={hasExoticDupes}
           />
         )
       }

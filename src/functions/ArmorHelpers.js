@@ -250,7 +250,7 @@ function getArmorClassType(currentStatic, armorObject) {
 }
 
 
-function assessHiddenStats(currentStatic, armorObject) {
+export function assessHiddenStats(currentStatic, armorObject) {
   //Shorten the object path:
   const statsPath = currentStatic[1].stats.stats
   //If 2996146975 is present:
@@ -282,10 +282,15 @@ export function getAdvancedArmorInfo(currentStatic, armorObject) {
   armorObject.icon = currentStatic[1].displayProperties.icon
   //Define the item's category hash:
   armorObject.categoryHash = currentStatic[1].itemCategoryHashes[1]
+  // Don't ignore the item when evaluating:
+  armorObject.ignore = false
   //Define the class type the item belongs to:
   getArmorClassType(currentStatic, armorObject)
-  //Add any hidden stats to the armor object:
-  assessHiddenStats(currentStatic, armorObject)
+  // If the armor piece is owned:
+  if (armorObject.owned) {
+    //Add any hidden stats to the armor object:
+    assessHiddenStats(currentStatic, armorObject)
+  }
 }
 
 

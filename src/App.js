@@ -7,14 +7,14 @@ import PopulateUser from "./views/PopulateUser"
 import ClassPage from "./views/ClassPage"
 import Main from "./views/Main"
 import ExoticBattle from "./views/ExoticBattle"
-import ExtoicPage from "./views/ExtoicPage"
+// import ExtoicPage from "./views/ExtoicPage"
 import ArmorEvaluator from "./views/ArmorEvaluator"
-import SingleEvaluation from "./archived/SingleEvaluation"
+// import SingleEvaluation from "./archived/SingleEvaluation"
 import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
-// import ReAuth from "./views/ReAuth"
-import './App.css';
 import PopulateVendor from "./views/PopulateVendor"
+import Refresh from "./views/Refresh"
+import './App.css';
 
 function App() {
 
@@ -38,9 +38,9 @@ function App() {
         {/* <Route exact path="/" render={(routeProps) => {
           return <AuthPage {...routeProps} />
         }} /> */}
-        {/* <Route exact path="/reauth" render={(routeProps) => {
-          return <ReAuth {...routeProps} />
-        }} /> */}
+        <Route exact path="/refresh" render={(routeProps) => {
+          return <Refresh {...routeProps} />
+        }} />
         <Route path="/select" render={(routeProps) => {
           return <ClassPage {...routeProps} />
         }} />
@@ -53,15 +53,15 @@ function App() {
         <Route path="/exotic-battle" render={(routeProps) => {
           return <ExoticBattle {...routeProps} />
         }} />
-        <Route exact path="/evaluate" render={(routeProps) => {
+        <Route path="/evaluate/:class?" render={(routeProps) => {
           return <ArmorEvaluator {...routeProps} />
         }} />
-        <Route path="/evaluate/:hash?" render={(routeProps) => {
+        {/* <Route path="/evaluate/:hash?" render={(routeProps) => {
           return <ExtoicPage {...routeProps} />
         }} />
         <Route path="/single/:instance?" render={(routeProps) => {
           return <SingleEvaluation {...routeProps} />
-        }} />
+        }} /> */}
       </Switch>
     </div>
   );

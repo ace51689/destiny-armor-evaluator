@@ -35,6 +35,7 @@ const EvaluationInterface = (props) => {
         toggleKeeps={props.toggleKeeps}
         showJunks={props.showJunks}
         toggleJunks={props.toggleJunks}
+        hasExoticDupes={props.hasExoticDupes}
       />
       <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userTier={props.userTier} />
       <div className='no-loadouts-display'>

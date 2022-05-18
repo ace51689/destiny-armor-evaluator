@@ -130,3 +130,15 @@ export async function getUserInformation(code) {
   //Return all of the important user information:
   return { accessToken: accessToken, destinyId: destinyId, characterInformation: characterInformation }
 }
+
+export async function refreshUserInformation(membershipType, destinyId, accessToken) {
+  //Get the character information:
+  const characterInformation = await getCharacterInformation(membershipType, destinyId, accessToken)
+  //Check to see if getCharacterInformation returned false:
+  if (!characterInformation) {
+    //If so, return false:
+    return false
+  }
+  //Return all of the important user information:
+  return { destinyId: destinyId, characterInformation: characterInformation }
+}

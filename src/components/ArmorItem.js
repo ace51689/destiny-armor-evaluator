@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
 import { Card } from "react-bootstrap"
 import CustomDisplay from './CustomDisplay'
 import "./ArmorItem.css"
@@ -16,16 +16,14 @@ const ArmorItem = (props) => {
     <li>
       <Card>
         <Card.Header>
-          <Link to={"/evaluate/" + props.item.itemHash}>
+          {/* <Link to={"/evaluate/" + props.item.itemHash}> */}
             <Card.Img style={{ width: "90px" }} src={"https://www.bungie.net" + armorIcon} alt="" />
-          </Link>
+          {/* </Link> */}
         </Card.Header>
         <Card.Body id='item-info'>
-          Name: <Link to={"/evaluate/" + props.item.itemHash}>{props.item.name}</Link>
+          {props.item.name}
           <br />
           Power Level: {props.item.powerLevel}
-          <br />
-          Type: {props.item.itemSubType}
           <br />
           {
             props.item.owned ?
@@ -42,7 +40,7 @@ const ArmorItem = (props) => {
 
         </Card.Body>
         {
-          props.item.itemIier === "Legendary" &&
+          props.item.itemTier === "Legendary" &&
           <Card.Body id='loadouts'>
             <CustomDisplay item={props.item} evalType={props.evalType} userTier={props.userTier} specific={props.specific} />
           </Card.Body>

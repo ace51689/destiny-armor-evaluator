@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getVendorArmor } from '../functions/VendorHelpers'
-import { useStore, GET_VENDOR_ARMOR, SET_ERROR } from '../store/store'
+import { useStore, GET_VENDOR_ARMOR, SET_ERROR, SET_SHOW_CLASS_BUTTONS } from '../store/store'
 
 function PopulateVendor() {
    //Define the user's membership type:
@@ -12,6 +12,8 @@ function PopulateVendor() {
   const accessToken = localStorage.getItem('accessToken')
   //Define the user's character ids:
   const characterIds = localStorage.getItem('characterIds')
+  const characterClasses = useStore(state => state.characterClasses)
+  const mainClass = characterClasses[0]
   //Define a boolean to control when we run our master function:
   const [mounted, setMounted] = useState(false)
   //Define a boolean to contol what we return to render:
@@ -45,7 +47,8 @@ function PopulateVendor() {
             setFinished(true)
             //After one second send the user to the select page: (TODO more robust 'home' page)
             setTimeout(() => {
-              history.push('/select')
+              dispatch({ type: SET_SHOW_CLASS_BUTTONS, payload: true})
+              history.push(`/evaluate/${mainClass}`)
             }, 1000)
           }
         })
@@ -54,7 +57,7 @@ function PopulateVendor() {
     if (!mounted) {
       setMounted(true)
     }
-  }, [mounted, membershipType, destinyId, characterIds, accessToken, dispatch, history])
+  }, [mounted, membershipType, destinyId, characterIds, accessToken, dispatch, history, mainClass])
 
   //If finished is true render a finishing up message:
   if (finished) {

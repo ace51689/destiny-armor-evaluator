@@ -1,9 +1,8 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import ArmorItem from './ArmorItem'
 
 function ExoticItem(props) {
+
   const listStyle = {
     display: "flex",
     flexDirection: "row",
@@ -26,11 +25,19 @@ function ExoticItem(props) {
     width: "20vw",
     maxWidth: "45vw",
     height: "20vh",
-    maxHeight: "20vh",  
+    maxHeight: "20vh",
   }
 
   const imageStyle = {
     width: "90%",
+  }
+
+  const keepStyle = {
+    width: "20vw",
+    maxWidth: "45vw",
+    height: "20vh",
+    maxHeight: "20vh",
+    backgroundColor: "lightgreen"  
   }
 
   return (
@@ -58,18 +65,19 @@ function ExoticItem(props) {
             key={key(exotic)}
             style={baseStyle}
           >
-            {/* <ArmorItem
-              item={exotic}
-            /> */}
-
-            <Card style={cardStyle}>
+            <Card style={
+              exotic.counter > 0 ?
+              keepStyle
+              :
+              cardStyle
+              }>
               <Card.Header>
-                <Link to={"/evaluate/" + exotic.itemHash}>
+                {/* <Link to={"/evaluate/" + exotic.itemHash}> */}
                   <Card.Img style={imageStyle} src={"https://www.bungie.net" + armorIcon} alt="" />
-                </Link>
+                {/* </Link> */}
               </Card.Header>
               <Card.Body id='item-info'>
-                Name: <Link to={"/evaluate/" + exotic.itemHash}>{exotic.name}</Link>
+                {exotic.name}
                 <br />
                 Power Level: {exotic.powerLevel}
                 <br />
@@ -87,7 +95,7 @@ function ExoticItem(props) {
                       Vendor: {exotic.vendor}
                     </>
                 }
-
+                
               </Card.Body>
             </Card>
           </li>
