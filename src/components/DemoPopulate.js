@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { useStore, GET_USER_ARMOR } from '../store/store'
+import { useStore, actions } from '../store/store'
 import { demoArmor } from '../DemoArmor'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function DemoPopulate() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const dispatch = useStore((state) => state.dispatch)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     if (mounted) {
-      dispatch({ type: GET_USER_ARMOR, payload: demoArmor })
+      dispatch({ type: actions.setCharacterInformation, payload: {
+        characterClasses: ['Titan', 'Hunter', 'Warlock'],
+        characterIds: [0, 1, 2]
+      }
+    })
+      dispatch({ type: actions.setUserArmor, payload: demoArmor })
+      dispatch({ type: actions.setShowClassButtons, payload: true})
       setLoading(false)
     }
 
@@ -31,13 +37,13 @@ function DemoPopulate() {
       <div>
         <h4>Select the class you would like to analyze:</h4>
         <button onClick={() => {
-          history.push("/evaluate/Titan")
+          navigate("/evaluate/Titan")
         }}>Titan</button>
         <button onClick={() => {
-          history.push("/evaluate/Hunter")
+          navigate("/evaluate/Hunter")
         }}>Hunter</button>
         <button onClick={() => {
-          history.push("/evaluate/Warlock")
+          navigate("/evaluate/Warlock")
         }}>Warlock</button>
       </div>
     )

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { getUserArmor } from '../functions/ArmorHelpers'
-import { useStore, GET_USER_ARMOR, SET_ERROR } from '../store/store'
+import { useStore, actions } from '../store/store'
 
 function PopulateUser() {
   //Define a boolean to control when we run our master function:
   const [mounted, setMounted] = useState(false)
   //Define the user's destinyId:
-  const destinyId = localStorage.getItem('destinyId')
+  const destinyId = useStore(state => state.profileInformation.destinyId)
   //Define the user's membership type:
-  const membershipType = localStorage.getItem('membershipType')
+  const membershipType = useStore(state => state.profileInformation.membershipType)
   //Define the user's accessToken:
-  const accessToken = localStorage.getItem('accessToken')
+  const accessToken = useStore(state => state.accessInformation.accessToken)
   //Define the dispatch used to store data in global state:
   const dispatch = useStore(state => state.dispatch)
   //Define the history object used to push the user to the next page:
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     //If mounted:
@@ -26,19 +26,20 @@ function PopulateUser() {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
           if (!array) {
             dispatch({
-              type: SET_ERROR,
+              type: actions.setError,
               payload: {
+                type: "error",
                 message: "There was an error retrieving your armor. Please try authenticating with Bungie again."
               }
             })
-            history.push('/login')
+            navigate('/login')
           }
           //If the array isn't false:
           else {
             //Dispatch the array to global state:
-            dispatch({ type: GET_USER_ARMOR, payload: array })
+            dispatch({ type: actions.setUserArmor, payload: array })
             //Send the user to /populate-vendor:
-            history.push('/populate-vendor')
+            navigate('/populate-vendor')
           }
         })
     }
@@ -46,7 +47,7 @@ function PopulateUser() {
     if (!mounted) {
       setMounted(true)
     }
-  }, [mounted, destinyId, membershipType, accessToken, dispatch, history])
+  }, [mounted, destinyId, membershipType, accessToken, dispatch, navigate])
 
   return (
     <div className='Populate'>

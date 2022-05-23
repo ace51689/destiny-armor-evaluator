@@ -1,71 +1,71 @@
 import React from 'react'
-import { ToggleButtonGroup, ToggleButton, Button } from 'react-bootstrap'
+import BooleanButton from './BooleanButton'
+import { Button, ButtonGroup } from 'react-bootstrap'
 
 const ArmorToggleBar = (props) => {
+
+  const changeArmor = (e) => {
+    props.changeArmor(parseInt(e.target.value))
+  }
 
   return (
     <div className="armor-toggle-bar">
       {
         props.hasExoticDupes ?
-          <ToggleButton
-            type="checkbox"
-            variant="secondary"
-            checked={props.exotic}
-            value="1"
-            onChange={props.toggleExotic}
-          >
-            Exotic
-          </ToggleButton>
+          <BooleanButton
+            buttonText=" Test Duplicate Exotics"
+            booleanType={props.exotic}
+            toggleFunction={props.toggleExotic}
+            color='#565e64'
+            title="Toggle to show or hide duplicate exotics"
+          />
           :
-          <ToggleButton
+          <BooleanButton
+            buttonText="No Duplicate Exotics"
+            booleanType={props.exotic}
+            toggleFunction={props.toggleExotic}
+            color='#adb5bd'
+            title="No duplicate exotics found"
             disabled
-            type="checkbox"
-            variant="secondary"
-            checked={props.exotic}
-            value="1"
-            onChange={props.toggleExotic}
-          >
-            Exotic
-          </ToggleButton>
+          />
       }
-      <ToggleButtonGroup type="radio" name="armorTypes" value={props.armorType} onChange={props.changeArmor}>
-        <ToggleButton value={1}>Helmets</ToggleButton>
-        <ToggleButton value={2}>Gauntlets</ToggleButton>
-        <ToggleButton value={3}>Chest Armor</ToggleButton>
-        <ToggleButton value={4}>Leg Armor</ToggleButton>
-      </ToggleButtonGroup>
+      <ButtonGroup type="checkbox" name="armorTypes" value={props.armorType}>
+        <Button value={1} onClick={changeArmor}>Helmets</Button>
+        <Button value={2} onClick={changeArmor}>Gauntlets</Button>
+        <Button value={3} onClick={changeArmor}>Chest Armor</Button>
+        <Button value={4} onClick={changeArmor}>Leg Armor</Button>
+      </ButtonGroup>
       &nbsp;
-      <ToggleButton
-        type="checkbox"
-        variant="secondary"
-        checked={props.showKeeps}
-        value="1"
-        onChange={props.toggleKeeps}
-      >
-        &nbsp;Keeps
-      </ToggleButton>
+      <BooleanButton
+        buttonText="Keeps"
+        booleanType={props.showKeeps}
+        toggleFunction={props.toggleKeeps}
+        color="#565e64"
+        title="Toggle to show or hide armor to keep"
+      />
       &nbsp;
-      <ToggleButton
-        type="checkbox"
-        variant="secondary"
-        checked={props.showJunks}
-        value="1"
-        onChange={props.toggleJunks}
-      >
-        &nbsp;Junks
-      </ToggleButton>
+      <BooleanButton
+        buttonText="Junks"
+        booleanType={props.showJunks}
+        toggleFunction={props.toggleJunks}
+        color="#565e64"
+        title="Toggle to show or hide armor to dismantle"
+      />
       &nbsp;
-      <ToggleButton
-        type="checkbox"
-        variant="secondary"
-        checked={props.showVendor}
-        value="1"
-        onChange={props.toggleVendor}
-      >
-        &nbsp;Vendor
-      </ToggleButton>
+      <BooleanButton
+        buttonText="Vendor"
+        booleanType={props.showVendor}
+        toggleFunction={props.toggleVendor}
+        color="#565e64"
+        title="Toggle to show or hide vendor armor"
+      />
       &nbsp;
-      <Button variant="success" onClick={props.evaluateArmor}>Evaluate Loadouts</Button>
+      <Button
+        variant="success"
+        onClick={props.evaluateArmor}
+        title="Click to evaluate armor based on the inputs below"
+      >Evaluate Loadouts
+      </Button>
 
     </div>
   )

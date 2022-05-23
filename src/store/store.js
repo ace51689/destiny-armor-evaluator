@@ -1,35 +1,64 @@
 import create from "zustand"
 import { persist, devtools, redux } from "zustand/middleware"
 
-const initialState = { characterClasses: [], userArmor: [], vendorArmor: [], error: {}, showClassButtons: false, }
+const state = {
+  accessInformation: {},
+  profileInformation: {},
+  characterInformation: {},
+  userArmor: [],
+  vendorArmor: [],
+  helpers: {
+    error: {
+      type: "none",
+      message: ""
+    },
+    showClassButtons: false
+  }
+}
 
-export const GET_CHAR_INFO = "GETCHARINFO"
-export const GET_ARMOR = "GETARMOR"
-export const GET_USER_ARMOR = "GETUSERARMOR"
-export const GET_VENDOR_ARMOR = "GETVENDORARMOR"
-export const GET_INTRINSICS = "GETINTRINSICS"
-export const SET_ERROR = "SETERROR"
-export const SET_SHOW_CLASS_BUTTONS = "SETSHOWCLASSBUTTONS"
+export const actions = {
+  setAccessInformation: "setAccessInformation",
+  setProfileInformation: "setProfileInformation",
+  setCharacterInformation: "setCharacterInformation",
+  setUserArmor: "setUserArmor",
+  setVendorArmor: "setVendorArmor",
+  setError: "setError",
+  setShowClassButtons: "setShowClassButtons",
+  resetState: "resetState"
+}
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case GET_CHAR_INFO:
-      return { characterClasses: action.payload }
-    case GET_ARMOR:
-      return { staticArmor: action.payload }
-    case GET_USER_ARMOR:
+    case actions.setAccessInformation:
+      return { accessInformation: action.payload }
+    case actions.setProfileInformation:
+      return { profileInformation: action.payload }
+    case actions.setCharacterInformation:
+      return { characterInformation: action.payload }
+    case actions.setUserArmor:
       return { userArmor: action.payload }
-    case GET_VENDOR_ARMOR:
+    case actions.setVendorArmor:
       return { vendorArmor: action.payload }
-    case GET_INTRINSICS:
-      return { intrinsics: action.payload }
-    case SET_ERROR:
-      return { error: action.payload }
-    case SET_SHOW_CLASS_BUTTONS:
-      return { showClassButtons: action.payload }
+    case actions.setError:
+      return { helpers: { ...state.helpers, error: action.payload } }
+    case actions.setShowClassButtons:
+      return { helpers: { ...state.helpers, showClassButtons: action.payload } }
+    case actions.resetState:
+      return {
+        accessInformation: {},
+        profileInformation: {},
+        characterInformation: {},
+        userArmor: [],
+        vendorArmor: [],
+        helpers: {
+          ...state.helpers,
+          showClassButtons: false
+        }
+      }
     default:
       return state
   }
 }
 
-export const useStore = create(persist(devtools(redux(reducer, initialState))))
+
+export const useStore = create(persist(devtools(redux(reducer, state))))

@@ -1,19 +1,12 @@
 import React from "react"
-import { Switch, Route, Redirect } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import Login from "./views/Login"
 import Authenticate from "./views/Authenticate"
 import PopulateUser from "./views/PopulateUser"
-// import AuthPage from "./views/AuthPage"
-import ClassPage from "./views/ClassPage"
-import Main from "./views/Main"
-import ExoticBattle from "./views/ExoticBattle"
-// import ExtoicPage from "./views/ExtoicPage"
+import PopulateVendor from "./views/PopulateVendor"
 import ArmorEvaluator from "./views/ArmorEvaluator"
-// import SingleEvaluation from "./archived/SingleEvaluation"
 import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
-import PopulateVendor from "./views/PopulateVendor"
-import Refresh from "./views/Refresh"
 import './App.css';
 
 function App() {
@@ -21,48 +14,17 @@ function App() {
   return (
     <div className="App">
       <Navigation />
-      <Switch>
-        <Redirect exact from='/' to='/login' />
-        <Route exact path="/login" render={(routeProps) => {
-          return <Login {...routeProps} />
-        }} />
-        <Route path='/authenticate' render={(routeProps) => {
-          return <Authenticate {...routeProps} />
-        }} />
-        <Route path="/populate-user" render={(routeProps) => {
-          return <PopulateUser {...routeProps} />
-        }} />
-        <Route path="/populate-vendor" render={(routeProps) => {
-          return <PopulateVendor {...routeProps} />
-        }} />
-        {/* <Route exact path="/" render={(routeProps) => {
-          return <AuthPage {...routeProps} />
-        }} /> */}
-        <Route exact path="/refresh" render={(routeProps) => {
-          return <Refresh {...routeProps} />
-        }} />
-        <Route path="/select" render={(routeProps) => {
-          return <ClassPage {...routeProps} />
-        }} />
-        <Route path="/demo-populate" render={(routeProps) => {
-          return <DemoPopulate {...routeProps} />
-        }} />
-        <Route path="/main" render={(routeProps) => {
-          return <Main {...routeProps} />
-        }} />
-        <Route path="/exotic-battle" render={(routeProps) => {
-          return <ExoticBattle {...routeProps} />
-        }} />
-        <Route path="/evaluate/:class?" render={(routeProps) => {
-          return <ArmorEvaluator {...routeProps} />
-        }} />
-        {/* <Route path="/evaluate/:hash?" render={(routeProps) => {
-          return <ExtoicPage {...routeProps} />
-        }} />
-        <Route path="/single/:instance?" render={(routeProps) => {
-          return <SingleEvaluation {...routeProps} />
-        }} /> */}
-      </Switch>
+      <Routes>
+        <Route path='/' element={<Navigate to='/login' replace />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/authenticate' element={<Authenticate />} />
+        <Route path="/populate-user" element={<PopulateUser />} />
+        <Route path="/populate-vendor" element={<PopulateVendor />} />
+        <Route path="/demo-populate" element={<DemoPopulate />} />
+        <Route path='/evaluate'>
+          <Route path=":class" element={<ArmorEvaluator />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
