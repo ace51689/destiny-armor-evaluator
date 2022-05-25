@@ -17,8 +17,8 @@ async function getAccessToken(code) {
   })
   //Check the request status
   if (request.status !== 200) {
-    //If the request fails return false
-    return false
+    //If the request fails return error info:
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert the response to JSON:
   const response = await request.json()
@@ -27,7 +27,7 @@ async function getAccessToken(code) {
   //Define the user's bungie membership id:
   const bungieId = response.membership_id
   //Return the user's access token and bungie membership id:
-  return { accessToken: accessToken, bungieId: bungieId }
+  return { accessToken: accessToken, bungieId: bungieId, ErrorCode: 1 }
 }
 
 
@@ -42,21 +42,22 @@ async function getDestinyId(bungieId) {
   })
   //Check the request status:
   if (request.status !== 200) {
-    //If the request fails return false:
-    return false
+    //If the request fails return error info:
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert the response to JSON:
   const response = await request.json()
-  //If the response information is undefined, return false:
-  if (response.Response.profiles[0] === undefined) {
-    return false
+   //If Bungie returns an internal ErrorCode other than 1:
+  if (response.ErrorCode !== 1) {
+    //Return the response:
+    return response
   }
   //Define the user's destiny id:
   const destinyId = response.Response.profiles[0].membershipId
   //Define the user's membership type:
   const membershipType = response.Response.profiles[0].membershipType
   //Return the user's destiny id and membership type:
-  return { destinyId: destinyId, membershipType: membershipType }
+  return { destinyId: destinyId, membershipType: membershipType, ErrorCode: 1 }
 }
 
 //Helper function that assesses user's character information:
@@ -78,7 +79,7 @@ function assessCharacterInformation(characters) {
     characterClasses.push(classHashKey[character.classHash])
   })
   //Return the character class types and character ids:
-  return { characterClasses: characterClasses, characterIds: characterIds }
+  return { characterClasses: characterClasses, characterIds: characterIds, ErrorCode: 1 }
 }
 
 //Function to get user's character information from the api:
@@ -95,11 +96,16 @@ async function getCharacterInformation(membershipType, destinyId, token) {
   })
   //Check the request status:
   if (request.status !== 200) {
-    //If the request fails return false:
-    return false
+    //If the request fails return error info:
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert the response to JSON:
   const response = await request.json()
+  //If Bungie returns an internal ErrorCode other than 1:
+  if (response.ErrorCode !== 1) {
+    //Return the response:
+    return response
+  }
   //Define the user's character data:
   const characters = response.Response.characters.data
   //Call the assessCharacterInformation function to handle the data:
@@ -112,37 +118,25 @@ async function getCharacterInformation(membershipType, destinyId, token) {
 export async function getUserInformation(code) {
   //Get the access token and bungie id:
   const accessToken = await getAccessToken(code)
-  //Check to see if getAccessToken returned false:
-  if (!accessToken) {
+  //Check to see if getAccessToken returned error info:
+  if (accessToken.ErrorCode !== 1) {
     //If so, return false:
-    return false
+    return accessToken
   }
   //Get the destiny id and membership type:
   const destinyId = await getDestinyId(accessToken.bungieId)
-  //Check to see if getDestinyId returned false:
-  if (!destinyId) {
+  //Check to see if getDestinyId returned error info:
+  if (destinyId.ErrorCode !== 1) {
     //If so, return false:
-    return false
+    return destinyId
   }
   //Get the character information:
   const characterInformation = await getCharacterInformation(destinyId.membershipType, destinyId.destinyId, accessToken.accessToken)
-  //Check to see if getCharacterInformation returned false:
-  if (!characterInformation) {
+  //Check to see if getCharacterInformation returned error info:
+  if (characterInformation.ErrorCode !== 1) {
     //If so, return false:
-    return false
+    return characterInformation
   }
   //Return all of the important user information:
-  return { accessToken: accessToken, destinyId: destinyId, characterInformation: characterInformation }
-}
-
-export async function refreshUserInformation(membershipType, destinyId, accessToken) {
-  //Get the character information:
-  const characterInformation = await getCharacterInformation(membershipType, destinyId, accessToken)
-  //Check to see if getCharacterInformation returned false:
-  if (!characterInformation) {
-    //If so, return false:
-    return false
-  }
-  //Return all of the important user information:
-  return { destinyId: destinyId, characterInformation: characterInformation }
+  return { accessToken: accessToken, destinyId: destinyId, characterInformation: characterInformation, ErrorCode: 1 }
 }

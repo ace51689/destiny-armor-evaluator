@@ -15,10 +15,15 @@ async function getVendors(membershipType, destinyId, characterId, accessToken) {
   })
   //Check the request status:
   if (request.status !== 200) {
-    return false
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert the response to JSON:
   const response = await request.json()
+  //If Bungie returns an internal ErrorCode other than 1:
+  if (response.ErrorCode !== 1) {
+    //Return the response:
+    return response
+  }
   //Shorten the response path:
   const info = response.Response
   //Define an array with the relevent vendor's hashes. Used for filtering later:
@@ -30,7 +35,7 @@ async function getVendors(membershipType, destinyId, characterId, accessToken) {
   const releventVendorStats = Object.entries(info.itemComponents)
     .filter(vendor => vendorHashes.includes(vendor[0]))
   //Return the vendor sales and vendor stats:
-  return { vendorSales: releventVendorSales, vendorStats: releventVendorStats }
+  return { vendorSales: releventVendorSales, vendorStats: releventVendorStats, ErrorCode: 1 }
 }
 
 function assignCorrectVendor(vendor, armorObject) {
@@ -102,8 +107,8 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
   //Get the static items:
   const staticItems = await getStaticItems()
   //If static items is false return false and exit the function:
-  if (!staticItems) {
-    return false
+  if (staticItems.ErrorCode !== 1) {
+    return staticItems
   }
   //Get the static armor
   const staticArmor = staticItems.staticArmor
@@ -119,7 +124,8 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
     //Get the vendors for the current character:
     const vendors = await getVendors(membershipType, destinyId, characterIds[n], accessToken)
     //If vendors returns false, break out of the while loop:
-    if (!vendors) {
+    if (vendors.ErrorCode !== 1) {
+      vendorArray.push(vendors)
       break;
     }
     //Define the vendor sales:
@@ -183,10 +189,11 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
   //If n doesn't equal the number of characters then one of our getVendor calls failed.
   if (n !== numberOfCharacters) {
     //Return false to handle the error in PopulateVendor:
-    return false
+    console.log(vendorArray)
+    return vendorArray[0]
   }
   //If n equals the number of characters then return the full vendor array:
   else {
-    return vendorArray
+    return {vendorArray: vendorArray, ErrorCode: 1 }
   }
 }

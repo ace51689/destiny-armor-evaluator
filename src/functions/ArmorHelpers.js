@@ -15,14 +15,19 @@ async function getInventoryItemDefinitionsPath() {
   })
   //Check the request status:
   if (request.status !== 200) {
-    return false
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Store the response:
   const response = await request.json()
+  //If Bungie returns an internal ErrorCode other than 1:
+  if (response.ErrorCode !== 1) {
+    //Return the response:
+    return response
+  }
   //Store the URL path
   const inventoryItemDefinitionsPath = response.Response.jsonWorldComponentContentPaths.en.DestinyInventoryItemDefinition
   //Return the full URL for fetching Destiny iventory item definitions:
-  return baseURL + inventoryItemDefinitionsPath
+  return { url: baseURL + inventoryItemDefinitionsPath, ErrorCode: 1 }
 }
 
 
@@ -70,14 +75,14 @@ export async function getStaticItems() {
   //Get the path to fetch:
   const requestPath = await getInventoryItemDefinitionsPath()
   //Check the request status:
-  if (!requestPath) {
-    return false
+  if (requestPath.ErrorCode !== 1) {
+    return requestPath
   }
   //Store the response:
-  const request = await fetch(requestPath)
+  const request = await fetch(requestPath.url)
   //Check the request status:
   if (request.status !== 200) {
-    return false
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert to JSON:
   const response = await request.json()
@@ -89,7 +94,7 @@ export async function getStaticItems() {
   const ornaments = findingOrnaments(response)
 
   //Return an object containing both the static armor array and intrinsics array:
-  return { staticArmor: staticArmor, intrinsics: intrinsics, ornaments: ornaments }
+  return { staticArmor: staticArmor, intrinsics: intrinsics, ornaments: ornaments, ErrorCode: 1 }
 }
 
 
@@ -153,10 +158,15 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
   })
   //Check the request status:
   if (request.status !== 200) {
-    return false
+    return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
   //Convert the response to JSON
   const response = await request.json()
+  //If Bungie returns an internal ErrorCode other than 1:
+  if (response.ErrorCode !== 1) {
+    //Return the response:
+    return response
+  }
   //Shorten the object path:
   const info = response.Response
   //Get the instances array and armor instance ids:
@@ -169,7 +179,7 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
   const socketsArray = Object.entries(info.itemComponents.sockets.data)
     .filter(item => armorInstanceIds.includes(item[0]))
   //Return the instances array, master array, and sockets array:
-  return { instancesArray: instancesArray, masterArray: masterArray, socketsArray: socketsArray }
+  return { instancesArray: instancesArray, masterArray: masterArray, socketsArray: socketsArray, ErrorCode: 1 }
 }
 
 
@@ -355,8 +365,8 @@ export async function getUserArmor(destinyId, membershipType, accessToken) {
   //Get the static items and define them individually:
   const staticItems = await getStaticItems()
   //Check if staticItems returns false:
-  if (!staticItems) {
-    return false
+  if (staticItems.ErrorCode !== 1) {
+    return staticItems
   }
   const staticArmor = staticItems.staticArmor
   const intrinsics = staticItems.intrinsics
@@ -364,8 +374,8 @@ export async function getUserArmor(destinyId, membershipType, accessToken) {
   //Get the user armor information and define each array individually
   const armorInformation = await getArmorInformation(destinyId, membershipType, accessToken)
   //Check if armorInformation returns false:
-  if (!armorInformation) {
-    return false
+  if (armorInformation.ErrorCode !== 1) {
+    return armorInformation
   }
   const instancesArray = armorInformation.instancesArray
   const masterArray = armorInformation.masterArray
@@ -404,5 +414,5 @@ export async function getUserArmor(destinyId, membershipType, accessToken) {
     armorArray.push(armorObject)
   })
   //Return the completed armor array:
-  return armorArray
+  return { armorArray: armorArray, ErrorCode: 1 }
 }

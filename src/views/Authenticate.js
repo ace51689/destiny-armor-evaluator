@@ -3,10 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useStore, actions } from '../store/store'
 import { getUserInformation } from '../functions/ProfileHelpers'
 
-function Authenticate(props) {
-  //Define the code needed to retrieve the access token:
-  // const authcode = useLocation().replace('?code=', '')
+function Authenticate() {
+  //Define the current location:
   const location = useLocation()
+  //Define the code needed to retrieve the access token:
   const authcode = location.search.replace('?code=', '')
   //Define the dispatch used to store data in global state:
   const dispatch = useStore(state => state.dispatch)
@@ -21,8 +21,8 @@ function Authenticate(props) {
       localStorage.clear()
       getUserInformation(authcode)
         .then(data => {
-          if (!data) {
-            dispatch({ type: actions.setError, payload: { type: "error", message: "There was a problem with your request, please try again." } })
+          if (data.ErrorCode !== 1) {
+            dispatch({ type: actions.setError, payload: { type: "error", message: `Could not access your Bungie profile information. ${data.Message}`  } })
             navigate('/login')
           }
           else {

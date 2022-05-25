@@ -44,7 +44,9 @@ const ArmorEvaluator = (props) => {
   })
 
   useEffect(() => {
-    const masterArray = [...userArmor, ...vendorArmor]
+    console.log(vendorArmor)
+    const  masterArray = [...userArmor, ...vendorArmor]
+
 
     const legendaryHelmets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")

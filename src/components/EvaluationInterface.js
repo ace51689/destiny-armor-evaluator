@@ -1,4 +1,5 @@
 import React from 'react'
+import { useStore } from '../store/store'
 import SelectableStatGroup from './SelectableStatGroup'
 import ArmorToggleBar from '../components/ArmorToggleBar'
 import ArmorItem from './ArmorItem'
@@ -6,6 +7,7 @@ import ExoticItem from './ExoticItem'
 // import { Form } from 'react-bootstrap'
 
 const EvaluationInterface = (props) => {
+  const error = useStore(state => state.helpers.error)
   const key = (choice) => {
     if (choice.itemInstanceId !== undefined) {
       return choice.itemInstanceId
@@ -54,7 +56,7 @@ const EvaluationInterface = (props) => {
     return choice
   })
 
-  const noArmor = filteredArmor.length == 0
+  const noArmor = filteredArmor.length === 0
 
   // const [query, setQuery] = useState("")
   // let n = 0
@@ -65,6 +67,9 @@ const EvaluationInterface = (props) => {
 
   return (
     <div>
+      {
+        error.type === "error" && <div style={{ color: "red" }}>{error.message}</div>
+      }
       <ArmorToggleBar
         exotic={props.exotic}
         toggleExotic={props.toggleExotic}

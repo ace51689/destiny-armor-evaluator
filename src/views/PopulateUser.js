@@ -24,12 +24,12 @@ function PopulateUser() {
       getUserArmor(destinyId, membershipType, accessToken)
         .then(array => {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
-          if (!array) {
+          if (array.ErrorCode !== 1) {
             dispatch({
               type: actions.setError,
               payload: {
                 type: "error",
-                message: "There was an error retrieving your armor. Please try authenticating with Bungie again."
+                message: `There was an error retrieving your armor. ${array.Message} Please try authenticating with Bungie again.`
               }
             })
             navigate('/login')
@@ -37,7 +37,7 @@ function PopulateUser() {
           //If the array isn't false:
           else {
             //Dispatch the array to global state:
-            dispatch({ type: actions.setUserArmor, payload: array })
+            dispatch({ type: actions.setUserArmor, payload: array.armorArray })
             //Send the user to /populate-vendor:
             navigate('/populate-vendor')
           }

@@ -30,28 +30,28 @@ function PopulateVendor() {
       getVendorArmor(membershipType, destinyId, characterIds, accessToken)
         .then(array => {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
-          if (!array) {
+          console.log(array)
+          if (array.ErrorCode !== 1) {
             dispatch({
               type: actions.setError,
               payload: {
                 type: "error",
-                message: "There was an error retrieving current vendor information. Please try authenticating with Bungie again."
+                message: `There was an error retrieving current vendor information. ${array.Message} Please try authenticating with Bungie again.`
               }
             })
-            navigate('/login')
           }
           //If the array isn't false:
           else {
             //Dispatch array to golbal state:
-            dispatch({ type: actions.setVendorArmor, payload: array })
-            //Set finished to true:
-            setFinished(true)
-            //After one second send the user to the select page: (TODO more robust 'home' page)
-            setTimeout(() => {
-              dispatch({ type: actions.setIsLoggedIn, payload: true})
-              navigate(`/evaluate/${mainClass}`)
-            }, 1000)
+            dispatch({ type: actions.setVendorArmor, payload: array.vendorArray })
           }
+          //Set finished to true:
+          setFinished(true)
+          //After one second send the user to the select page: (TODO more robust 'home' page)
+          setTimeout(() => {
+            dispatch({ type: actions.setIsLoggedIn, payload: true})
+            navigate(`/evaluate/${mainClass}`)
+          }, 1000)
         })
     }
     //If mounted is false: Used to manage how many times we run getVendorArmor
