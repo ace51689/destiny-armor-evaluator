@@ -47,6 +47,10 @@ async function getDestinyId(bungieId) {
   }
   //Convert the response to JSON:
   const response = await request.json()
+  //If the response information is undefined, return false:
+  if (response.Response.profiles[0] === undefined) {
+    return false
+  }
   //Define the user's destiny id:
   const destinyId = response.Response.profiles[0].membershipId
   //Define the user's membership type:
