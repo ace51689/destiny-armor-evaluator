@@ -30,7 +30,6 @@ function PopulateVendor() {
       getVendorArmor(membershipType, destinyId, characterIds, accessToken)
         .then(array => {
           //If the array is false, return the user to /login. (TODO: more robust error handling)
-          console.log(array)
           if (array.ErrorCode !== 1) {
             dispatch({
               type: actions.setError,

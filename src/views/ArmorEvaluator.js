@@ -44,9 +44,7 @@ const ArmorEvaluator = (props) => {
   })
 
   useEffect(() => {
-    console.log(vendorArmor)
     const  masterArray = [...userArmor, ...vendorArmor]
-
 
     const legendaryHelmets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")
@@ -169,27 +167,6 @@ const ArmorEvaluator = (props) => {
   const handleEvalType = (val) => {
     setEvalType(val)
   }
-
-  // const handleArmorType = (val) => {
-  //   // console.log("clicked")
-  //   setArmorType(val)
-  // }
-
-  // const handleToggleExotic = (e) => {
-  //   setExotic(e.currentTarget.checked)
-  // }
-
-  // const handleToggleVendor = (e) => {
-  //   setShowVendor(e.currentTarget.checked)
-  // }
-
-  // const handleToggleKeeps = (e) => {
-  //   setShowKeeps(e.currentTarget.checked)
-  // }
-
-  // const handleToggleJunks = (e) => {
-  //   setShowJunks(e.currentTarget.checked)
-  // }
 
   const evaluateArmor = () => {
     switch (armorType) {

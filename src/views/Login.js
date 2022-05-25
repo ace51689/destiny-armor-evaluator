@@ -16,11 +16,6 @@ function Login() {
 
   useEffect(() => {
     dispatch({ type: actions.resetState })
-
-    return function cleanup() {
-      console.log("unmount")
-      dispatch({ type: actions.setError, payload: { type: "none", message: "" } })
-    }
   }, [dispatch])
 
   return (

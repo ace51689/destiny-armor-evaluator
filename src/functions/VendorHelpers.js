@@ -189,7 +189,6 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
   //If n doesn't equal the number of characters then one of our getVendor calls failed.
   if (n !== numberOfCharacters) {
     //Return false to handle the error in PopulateVendor:
-    console.log(vendorArray)
     return vendorArray[0]
   }
   //If n equals the number of characters then return the full vendor array:
