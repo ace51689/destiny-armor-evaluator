@@ -14,6 +14,48 @@ const EvaluationInterface = (props) => {
       return choice.itemHash
     }
   }
+
+  const filteredArmor = props.chosen.filter(choice => {
+    const showVendor = props.showVendor
+    const showKeeps = props.showKeeps
+    const showJunks = props.showJunks
+
+    if (choice.counter !== undefined) {
+      if (showVendor && showKeeps && !showJunks) {
+        return choice.counter > 0 || !choice.owned
+      }
+      if (showVendor && !showKeeps && showJunks) {
+        return choice.counter === 0 || !choice.owned
+      }
+      if (showVendor && !showKeeps && !showJunks) {
+        return !choice.owned
+      }
+      if (!showVendor && showKeeps && showJunks) {
+        return choice.owned
+      }
+      if (!showVendor && showKeeps && !showJunks) {
+        return choice.counter > 0 && choice.owned
+      }
+      if (!showVendor && !showKeeps && showJunks) {
+        return choice.counter === 0 && choice.owned
+      }
+      if (!showVendor && !showKeeps && !showJunks) {
+        return false
+      }
+    }
+    else {
+      if (!showVendor) {
+        return choice.owned
+      }
+      else {
+        return choice
+      }
+    }
+    return choice
+  })
+
+  const noArmor = filteredArmor.length == 0
+
   // const [query, setQuery] = useState("")
   // let n = 0
 
@@ -53,70 +95,37 @@ const EvaluationInterface = (props) => {
         <Form.Label>Filter by Exotic:</Form.Label>
         <Form.Control onChange={handleSearch} value={query} type="text" placeholder="" className="mr-sm-2" />
       </Form> */}
-
-      <ul className='armor-list'>
+      <div>
         {
-          props.chosen && props.chosen
-            // .filter((choice) => choice.name.toLowerCase().includes(query.toLowerCase()))
-            .filter((choice) => {
-              const showVendor = props.showVendor
-              const showKeeps = props.showKeeps
-              const showJunks = props.showJunks
-
-              if (choice.counter !== undefined) {
-                if (showVendor && showKeeps && !showJunks) {
-                  return choice.counter > 0 || !choice.owned
-                }
-                if (showVendor && !showKeeps && showJunks) {
-                  return choice.counter === 0 || !choice.owned
-                }
-                if (showVendor && !showKeeps && !showJunks) {
-                  return !choice.owned
-                }
-                if (!showVendor && showKeeps && showJunks) {
-                  return choice.owned
-                }
-                if (!showVendor && showKeeps && !showJunks) {
-                  return choice.counter > 0 && choice.owned
-                }
-                if (!showVendor && !showKeeps && showJunks) {
-                  return choice.counter === 0 && choice.owned
-                }
-                if (!showVendor && !showKeeps && !showJunks) {
-                  return false
-                }
+          noArmor ?
+            <div>No armor pieces matched your filter criteria. Change your filter parameters and try again.</div>
+            :
+            <ul className='armor-list'>
+              {
+                props.chosen && filteredArmor
+                  .map(choice => {
+                    if (choice.length > 1) {
+                      return <ExoticItem
+                        key={choice[0].itemHash}
+                        item={choice}
+                        userTier={props.userTier}
+                        evalType={props.evalType}
+                      />
+                    }
+                    else {
+                      return <ArmorItem
+                        key={key(choice)}
+                        item={choice}
+                        userTier={props.userTier}
+                        evalType={props.evalType}
+                      // specific={query}
+                      />
+                    }
+                  })
               }
-              else {
-                if (!showVendor) {
-                  return choice.owned
-                }
-                else {
-                  return choice
-                }
-              }
-              return choice
-            })
-            .map(choice => {
-              if (choice.length > 1) {
-                return <ExoticItem
-                  key={choice[0].itemHash}
-                  item={choice}
-                  userTier={props.userTier}
-                  evalType={props.evalType}
-                />
-              }
-              else {
-                return <ArmorItem
-                  key={key(choice)}
-                  item={choice}
-                  userTier={props.userTier}
-                  evalType={props.evalType}
-                // specific={query}
-                />
-              }
-            })
+            </ul>
         }
-      </ul>
+      </div>
     </div>
   )
 }
