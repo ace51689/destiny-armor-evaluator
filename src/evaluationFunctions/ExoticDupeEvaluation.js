@@ -24,7 +24,7 @@ const findingTieLoadouts = (exoticLoadouts, exoticArray) => {
   }
   else {
     filteredArmorArray.push(topLoadout)
-    console.log(filteredArmorArray)
+    // console.log(filteredArmorArray)
     const userOwnedLoadouts = filteredArmorArray.filter(loadout => !loadout.containsVendor)
     // console.log(userOwnedLoadouts)
     if (userOwnedLoadouts.length === 1) {
@@ -32,10 +32,10 @@ const findingTieLoadouts = (exoticLoadouts, exoticArray) => {
     }
     // console.log(userOwnedLoadouts)
     const finalExoticHashes = userOwnedLoadouts.map(loadout => loadout.exoticInstance)
-    console.log(finalExoticHashes)
-    console.log(exoticArray)
+    // console.log(finalExoticHashes)
+    // console.log(exoticArray)
     const finalExoticItems = exoticArray.filter(exotic => finalExoticHashes.includes(exotic.itemInstanceId))
-    console.log(finalExoticItems)
+    // console.log(finalExoticItems)
     finalExoticItems.sort((a, b) => b.powerLevel - a.powerLevel)
     finalExoticItems.sort((a, b) => b.energyCapacity - a.energyCapacity)
     const finalLoadout = userOwnedLoadouts.find(loadout => loadout.exoticInstance === finalExoticItems[0].itemInstanceId)
@@ -69,7 +69,7 @@ const findFinalLoadout = (loadouts, exoticArray) => {
   }
 
   const finalLoadoutArray = sortArray(closestIntRecArray, 'intellect')
-  console.log(exoticArray)
+  // console.log(exoticArray)
   const bestLoadout = findingTieLoadouts(finalLoadoutArray, exoticArray)
   return bestLoadout
 }
@@ -82,12 +82,12 @@ const findBestLoadout = (loadouts, exoticArray) => {
     if (loadouts.every(loadout => loadout.stats.intellect > loadout.stats.recovery)) {
       //Every loadout has more intellect than recovery
       const finalLoadout = findFinalLoadout(loadouts, exoticArray)
-      return finalLoadout[0].exoticInstance
+      return { exoticInstance: finalLoadout[0].exoticInstance, loadouts: finalLoadout }
     }
     else if (loadouts.every(loadout => loadout.stats.recovery > loadout.stats.intellect)) {
       //Every loadout has more recovery than intellect
       const finalLoadout = findFinalLoadout(loadouts, exoticArray)
-      return finalLoadout[0].exoticInstance
+      return { exoticInstance: finalLoadout[0].exoticInstance, loadouts: finalLoadout }
     }
     else {
       //The loadouts array contains some amount of inverses of Intellect and Recovery
@@ -100,26 +100,41 @@ const findBestLoadout = (loadouts, exoticArray) => {
       const sameExoticInstance = intellectSortedArray[0].exoticInstance === recoverySortedArray[0].exoticInstance
       if (sameExoticInstance) {
         console.log("Had both types of loadouts, the best two had the same exoticInstance")
-        return intellectSortedArray[0].exoticInstance
+        return { exoticInstance: intellectSortedArray[0].exoticInstance, loadouts: [intellectSortedArray[0], recoverySortedArray[0]] }
       }
       else if (intellectSortedArray.length === 1 && recoverySortedArray.length === 1) {
         console.log("Had ONE of each type of loadout and the two didn't have the same exoticInstance ")
-        return intellectSortedArray[0].exoticInstance
+        return { exoticInstance: intellectSortedArray[0].exoticInstance, loadouts: [intellectSortedArray[0]] }
       }
       else {
-        console.log("Had more than one of at least one type of loadout and the top two didnt have the same exoticInstacne")
+        console.log("Had more than one of at least one type of loadout and the top two didnt have the same exoticInstance")
+        // console.log(loadouts)
+        // console.log(exoticArray)
+        const allExoticInstances = loadouts.map(loadout => loadout.exoticInstance)
+        const exoticInstances = allExoticInstances.filter((instance, index) => allExoticInstances.indexOf(instance) === index)
+        // console.log(exoticInstances)
+        const finalInstances = []
+        exoticInstances.forEach(instance => {
+          const hasIntellectLoadout = intellectSortedArray.some(loadout => loadout.exoticInstance === instance)
+          const hasRecoveryLoadout = recoverySortedArray.some(loadout => loadout.exoticInstance === instance)
+          if (hasIntellectLoadout && hasRecoveryLoadout) {
+            finalInstances.push(instance)
+          }
+        })
+        if (finalInstances.length === 1) {
+          return { exoticInstance: finalInstances[0], loadouts: [intellectSortedArray[0], recoverySortedArray[0]] }
+        }
+        else {
+          console.log("Neither focus included the same exotic instance")
+          console.log(finalInstances)
+        }
       }
     }
   }
   else {
     //Every loadout's difference between Intellect and Recovery is less than 1.
     const finalLoadout = findFinalLoadout(loadouts, exoticArray)
-    if (loadouts[0].exoticName === "Geomag Stabilizers") {
-      console.log("Geomags:")
-      console.log(loadouts)
-      console.log(finalLoadout)
-    }
-    return finalLoadout[0].exoticInstance
+    return { exoticInstance: finalLoadout[0].exoticInstance, loadouts: finalLoadout }
   }
 }
 
@@ -139,12 +154,12 @@ const findBestLoadout = (loadouts, exoticArray) => {
 const findExoticToKeep = (exoticLoadouts, exotics, exoticArray, setExoticArray) => {
   if (exoticLoadouts.length === 1) {
     console.log('Only one loadout entered function')
-    return exoticLoadouts[0].exoticInstance
+    return { exoticInstance: exoticLoadouts[0].exoticInstance, loadouts: exoticLoadouts[0] }
   }
   else if (exoticLoadouts.every(loadout => loadout.stats.totalIntRec >= 19)) {
     console.log("Best was 19 or higher")
-    const finalLoadout = findFinalLoadout(exoticLoadouts, exoticArray)
-    return finalLoadout[0].exoticInstance
+    const finalLoadout = findFinalLoadout(exoticLoadouts, exotics)
+    return { exoticInstance: finalLoadout[0].exoticInstance, loadouts: finalLoadout }
   }
   else if (exoticLoadouts.every(loadout => loadout.stats.totalIntRec >= 18)) {
     console.log("Best was 18 or 18.5")
@@ -272,17 +287,19 @@ const calculateStats = (exoticArray, topArray, middleArray, bottomArray, userTie
       const filteredArmorArray = findingBestLoadouts(exoticLoadouts)
 
       // console.log(filteredArmorArray)
-
-      const instanceToKeep = findExoticToKeep(filteredArmorArray, exotic, exoticArray, setExoticArray)
-      // console.log(instanceToKeep)
+      const finalLoadoutInfo = findExoticToKeep(filteredArmorArray, exotic, exoticArray, setExoticArray)
+      const instanceToKeep = finalLoadoutInfo.exoticInstance
+      // console.log(finalLoadoutInfo)
       exoticArray.forEach(array => {
         if (array[0].itemHash === exoticHash) {
           const updatedDupes = array.map(exotic => {
+            // console.log(exotic)
             if (exotic.itemInstanceId === instanceToKeep) {
-              return { ...exotic, counter: 1 }
+              return { ...exotic, counter: 1, loadouts: finalLoadoutInfo.loadouts }
             }
             return exotic
           })
+          console.log(updatedDupes)
           finalExoticArray.push(updatedDupes)
         }
       })
@@ -342,8 +359,8 @@ export const ExoticDupeEvaluation = (exoticHelmets, setExoticHelmets, helmets, e
   const noLoadouts = []
   const tieLoadouts = []
 
-  
-  
+
+
   if (exoticHelmets.length > 0) {
     resetEvaluation(exoticHelmets)
     // const finalHelmetsArray = filterExoticVendorDupes(exoticHelmets)
