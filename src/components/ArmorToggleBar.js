@@ -8,6 +8,20 @@ const ArmorToggleBar = (props) => {
     props.changeArmor(parseInt(e.target.value))
   }
 
+  const onStyle = {
+    color: "#fff",
+    backgroundColor: "#0d6efd",
+    borderColor: "#0d6efd",
+    boxShadow: 'none'
+  }
+
+  const offStyle = {
+    color: "#0d6efd",
+    backgroundColor: "#fff",
+    borderColor: "#0d6efd",
+    boxShadow: 'none'
+  }
+
   return (
     <div className="armor-toggle-bar">
       {
@@ -30,10 +44,10 @@ const ArmorToggleBar = (props) => {
           />
       }
       <ButtonGroup type="checkbox" name="armorTypes" value={props.armorType}>
-        <Button value={1} onClick={changeArmor}>Helmets</Button>
-        <Button value={2} onClick={changeArmor}>Gauntlets</Button>
-        <Button value={3} onClick={changeArmor}>Chest Armor</Button>
-        <Button value={4} onClick={changeArmor}>Leg Armor</Button>
+        <Button value={1} style={props.armorType === 1 ? onStyle : offStyle} onClick={changeArmor}>Helmets</Button>
+        <Button value={2} style={props.armorType === 2 ? onStyle : offStyle} onClick={changeArmor}>Gauntlets</Button>
+        <Button value={3} style={props.armorType === 3 ? onStyle : offStyle} onClick={changeArmor}>Chest Armor</Button>
+        <Button value={4} style={props.armorType === 4 ? onStyle : offStyle} onClick={changeArmor}>Leg Armor</Button>
       </ButtonGroup>
       &nbsp;
       <BooleanButton

@@ -150,6 +150,12 @@ const ArmorEvaluator = (props) => {
     setExoticChests(exoticChests)
     setExoticLegs(exoticLegs)
 
+    setExotic(false)
+    setArmorType(1)
+    setShowKeeps(true)
+    setShowJunks(true)
+    setShowVendor(true)
+
   },
     [userArmor, vendorArmor, setHelmets, setGauntlets, setChests, setLegs, playerClass]
   )
