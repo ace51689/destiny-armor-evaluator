@@ -48,7 +48,7 @@ function PopulateVendor() {
             setFinished(true)
             //After one second send the user to the select page: (TODO more robust 'home' page)
             setTimeout(() => {
-              dispatch({ type: actions.setShowClassButtons, payload: true})
+              dispatch({ type: actions.setIsLoggedIn, payload: true})
               navigate(`/evaluate/${mainClass}`)
             }, 1000)
           }

@@ -8,6 +8,7 @@ import ArmorEvaluator from "./views/ArmorEvaluator"
 import Navigation from "./components/Navigation"
 import DemoPopulate from "./components/DemoPopulate"
 import './App.css';
+import NotFound from "./views/NotFound"
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path='/evaluate'>
           <Route path=":class" element={<ArmorEvaluator />} />
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </div>
   );

@@ -12,7 +12,8 @@ const state = {
       type: "none",
       message: ""
     },
-    showClassButtons: false
+    isLoggedIn: false,
+    isDemo: false
   }
 }
 
@@ -23,7 +24,8 @@ export const actions = {
   setUserArmor: "setUserArmor",
   setVendorArmor: "setVendorArmor",
   setError: "setError",
-  setShowClassButtons: "setShowClassButtons",
+  setIsLoggedIn: "setIsLoggedIn",
+  setIsDemo: "setIsDemo",
   resetState: "resetState"
 }
 
@@ -41,8 +43,10 @@ const reducer = (state, action) => {
       return { vendorArmor: action.payload }
     case actions.setError:
       return { helpers: { ...state.helpers, error: action.payload } }
-    case actions.setShowClassButtons:
-      return { helpers: { ...state.helpers, showClassButtons: action.payload } }
+    case actions.setIsLoggedIn:
+      return { helpers: { ...state.helpers, isLoggedIn: action.payload } }
+    case actions.setIsDemo:
+      return { helpers: { ...state.helpers, isDemo: action.payload}}
     case actions.resetState:
       return {
         accessInformation: {},
@@ -52,7 +56,8 @@ const reducer = (state, action) => {
         vendorArmor: [],
         helpers: {
           ...state.helpers,
-          showClassButtons: false
+          isLoggedIn: false,
+          isDemo: false
         }
       }
     default:

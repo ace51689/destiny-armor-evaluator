@@ -17,7 +17,8 @@ function DemoPopulate() {
       }
     })
       dispatch({ type: actions.setUserArmor, payload: demoArmor })
-      dispatch({ type: actions.setShowClassButtons, payload: true})
+      dispatch({ type: actions.setIsLoggedIn, payload: true})
+      dispatch({ type: actions.setIsDemo, payload: true})
       setLoading(false)
     }
 

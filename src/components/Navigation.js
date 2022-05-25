@@ -7,7 +7,8 @@ import { Nav, Button } from "react-bootstrap"
 const Navigation = () => {
   const navigate = useNavigate()
   const dispatch = useStore(state => state.dispatch)
-  const showClassButtons = useStore(state => state.helpers.showClassButtons)
+  const isLoggedIn = useStore(state => state.helpers.isLoggedIn)
+  const isDemo = useStore(state => state.helpers.isDemo)
   const characterClasses = useStore(state => state.characterInformation.characterClasses)
 
   const handleLogout = () => {
@@ -16,7 +17,7 @@ const Navigation = () => {
   }
 
   const handleRefresh = () => {
-    dispatch({ type: actions.setShowClassButtons, payload: false })
+    dispatch({ type: actions.setIsLoggedIn, payload: false })
     navigate('/populate-user')
   }
 
@@ -25,7 +26,7 @@ const Navigation = () => {
       <div style={{ "display": "flex" }}>
         &nbsp;
         {
-          showClassButtons &&
+          isLoggedIn &&
           characterClasses
             .filter((item, index) => characterClasses.indexOf(item) === index)
             .map(classType => {
@@ -35,9 +36,11 @@ const Navigation = () => {
       </div>
       <div>
         {
-          showClassButtons &&
+          isLoggedIn &&
           <Nav.Item>
-            <Button onClick={handleRefresh}>Refresh Gear</Button>
+            {
+                !isDemo && <Button onClick={handleRefresh}>Refresh Gear</Button>
+            }
             &nbsp;
             <Button onClick={handleLogout}>Logout</Button>
             &nbsp;
