@@ -264,15 +264,29 @@ const checkForLargeDifference = (loadouts) => {
 
 const findInverseLoadouts = (loadouts) => {
   const intellectFocusedArray = loadouts.filter(loadout => loadout.stats.intellect > loadout.stats.recovery)
+  let filteredIntellectArray
+  if (intellectFocusedArray.some(loadout => loadout.stats.intRecDiff <= 1.5)) {
+    filteredIntellectArray = intellectFocusedArray.filter(loadout => loadout.stats.intRecDiff <= 1.5)
+  }
+  else {
+    filteredIntellectArray = [...intellectFocusedArray]
+  }
+  
+
   const recoveryFocusedArray = loadouts.filter(loadout => loadout.stats.recovery > loadout.stats.intellect)
-
-  const intellectSortedArray = sortArray(intellectFocusedArray, 'intellect')
-  const recoverySortedArray = sortArray(recoveryFocusedArray, 'recovery')
-
+  let filteredRecoveryArray
+  if (recoveryFocusedArray.some(loadout => loadout.stats.intRecDiff <= 1.5)) {
+    filteredRecoveryArray = recoveryFocusedArray.filter(loadout => loadout.stats.intRecDiff <= 1.5)
+  }
+  else {
+    filteredRecoveryArray = [...recoveryFocusedArray]
+  }
+  
+  const intellectSortedArray = sortArray(filteredIntellectArray, 'intellect')
+  const recoverySortedArray = sortArray(filteredRecoveryArray, 'recovery')
+  
   const finalIntellectArray = findingTieLoadouts(intellectSortedArray, 'intellect')
   const finalRecoveryArray = findingTieLoadouts(recoverySortedArray, 'recovery')
-
-  // console.log(loadouts[0].exoticName)
 
   return {
     intellectLoadout: finalIntellectArray,
@@ -302,26 +316,26 @@ const findSmallestIntRecDiff = (loadouts) => {
   return smallestIntRecDiffArray
 }
 
-//TODO: create a function that handles finding the smallest pointsToMax and filtering out loadouts that require more points to max.
-// const findsmallestPointsFromMax = (loadouts) => {
-//   loadouts.sort((a, b) => a.stats.pointsFromMax - b.stats.pointsFromMax)
-//   const smallestPointsFromMax = loadouts[0].stats.pointsFromMax
-//   const smallestPointsFromMaxArray = loadouts.filter(loadout => loadout.stats.pointsFromMax === smallestPointsFromMax)
-//   return smallestPointsFromMaxArray
-// }
+// TODO: create a function that handles finding the smallest pointsToMax and filtering out loadouts that require more points to max.
+const findsmallestPointsFromMax = (loadouts) => {
+  loadouts.sort((a, b) => a.stats.pointsFromMax - b.stats.pointsFromMax)
+  const smallestPointsFromMax = loadouts[0].stats.pointsFromMax
+  const smallestPointsFromMaxArray = loadouts.filter(loadout => loadout.stats.pointsFromMax === smallestPointsFromMax)
+  return smallestPointsFromMaxArray
+}
 
 // const findHighestTotalIntRec = (loadouts) => {
-//   loadouts.sort((a, b) => b.stats.totalIntRec - a.stats.totalIntRec)
-//   const highestTotalIntRec = loadouts[0].stats.totalIntRec
-//   const highestTotalIntRecArray = loadouts.filter(loadout => loadout.stats.totalIntRec === highestTotalIntRec)
-//   return highestTotalIntRecArray
-// }
-
-const findZeroArmorCountLoadouts = (loadouts) => {
-  if (loadouts[0].armorCounter.includes(0)) {
-    return true
-  }
-  return false
+  //   loadouts.sort((a, b) => b.stats.totalIntRec - a.stats.totalIntRec)
+  //   const highestTotalIntRec = loadouts[0].stats.totalIntRec
+  //   const highestTotalIntRecArray = loadouts.filter(loadout => loadout.stats.totalIntRec === highestTotalIntRec)
+  //   return highestTotalIntRecArray
+  // }
+  
+  const findZeroArmorCountLoadouts = (loadouts) => {
+    if (loadouts[0].armorCounter.includes(0)) {
+      return true
+    }
+    return false
 }
 
 const findLoadoutsToKeep = (loadoutsArray, topArray, middleArray, bottomArray, tieLoadouts) => {
