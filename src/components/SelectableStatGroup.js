@@ -7,7 +7,7 @@ const SelectableStatGroup = (props) => {
       <div className='selectable-stat-group'>
         <div id='stat-groups'>
           <div>
-            <label title="Minimum amount of total stat points you want across all six stat tiers" htmlFor="customTier">Minimum Stat Tier: </label>
+            <label title="Minimum amount of total stat points you want across all six stat tiers." htmlFor="customTier">Minimum Stat Tier: </label>
             &nbsp;
             <input id='stat-input' onChange={props.handleChange} min={25} max={32} name="totalTier" type="number" value={props.userTier.totalTier}></input>
           </div>
@@ -29,7 +29,7 @@ const SelectableStatGroup = (props) => {
           </div> */}
 
           <div>
-            <label title="Minimum Recovery tier you want your loadouts to have" htmlFor="customTier">Minimum Recovery Tier: </label>
+            <label title="Minimum Recovery tier you want your loadouts to have." htmlFor="customTier">Minimum Recovery Tier: </label>
             &nbsp;
             <input id='stat-input' onChange={props.handleChange} min={1} max={10} name="recovery" type="number" value={props.userTier.recovery}></input>
           </div>
@@ -37,7 +37,7 @@ const SelectableStatGroup = (props) => {
 
         <div id='stat-groups'>
           <div>
-            <label title="Minimum Intellect tier you want your loadouts to have" htmlFor="customTier">Minimum Intellect Tier: </label>
+            <label title="Minimum Intellect tier you want your loadouts to have." htmlFor="customTier">Minimum Intellect Tier: </label>
             &nbsp;
             <input id='stat-input' onChange={props.handleChange} min={1} max={10} name="intellect" type="number" value={props.userTier.intellect}></input>
           </div>

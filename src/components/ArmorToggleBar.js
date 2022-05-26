@@ -31,7 +31,7 @@ const ArmorToggleBar = (props) => {
             booleanType={props.exotic}
             toggleFunction={props.toggleExotic}
             color='#565e64'
-            title="Toggle to show or hide duplicate exotics"
+            title="Toggle to show or hide duplicate exotics."
           />
           :
           <BooleanButton
@@ -39,10 +39,11 @@ const ArmorToggleBar = (props) => {
             booleanType={props.exotic}
             toggleFunction={props.toggleExotic}
             color='#adb5bd'
-            title="No duplicate exotics found"
+            title="No duplicate exotics found."
             disabled
           />
       }
+      &nbsp;
       <ButtonGroup type="checkbox" name="armorTypes" value={props.armorType}>
         <Button value={1} style={props.armorType === 1 ? onStyle : offStyle} onClick={changeArmor}>Helmets</Button>
         <Button value={2} style={props.armorType === 2 ? onStyle : offStyle} onClick={changeArmor}>Gauntlets</Button>
@@ -55,7 +56,7 @@ const ArmorToggleBar = (props) => {
         booleanType={props.showKeeps}
         toggleFunction={props.toggleKeeps}
         color="#565e64"
-        title="Toggle to show or hide armor to keep"
+        title="Toggle to show or hide armor to keep."
       />
       &nbsp;
       <BooleanButton
@@ -63,7 +64,7 @@ const ArmorToggleBar = (props) => {
         booleanType={props.showJunks}
         toggleFunction={props.toggleJunks}
         color="#565e64"
-        title="Toggle to show or hide armor to dismantle"
+        title="Toggle to show or hide armor to dismantle."
       />
       &nbsp;
       <BooleanButton
@@ -71,13 +72,13 @@ const ArmorToggleBar = (props) => {
         booleanType={props.showVendor}
         toggleFunction={props.toggleVendor}
         color="#565e64"
-        title="Toggle to show or hide vendor armor"
+        title="Toggle to show or hide vendor armor."
       />
       &nbsp;
       <Button
         variant="success"
         onClick={props.evaluateArmor}
-        title="Click to evaluate armor based on the inputs below"
+        title="Click to evaluate armor based on the inputs below."
       >Evaluate Loadouts
       </Button>
 

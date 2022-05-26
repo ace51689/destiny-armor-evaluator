@@ -29,7 +29,7 @@ function PopulateUser() {
               type: actions.setError,
               payload: {
                 type: "error",
-                message: `There was an error retrieving your armor. ${array.Message} Please try authenticating with Bungie again.`
+                message: `There was an error retrieving your armor. ${array.Message}`
               }
             })
             navigate('/login')

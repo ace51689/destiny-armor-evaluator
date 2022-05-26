@@ -4,7 +4,7 @@ import { getVendorArmor } from '../functions/VendorHelpers'
 import { useStore, actions } from '../store/store'
 
 function PopulateVendor() {
-   //Define the user's membership type:
+  //Define the user's membership type:
   const membershipType = useStore(state => state.profileInformation.membershipType)
   //Define the user's destinyId:
   const destinyId = useStore(state => state.profileInformation.destinyId)
@@ -43,12 +43,13 @@ function PopulateVendor() {
           else {
             //Dispatch array to golbal state:
             dispatch({ type: actions.setVendorArmor, payload: array.vendorArray })
+            dispatch({ type: actions.setError, payload: { type: "none", message: "" } })
           }
           //Set finished to true:
           setFinished(true)
           //After one second send the user to the select page: (TODO more robust 'home' page)
           setTimeout(() => {
-            dispatch({ type: actions.setIsLoggedIn, payload: true})
+            dispatch({ type: actions.setIsLoggedIn, payload: true })
             navigate(`/evaluate/${mainClass}`)
           }, 1000)
         })

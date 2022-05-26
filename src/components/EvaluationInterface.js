@@ -17,7 +17,7 @@ const EvaluationInterface = (props) => {
     }
   }
 
-  const filteredArmor = props.chosen.filter(choice => {
+  const filteredArmor = props.chosen && props.chosen.filter(choice => {
     const showVendor = props.showVendor
     const showKeeps = props.showKeeps
     const showJunks = props.showJunks

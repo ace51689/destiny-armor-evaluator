@@ -165,7 +165,7 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
   //If Bungie returns an internal ErrorCode other than 1:
   if (response.ErrorCode !== 1) {
     //Return the response:
-    return response
+    return { ErrorCode: 0, Message: "Your access token has expired. Please re-authorize with Bungie.net."}
   }
   //Shorten the object path:
   const info = response.Response
