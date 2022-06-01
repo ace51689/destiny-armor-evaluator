@@ -32,64 +32,66 @@ const ArmorEvaluator = (props) => {
   const [showKeeps, setShowKeeps] = useState(true)
   const [showJunks, setShowJunks] = useState(true)
   const [hasExoticDupes, setHasExoticDupes] = useState(true)
-  const [userTier, setUserTier] = useState({
+  const [userInput, setUserInput] = useState({
     totalTier: 30,
-    mobility: 1,
-    resilience: 1,
-    recovery: 1,
-    discipline: 1,
-    intellect: 1,
-    strength: 1,
-    average: 10
+    topStat: {
+      type: "recovery",
+      value: 1
+    },
+    bottomStat: {
+      type: "intellect",
+      value: 1
+    },
+    tieBreak: "discipline"
   })
 
   useEffect(() => {
-    const  masterArray = [...userArmor, ...vendorArmor]
+    const masterArray = [...userArmor, ...vendorArmor]
 
     const legendaryHelmets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")
       .filter(armor => armor.itemSubType === "Helmet")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const legendaryGauntlets = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const legendaryGauntlets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")
       .filter(armor => armor.itemSubType === "Gauntlets")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const legendaryChests = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const legendaryChests = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")
       .filter(armor => armor.itemSubType === "Chest Armor")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const legendaryLegs = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const legendaryLegs = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Legendary")
       .filter(armor => armor.itemSubType === "Leg Armor")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    setHelmets(legendaryHelmets)
-    setGauntlets(legendaryGauntlets)
-    setChests(legendaryChests)
-    setLegs(legendaryLegs)
-
-    const exoticHelmets = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      setHelmets(legendaryHelmets)
+      setGauntlets(legendaryGauntlets)
+      setChests(legendaryChests)
+      setLegs(legendaryLegs)
+      
+      const exoticHelmets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Exotic")
       .filter(armor => armor.itemSubType === "Helmet")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const exoticGauntlets = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const exoticGauntlets = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Exotic")
       .filter(armor => armor.itemSubType === "Gauntlets")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const exoticChests = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const exoticChests = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Exotic")
       .filter(armor => armor.itemSubType === "Chest Armor")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
-
-    const exoticLegs = masterArray.filter(armor => armor.equippableBy === playerClass)
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
+      
+      const exoticLegs = masterArray.filter(armor => armor.equippableBy === playerClass)
       .filter(armor => armor.itemTier === "Exotic")
       .filter(armor => armor.itemSubType === "Leg Armor")
-      .sort((a, b) => (b.baseStats.intellect + b.baseStats.recovery) - (a.baseStats.intellect + a.baseStats.recovery))
+      .sort((a, b) => b.baseStats.total - a.baseStats.total)
 
     const findExoticDupes = (exoticArray) => {
       const exoticHashes = []
@@ -160,50 +162,16 @@ const ArmorEvaluator = (props) => {
     [userArmor, vendorArmor, setHelmets, setGauntlets, setChests, setLegs, playerClass]
   )
 
-  const handleChange = (e) => {
-    setUserTier((state) => ({ ...state, [e.target.name]: parseInt(e.target.value) }))
-  }
-
   const handleEvalType = (val) => {
     setEvalType(val)
   }
 
   const evaluateArmor = () => {
-    switch (armorType) {
-      case 1:
-        if (exotic) {
-          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
-        }
-        else {
-          LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
-        }
-        break;
-      case 2:
-        if (exotic) {
-          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
-        }
-        else {
-          LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
-        }
-        break;
-      case 3:
-        if (exotic) {
-          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
-        }
-        else {
-          LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
-        }
-        break;
-      case 4:
-        if (exotic) {
-          ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userTier, setNoLoadouts)
-        }
-        else {
-          LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userTier, setNoLoadouts)
-        }
-        break;
-      default:
-        break;
+    if (exotic) {
+      ExoticDupeEvaluation(dupeHelmets, setDupeHelmets, helmets, dupeGauntlets, setDupeGauntlets, gauntlets, dupeChests, setDupeChests, chests, dupeLegs, setDupeLegs, legs, userInput, setNoLoadouts)
+    }
+    else {
+      LegendaryArmorEvaluation(helmets, exoticHelmets, setHelmets, gauntlets, exoticGauntlets, setGauntlets, chests, exoticChests, setChests, legs, exoticLegs, setLegs, userInput, setNoLoadouts)
     }
   }
 
@@ -213,14 +181,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={dupeHelmets}
             showVendor={showVendor}
             toggleVendor={setShowVendor}
@@ -229,6 +196,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -236,14 +204,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={helmets}
             noLoadouts={noLoadouts}
             showVendor={showVendor}
@@ -253,6 +220,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -261,14 +229,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={dupeGauntlets}
             showVendor={showVendor}
             toggleVendor={setShowVendor}
@@ -277,6 +244,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -284,14 +252,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={gauntlets}
             noLoadouts={noLoadouts}
             showVendor={showVendor}
@@ -301,6 +268,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -309,14 +277,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={dupeChests}
             showVendor={showVendor}
             toggleVendor={setShowVendor}
@@ -325,6 +292,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -332,14 +300,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={chests}
             noLoadouts={noLoadouts}
             showVendor={showVendor}
@@ -349,6 +316,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -357,14 +325,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={dupeLegs}
             showVendor={showVendor}
             toggleVendor={setShowVendor}
@@ -373,6 +340,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }
@@ -380,14 +348,13 @@ const ArmorEvaluator = (props) => {
         return (
           <EvaluationInterface
             handleEvalType={handleEvalType}
-            handleChange={handleChange}
             evaluateArmor={evaluateArmor}
             changeArmor={setArmorType}
             toggleExotic={setExotic}
             armorType={armorType}
             exotic={exotic}
             evalType={evalType}
-            userTier={userTier}
+            userInput={userInput}
             chosen={legs}
             noLoadouts={noLoadouts}
             showVendor={showVendor}
@@ -397,6 +364,7 @@ const ArmorEvaluator = (props) => {
             showJunks={showJunks}
             toggleJunks={setShowJunks}
             hasExoticDupes={hasExoticDupes}
+            setUserInput={setUserInput}
           />
         )
       }

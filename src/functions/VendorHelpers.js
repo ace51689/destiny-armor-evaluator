@@ -83,6 +83,8 @@ function getBasicVendorArmorInfo(item, vendor, currentStatic, vendorStats, armor
     const statsPath = currentStats[1].stats.data[vendorItemIndex].stats
     //Set the item type:
     armorObject.itemType = "Armor"
+    //Set isMasterworked to false:
+    armorObject.isMasterworked = false
     //Set owned as false, for filtering purposes later:
     armorObject.owned = false
     //Set the vendor item index:
@@ -98,8 +100,13 @@ function getBasicVendorArmorInfo(item, vendor, currentStatic, vendorStats, armor
       recovery: statsPath[1943323491].value,
       discipline: statsPath[1735777505].value,
       intellect: statsPath[144602215].value,
-      strength: statsPath[4244567218].value
+      strength: statsPath[4244567218].value,
+      total: 0
     }
+    //Create an array of base stat values:
+    const baseStatValues = Object.values(armorObject.baseStats)
+    //Reduce the base stat values and add that to the total:
+    armorObject.baseStats.total += baseStatValues.reduce((a, b) => a + b)
   }
 }
 
@@ -162,6 +169,8 @@ export async function getVendorArmor(membershipType, destinyId, characterIds, ac
         const armorObject = {}
         //Define the item's item hash:
         armorObject.itemHash = item.itemHash
+        //Set the instanceId to the itemHash:
+        armorObject.itemInstanceId = item.itemHash
         //Get the basic armor information:
         getBasicVendorArmorInfo(item, vendor, currentStatic, vendorStats, armorObject)
         //If the armor piece doesn't belong to a vendor return false to return to the beginning of the loop:

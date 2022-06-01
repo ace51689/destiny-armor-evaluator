@@ -165,7 +165,7 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
   //If Bungie returns an internal ErrorCode other than 1:
   if (response.ErrorCode !== 1) {
     //Return the response:
-    return { ErrorCode: 0, Message: "Your access token has expired. Please re-authorize with Bungie.net."}
+    return { ErrorCode: 0, Message: "Your access token has expired. Please re-authorize with Bungie.net." }
   }
   //Shorten the object path:
   const info = response.Response
@@ -233,7 +233,8 @@ function getBasicArmorInfo(item, armorObject) {
     recovery: 0,
     discipline: 0,
     intellect: 0,
-    strength: 0
+    strength: 0,
+    total: 0
   }
 }
 
@@ -317,6 +318,10 @@ function assessArmorSockets(hash, intrinsics, armorObject, statsArray) {
       armorObject.baseStats[statsArray[0]] += investmentStats[0].value
       armorObject.baseStats[statsArray[1]] += investmentStats[1].value
       armorObject.baseStats[statsArray[2]] += investmentStats[2].value
+      //Add to the total:
+      armorObject.baseStats.total += investmentStats[0].value
+      armorObject.baseStats.total += investmentStats[1].value
+      armorObject.baseStats.total += investmentStats[2].value
     }
   }
 }

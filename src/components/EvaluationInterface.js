@@ -4,7 +4,6 @@ import SelectableStatGroup from './SelectableStatGroup'
 import ArmorToggleBar from '../components/ArmorToggleBar'
 import ArmorItem from './ArmorItem'
 import ExoticItem from './ExoticItem'
-// import { Form } from 'react-bootstrap'
 
 const EvaluationInterface = (props) => {
   const error = useStore(state => state.helpers.error)
@@ -58,12 +57,7 @@ const EvaluationInterface = (props) => {
 
   const noArmor = filteredArmor.length === 0
 
-  // const [query, setQuery] = useState("")
-  // let n = 0
-
-  // const handleSearch = (e) => {
-  //   setQuery(e.target.value)
-  // }
+  const noExotic = props.exotic && !props.chosen
 
   return (
     <div>
@@ -84,7 +78,7 @@ const EvaluationInterface = (props) => {
         toggleJunks={props.toggleJunks}
         hasExoticDupes={props.hasExoticDupes}
       />
-      <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userTier={props.userTier} />
+      <SelectableStatGroup handleChange={props.handleChange} evaluateArmor={props.evaluateArmor} evalType={props.evalType} userInput={props.userInput} setUserInput={props.setUserInput} />
       <div className='no-loadouts-display'>
         {(props.noLoadouts && props.noLoadouts.length > 0) && <div>No Applicable Loadouts for:</div>}
         &nbsp;
@@ -102,7 +96,7 @@ const EvaluationInterface = (props) => {
       </Form> */}
       <div>
         {
-          noArmor ?
+          noArmor || noExotic ?
             <div>No armor pieces matched your filter criteria. Change your filter parameters and try again.</div>
             :
             <ul className='armor-list'>
