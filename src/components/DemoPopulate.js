@@ -16,7 +16,10 @@ function DemoPopulate() {
           characterIds: [0, 1, 2]
         }
       })
-      dispatch({ type: actions.setUserArmor, payload: demoArmor })
+      const userArmor = demoArmor.filter(item => item.owned)
+      const vendorArmor = demoArmor.filter(item => !item.owned)
+      dispatch({ type: actions.setUserArmor, payload: userArmor })
+      dispatch({ type: actions.setVendorArmor, payload: vendorArmor })
       dispatch({ type: actions.setIsLoggedIn, payload: true })
       dispatch({ type: actions.setIsDemo, payload: true })
       navigate('/evaluate/Titan')

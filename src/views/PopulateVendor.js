@@ -12,7 +12,9 @@ function PopulateVendor() {
   const accessToken = useStore(state => state.accessInformation.accessToken)
   //Define the user's character ids:
   const characterIds = useStore(state => state.characterInformation.characterIds)
+  //Define the user's character classes:
   const characterClasses = useStore(state => state.characterInformation.characterClasses)
+  //Find the user's "main" class:
   const mainClass = characterClasses[0]
   //Define a boolean to control when we run our master function:
   const [mounted, setMounted] = useState(false)

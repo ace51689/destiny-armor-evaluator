@@ -409,7 +409,7 @@ const resetEvaluation = (armorArray) => {
 //   return [finalArray]
 // }
 
-export const ExoticDupeEvaluation = (exoticHelmets, setExoticHelmets, helmets, exoticGauntlets, setExoticGauntlets, gauntlets, exoticChests, setExoticChests, chests, exoticLegs, setExoticLegs, legs, userInput, setNoLoadouts) => {
+const ExoticDupeEvaluation = (exoticHelmets, setExoticHelmets, helmets, exoticGauntlets, setExoticGauntlets, gauntlets, exoticChests, setExoticChests, chests, exoticLegs, setExoticLegs, legs, userInput, setNoLoadouts) => {
   const noLoadouts = []
   const tieLoadouts = []
 
@@ -436,3 +436,5 @@ export const ExoticDupeEvaluation = (exoticHelmets, setExoticHelmets, helmets, e
     calculateStats(exoticLegs, helmets, gauntlets, chests, userInput, noLoadouts, tieLoadouts, setExoticLegs)
   }
 }
+
+export default ExoticDupeEvaluation

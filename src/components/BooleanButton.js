@@ -2,9 +2,7 @@ import React from 'react'
 import { Button } from 'react-bootstrap'
 
 //Component that returns a button used for boolean switching.
-function BooleanButton(props) {
-  //Deconstruct props:
-  const { buttonText, booleanType, toggleFunction, color, title, disabled } = props
+function BooleanButton({ buttonText, booleanType, toggleFunction, color, title, disabled }) {
   //Define a style for if the boolean is true:
   const trueStyle = {
     color: "#fff",
@@ -43,10 +41,10 @@ function BooleanButton(props) {
   if (!disabled) {
     //Return an active button
     return (
-        //Button if boolean is true:
-        <Button onClick={handleChange} title={title} style={booleanType ? trueStyle : falseStyle} >
-          {buttonText}
-        </Button>
+      //Button if boolean is true:
+      <Button onClick={handleChange} title={title} style={booleanType ? trueStyle : falseStyle} >
+        {buttonText}
+      </Button>
     )
   }
 }

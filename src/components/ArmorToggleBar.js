@@ -2,10 +2,42 @@ import React from 'react'
 import BooleanButton from './BooleanButton'
 import { Button, ButtonGroup } from 'react-bootstrap'
 
-const ArmorToggleBar = (props) => {
+const ArmorToggleBar = ({
+  changeArmor,
+  hasExotics,
+  exotic,
+  toggleExotic,
+  armorType,
+  showDuplicates,
+  setShowDuplicates,
+  showKeeps,
+  toggleKeeps,
+  showJunks,
+  toggleJunks,
+  showVendor,
+  toggleVendor,
+  evaluateArmor,
+  hasDupes,
+  xur,
+  ignoreXur,
+  setIgnoreXur
+}) => {
 
-  const changeArmor = (e) => {
-    props.changeArmor(parseInt(e.target.value))
+  const handleChangeArmor = (e) => {
+    changeArmor(e.target.value)
+  }
+
+  const handleToggleExotic = () => {
+    if (exotic) {
+      setShowDuplicates(false)
+      toggleExotic(false)
+    }
+    else {
+      toggleExotic(true)
+    }
+    toggleKeeps(true)
+    toggleJunks(true)
+    toggleVendor(true)
   }
 
   const onStyle = {
@@ -25,62 +57,100 @@ const ArmorToggleBar = (props) => {
   return (
     <div className="armor-toggle-bar">
       {
-        props.hasExoticDupes ?
+        hasExotics ?
           <BooleanButton
-            buttonText=" Test Duplicate Exotics"
-            booleanType={props.exotic}
-            toggleFunction={props.toggleExotic}
-            color='#565e64'
-            title="Toggle to show or hide duplicate exotics."
+            buttonText="Exotic"
+            booleanType={exotic}
+            toggleFunction={handleToggleExotic}
+            color='#daa520'
+            title="Toggle to switch display to exotic armor."
           />
           :
           <BooleanButton
-            buttonText="No Duplicate Exotics"
-            booleanType={props.exotic}
-            toggleFunction={props.toggleExotic}
+            buttonText="Exotic"
+            booleanType={exotic}
+            toggleFunction={handleToggleExotic}
             color='#adb5bd'
-            title="No duplicate exotics found."
+            title="No exotic armor found for this class."
             disabled
           />
       }
       &nbsp;
-      <ButtonGroup type="checkbox" name="armorTypes" value={props.armorType}>
-        <Button value={1} style={props.armorType === 1 ? onStyle : offStyle} onClick={changeArmor}>Helmets</Button>
-        <Button value={2} style={props.armorType === 2 ? onStyle : offStyle} onClick={changeArmor}>Gauntlets</Button>
-        <Button value={3} style={props.armorType === 3 ? onStyle : offStyle} onClick={changeArmor}>Chest Armor</Button>
-        <Button value={4} style={props.armorType === 4 ? onStyle : offStyle} onClick={changeArmor}>Leg Armor</Button>
+      <ButtonGroup type="checkbox" name="armorTypes" value={armorType}>
+        <Button value="helmets" style={armorType === "helmets" ? onStyle : offStyle} onClick={handleChangeArmor}>Helmets</Button>
+        <Button value="gauntlets" style={armorType === "gauntlets" ? onStyle : offStyle} onClick={handleChangeArmor}>Gauntlets</Button>
+        <Button value="chests" style={armorType === "chests" ? onStyle : offStyle} onClick={handleChangeArmor}>Chest Armor</Button>
+        <Button value="legs" style={armorType === "legs" ? onStyle : offStyle} onClick={handleChangeArmor}>Leg Armor</Button>
       </ButtonGroup>
       &nbsp;
-      <BooleanButton
-        buttonText="Keeps"
-        booleanType={props.showKeeps}
-        toggleFunction={props.toggleKeeps}
-        color="#565e64"
-        title="Toggle to show or hide armor to keep."
-      />
+      {
+        !exotic &&
+        <BooleanButton
+          buttonText="Keeps"
+          booleanType={showKeeps}
+          toggleFunction={toggleKeeps}
+          color="#565e64"
+          title="Toggle to show or hide armor to keep."
+        />
+      }
+      {
+        (exotic && hasDupes) &&
+        <BooleanButton
+          buttonText="Duplicates"
+          booleanType={showDuplicates}
+          toggleFunction={setShowDuplicates}
+          color="#565e64"
+          title="Toggle to show or hide duplicate exotics."
+        />
+      }
+      {
+        (exotic && !hasDupes) &&
+        <BooleanButton
+          buttonText="Duplicates"
+          booleanType={showDuplicates}
+          toggleFunction={setShowDuplicates}
+          color="#6c757d"
+          title="No duplicate exotics found."
+          disabled
+        />
+      }
       &nbsp;
-      <BooleanButton
-        buttonText="Junks"
-        booleanType={props.showJunks}
-        toggleFunction={props.toggleJunks}
-        color="#565e64"
-        title="Toggle to show or hide armor to dismantle."
-      />
+      {
+        !exotic &&
+        <BooleanButton
+          buttonText="Junks"
+          booleanType={showJunks}
+          toggleFunction={toggleJunks}
+          color="#565e64"
+          title="Toggle to show or hide armor to dismantle."
+        />
+      }
       &nbsp;
       <BooleanButton
         buttonText="Vendor"
-        booleanType={props.showVendor}
-        toggleFunction={props.toggleVendor}
+        booleanType={showVendor}
+        toggleFunction={toggleVendor}
         color="#565e64"
         title="Toggle to show or hide vendor armor."
       />
       &nbsp;
       <Button
         variant="success"
-        onClick={props.evaluateArmor}
+        onClick={evaluateArmor}
         title="Click to evaluate armor based on the inputs below."
       >Evaluate Loadouts
       </Button>
+    &nbsp;
+      {
+        xur &&
+        <BooleanButton
+            buttonText={"Ignore Xur Exotics"}
+            booleanType={ignoreXur}
+            toggleFunction={setIgnoreXur}
+            color="#b22222"
+            title="Some text we'll figure out later"
+        />
+      }
 
     </div>
   )

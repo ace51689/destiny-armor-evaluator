@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Nav, Button } from 'react-bootstrap'
 
-function ClassButton(props) {
+function ClassButton({ classType }) {
   const navigate = useNavigate()
   const classIcons = {
     Titan: "https://www.bungie.net/common/destiny2_content/icons/e78f012b19b5f6c6026c12547895b756.png",
@@ -11,18 +11,18 @@ function ClassButton(props) {
   }
 
   const handleClick = () => {
-    navigate(`/evaluate/${props.classType}`)
+    navigate(`/evaluate/${classType}`)
   }
 
   return (
     <Nav.Item>
       <Button onClick={handleClick}>
         <img
-          src={classIcons[props.classType]}
+          src={classIcons[classType]}
           alt='titan logo'
           style={{ width: '25px' }}
         />
-        {props.classType}
+        {classType}
       </Button>
       &nbsp;
     </Nav.Item>

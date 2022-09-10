@@ -157,6 +157,9 @@ async function getArmorInformation(destinyId, membershipType, accessToken) {
     }
   })
   //Check the request status:
+  if (request.status === 401) {
+    return { ErrorCode: 0, Message: "Your access token has expired. Please re-authorize with Bungie.net." }
+  }
   if (request.status !== 200) {
     return { ErrorCode: 0, Message: "Could not access Bungie servers. Please try again later." }
   }
