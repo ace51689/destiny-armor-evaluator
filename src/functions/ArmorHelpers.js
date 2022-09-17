@@ -392,6 +392,9 @@ export async function getUserArmor(destinyId, membershipType, accessToken) {
   const armorArray = []
   //For each item in the instances array:
   instancesArray.forEach(item => {
+    if (item[1].energy === undefined) {
+        return false
+    }
     //Create an object that will hold all of the info for each armor piece:
     const armorObject = {}
     //Get the basic armor information:
